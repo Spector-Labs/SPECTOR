@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spector • Eyes Forward</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body class="landing">
+
+    <div class="container">
+        <header>
+            <div class="logo">Spector</div>
+            <p class="tagline">Eyes Forward.</p>
+            <p class="subtitle">The premium teleprompter for smart glasses.</p>
+        </header>
+
+        <div class="input-section">
+            <label>Your Script</label>
+            <textarea id="script-input" placeholder="Paste your speech, presentation, or notes here..."></textarea>
+
+            <div class="file-upload" id="file-area">
+                Drop .txt file here or click to browse
+                <input type="file" id="file-input" accept=".txt" style="display:none;">
+            </div>
+
+            <button id="launch-btn" class="btn-primary">Open in Glasses Mode</button>
+        </div>
+    </div>
+
+    <script>
+        // Dark mode toggle (simple)
+        function initDarkMode() {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (prefersDark) {
+                document.body.classList.add('dark-mode');
+            }
+        }
+
+        // File upload
+        function initFileUpload() {
+            const fileArea = document.getElementById('file-area');
+            const fileInput = document.getElementById('file-input');
+            const textarea = document.getElementById('script-input');
+
+            fileArea.addEventListener('click', () => fileInput.click());
+
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        textarea.value = event.target.result;
+                    };
+                    reader.readAsText(file);
+                }
+            });
+
+            // Drag and drop
+            fileArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileArea.style.borderColor = '#888';
+            });
+
+            fileArea.addEventListener('dragleave', () => {
+                fileArea.style.borderColor = '#444';
+            });
+
+            fileArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileArea.style.borderColor = '#444';
+                const file = e.dataTransfer.files[0];
+                if (file && file.type === 'text/plain') {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        textarea.value = event.target.result;
+                    };
+                    reader.readAsText(file);
+                }
+            });
+        }
+
+        // Launch button
+        function initLaunchButton() {
+            const launchBtn = document.getElementById('launch-btn');
+            const textarea = document.getElementById('script-input');
+
+            launchBtn.addEventListener('click', () => {
+                const text = textarea.value.trim();
+                if (!text) {
+                    alert("Please enter a script first.");
+                    return;
+                }
+                const encoded = btoa(encodeURIComponent(text));
+                window.location.href = `app.html?script=${encoded}`;
+            });
+        }
+
+        // PWA support
+        function initPWA() {
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js').catch(() => {});
+                });
+            }
+        }
+
+        // Init everything
+        function init() {
+            initDarkMode();
+            initFileUpload();
+            initLaunchButton();
+            initPWA();
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
