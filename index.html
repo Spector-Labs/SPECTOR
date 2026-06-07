@@ -20,9 +20,7 @@
             <textarea id="script-input" placeholder="Paste your speech, presentation, or notes here..."></textarea>
 
             <div class="file-upload" id="file-area">
-                <div class="file-upload-content">
-                    <p>Drop .txt file here or click to browse</p>
-                </div>
+                Drop .txt file here or click to browse
                 <input type="file" id="file-input" accept=".txt" style="display:none;">
             </div>
 
@@ -47,16 +45,12 @@
                 }
             });
 
-            // Drag and drop
             fileArea.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 fileArea.classList.add('dragover');
             });
 
-            fileArea.addEventListener('dragleave', () => {
-                fileArea.classList.remove('dragover');
-            });
-
+            fileArea.addEventListener('dragleave', () => fileArea.classList.remove('dragover'));
             fileArea.addEventListener('drop', (e) => {
                 e.preventDefault();
                 fileArea.classList.remove('dragover');
