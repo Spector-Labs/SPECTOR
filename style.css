@@ -12,6 +12,7 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
+/* LANDING PAGE */
 .landing {
     display: flex;
     align-items: center;
