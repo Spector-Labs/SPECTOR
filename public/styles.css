@@ -1,7 +1,11 @@
 :root {
     --bg: #0F0F0F;
     --text: #E8E8E8;
-    --text-active: #E8D5B7;
+    --text-secondary: #888;
+    --accent: #E8D5B7;
+    --accent-hover: #D4B98A;
+    --card-bg: #1A1A1A;
+    --border: #333;
 }
 
 body {
@@ -12,35 +16,34 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-.landing {
+/* === LANDING PAGE === */
+body.landing {
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    padding: 40px 20px;
+    padding: 60px 20px;
 }
 
 .container {
-    max-width: 620px;
+    max-width: 560px;
     width: 100%;
 }
 
-.logo {
-    font-size: 42px;
-    font-weight: 700;
-    letter-spacing: -0.04em;
-    margin-bottom: 8px;
+header {
+    text-align: center;
+    margin-bottom: 48px;
 }
 
-.tm {
-    font-size: 0.55em;
-    vertical-align: super;
-    margin-left: 3px;
-    opacity: 0.6;
+.logo {
+    font-size: 56px;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    margin-bottom: 12px;
 }
 
 .tagline {
-    font-size: 21px;
+    font-size: 24px;
     color: #E8D5B7;
     margin: 0 0 8px;
     font-weight: 600;
@@ -48,51 +51,74 @@ body {
 
 .subtitle {
     color: #888;
-    font-size: 15.5px;
-    margin-bottom: 40px;
+    font-size: 16px;
+    margin: 0;
+}
+
+/* Input Card */
+.input-section {
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 48px 40px;
+    border: 1px solid #222;
 }
 
 .input-section label {
     display: block;
-    font-size: 14px;
-    color: #999;
-    margin-bottom: 10px;
-    font-weight: 500;
+    font-size: 13px;
+    font-weight: 600;
+    color: #777;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
 }
 
+/* Textarea */
 textarea {
     width: 100%;
-    height: 180px;
-    background: #1A1A1A;
-    border: 1px solid #444;
-    border-radius: 16px;
-    padding: 18px;
+    min-height: 220px;
+    background: #111;
+    border: 1.5px solid #333;
+    border-radius: 20px;
+    padding: 24px;
+    font-size: 16px;
+    line-height: 1.7;
     color: #E8E8E8;
-    font-size: 15.5px;
     resize: vertical;
-    margin-bottom: 24px;
     outline: none;
+    transition: border-color 0.2s ease;
 }
 
+textarea:focus {
+    border-color: #555;
+}
+
+/* File Upload */
 .file-upload {
-    border: 1.5px dashed #555;
-    border-radius: 16px;
-    padding: 32px 20px;
+    border: 2px dashed #444;
+    border-radius: 20px;
+    padding: 42px 24px;
     text-align: center;
     color: #888;
-    margin-bottom: 24px;
+    margin: 28px 0;
     cursor: pointer;
     transition: all 0.2s ease;
+    background: #111;
 }
 
 .file-upload:hover {
-    border-color: #777;
-    background: rgba(255,255,255,0.015);
+    border-color: #666;
+    background: #1F1F1F;
 }
 
+.file-upload.dragover {
+    border-color: #E8D5B7;
+    background: rgba(232, 213, 183, 0.06);
+}
+
+/* Primary Button */
 .btn-primary {
     width: 100%;
-    padding: 18px;
+    padding: 18px 24px;
     background: #E8D5B7;
     color: #111;
     border: none;
@@ -101,4 +127,15 @@ textarea {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
+    box-shadow: 0 4px 14px rgba(232, 213, 183, 0.25);
+}
+
+.btn-primary:hover {
+    background: #D4B98A;
+    transform: translateY(-1px);
+}
+
+.btn-primary:active {
+    transform: scale(0.985);
+    background: #C9A87A;
 }
