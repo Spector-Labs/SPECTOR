@@ -9,7 +9,7 @@
 <body class="landing">
     <div class="container">
         <header>
-            <div class="logo">Spector</div>
+            <div class="logo">Spector<span class="tm">™</span></div>
             <p class="tagline">Eyes Forward.</p>
             <p class="subtitle">The teleprompter for smart glasses.</p>
         </header>
@@ -49,7 +49,7 @@
         });
 
         fileArea.addEventListener('dragleave', () => fileArea.classList.remove('dragover'));
-        
+
         fileArea.addEventListener('drop', (e) => {
             e.preventDefault();
             fileArea.classList.remove('dragover');
