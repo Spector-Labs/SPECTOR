@@ -3,9 +3,7 @@
     --text: #E8E8E8;
     --text-secondary: #888;
     --accent: #E8D5B7;
-    --accent-hover: #D4B98A;
     --card-bg: #1A1A1A;
-    --border: #333;
 }
 
 body {
@@ -39,7 +37,14 @@ header {
     font-size: 56px;
     font-weight: 700;
     letter-spacing: -0.04em;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
+}
+
+.tm {
+    font-size: 0.55em;
+    vertical-align: super;
+    margin-left: 2px;
+    opacity: 0.7;
 }
 
 .tagline {
@@ -61,6 +66,7 @@ header {
     border-radius: 24px;
     padding: 48px 40px;
     border: 1px solid #222;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
 .input-section label {
@@ -72,13 +78,13 @@ header {
     letter-spacing: 0.5px;
 }
 
-/* Textarea */
+/* Textarea - Blends better into card */
 textarea {
     width: 100%;
     min-height: 220px;
     background: #111;
-    border: 1.5px solid #333;
-    border-radius: 20px;
+    border: 1px solid #2A2A2A;
+    border-radius: 18px;
     padding: 24px;
     font-size: 16px;
     line-height: 1.7;
@@ -89,13 +95,13 @@ textarea {
 }
 
 textarea:focus {
-    border-color: #555;
+    border-color: #444;
 }
 
 /* File Upload */
 .file-upload {
     border: 2px dashed #444;
-    border-radius: 20px;
+    border-radius: 18px;
     padding: 42px 24px;
     text-align: center;
     color: #888;
