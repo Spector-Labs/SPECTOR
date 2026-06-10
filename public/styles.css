@@ -1,7 +1,6 @@
 :root {
     --bg: #0F0F0F;
     --text: #E8E8E8;
-    --text-secondary: #888;
     --accent: #E8D5B7;
     --card-bg: #1A1A1A;
 }
@@ -14,7 +13,6 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* === LANDING PAGE === */
 body.landing {
     display: flex;
     align-items: center;
@@ -60,7 +58,6 @@ header {
     margin: 0;
 }
 
-/* Input Card */
 .input-section {
     background: var(--card-bg);
     border-radius: 24px;
@@ -78,7 +75,6 @@ header {
     letter-spacing: 0.5px;
 }
 
-/* Textarea */
 textarea {
     width: 100%;
     min-height: 200px;
@@ -100,7 +96,6 @@ textarea:focus {
     border-color: #555;
 }
 
-/* File Upload */
 .file-upload {
     border: 2px dashed #444;
     border-radius: 18px;
@@ -123,7 +118,6 @@ textarea:focus {
     background: rgba(232, 213, 183, 0.06);
 }
 
-/* Primary Button */
 .btn-primary {
     width: 100%;
     padding: 18px 24px;
@@ -141,7 +135,6 @@ textarea:focus {
 .btn-primary:hover {
     background: #D4B98A;
     transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(232, 213, 183, 0.32);
 }
 
 .btn-primary:active {

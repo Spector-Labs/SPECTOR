@@ -67,8 +67,8 @@
                 alert("Please enter a script first.");
                 return;
             }
-            const encoded = btoa(encodeURIComponent(text));
-            window.location.href = `app.html?script=${encoded}`;
+            localStorage.setItem('spectorScript', text);
+            window.location.href = 'app.html';
         });
     </script>
 </body>
