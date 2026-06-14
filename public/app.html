@@ -15,19 +15,25 @@
         .script-container { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; }
         .chunk { font-size: 42px; line-height: 1.45; max-width: 820px; text-align: center; opacity: 0.35; transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); padding: 20px 40px; }
         .chunk.active { opacity: 1; color: #E8D5B7; font-weight: 500; }
-        .controls { display: flex; justify-content: center; align-items: center; gap: 16px; margin: 24px 0 16px; }
+        .controls { display: flex; justify-content: center; align-items: center; gap: 16px; margin: 24px 0 16px; transition: opacity 0.3s ease; }
         .control-btn { background: #1A1A1A; border: none; color: #E8E8E8; width: 56px; height: 56px; border-radius: 9999px; font-size: 20px; cursor: pointer; transition: all 0.2s ease; }
         .control-btn:active { transform: scale(0.92); background: #333; }
         #play-btn { width: 72px; height: 72px; font-size: 26px; }
-        .progress-container { margin-top: 16px; display: flex; align-items: center; gap: 16px; }
+        .progress-container { margin-top: 16px; display: flex; align-items: center; gap: 16px; transition: opacity 0.3s ease; }
         .progress-bar { flex: 1; height: 4px; background: #222; border-radius: 9999px; overflow: hidden; }
         .progress-fill { height: 100%; background: #E8D5B7; width: 0%; transition: width 0.3s ease; }
         .time { font-size: 13px; color: #888; min-width: 80px; text-align: right; }
-        .speed-presets { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .speed-presets { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; transition: opacity 0.3s ease; }
         .preset-btn { padding: 8px 18px; background: #1A1A1A; color: #888; border: none; border-radius: 9999px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; }
         .preset-btn.active { background: #E8D5B7; color: #111; font-weight: 600; }
 
-        /* End Screen */
+        .controls.hidden,
+        .progress-container.hidden,
+        .speed-presets.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
         .end-screen {
             position: fixed;
             inset: 0;
@@ -99,6 +105,7 @@
         let currentMode = 'comfort';
         let speed = 2600;
         let startTime = null;
+        let hideControlsTimeout = null;
 
         let breathingRAF = null;
         let breathingStartTime = 0;
@@ -178,6 +185,28 @@
             if (activeChunk) activeChunk.style.transform = '';
         }
 
+        function showControls() {
+            document.querySelector('.controls').classList.remove('hidden');
+            document.querySelector('.progress-container').classList.remove('hidden');
+            document.querySelector('.speed-presets').classList.remove('hidden');
+        }
+
+        function hideControls() {
+            if (isPlaying) {
+                document.querySelector('.controls').classList.add('hidden');
+                document.querySelector('.progress-container').classList.add('hidden');
+                document.querySelector('.speed-presets').classList.add('hidden');
+            }
+        }
+
+        function resetHideTimer() {
+            clearTimeout(hideControlsTimeout);
+            showControls();
+            if (isPlaying) {
+                hideControlsTimeout = setTimeout(hideControls, 3000);
+            }
+        }
+
         function setupSpatialAnchoring() {
             if (!window.DeviceOrientationEvent) return;
 
@@ -228,6 +257,7 @@
             if (!startTime) startTime = Date.now();
             stopBreathing();
             document.getElementById('play-btn').textContent = '⏸';
+            resetHideTimer();
 
             interval = setInterval(() => {
                 if (currentIndex < chunks.length - 1) {
@@ -245,6 +275,8 @@
             isPlaying = false;
             document.getElementById('play-btn').textContent = '▶';
             if (interval) { clearInterval(interval); interval = null; }
+            clearTimeout(hideControlsTimeout);
+            showControls();
             if (currentMode === 'comfort') startBreathing();
         }
 
@@ -257,6 +289,9 @@
             document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.mode === mode));
             isFirstOrientation = true;
             stopBreathing();
+            clearTimeout(hideControlsTimeout);
+            showControls();
+
             if (mode === 'comfort' && !isPlaying) setTimeout(startBreathing, 300);
         }
 
@@ -325,19 +360,30 @@
             renderChunks();
             updateActiveChunk();
 
+            // Mode buttons
             document.querySelectorAll('.mode-btn').forEach(btn => btn.addEventListener('click', () => applyMode(btn.dataset.mode)));
 
+            // Speed presets
             document.querySelectorAll('.preset-btn').forEach(btn => {
                 btn.addEventListener('click', () => setSpeed(parseInt(btn.dataset.speed), btn));
             });
 
+            // Controls
             document.getElementById('play-btn').addEventListener('click', togglePlay);
-            document.getElementById('rewind-btn').addEventListener('click', () => { if (currentIndex > 0) currentIndex = Math.max(0, currentIndex - 2); updateActiveChunk(); });
-            document.getElementById('forward-btn').addEventListener('click', () => { if (currentIndex < chunks.length - 1) currentIndex++; updateActiveChunk(); });
+            document.getElementById('rewind-btn').addEventListener('click', () => { if (currentIndex > 0) currentIndex = Math.max(0, currentIndex - 2); updateActiveChunk(); resetHideTimer(); });
+            document.getElementById('forward-btn').addEventListener('click', () => { if (currentIndex < chunks.length - 1) currentIndex++; updateActiveChunk(); resetHideTimer(); });
 
+            // Keyboard
             document.addEventListener('keydown', (e) => {
                 if (e.key === ' ' || e.key === 'k') { e.preventDefault(); togglePlay(); }
                 if (e.key.toLowerCase() === 'r') { if (currentIndex > 0) currentIndex = Math.max(0, currentIndex - 2); updateActiveChunk(); }
+            });
+
+            // Tap anywhere to show controls + reset hide timer
+            document.addEventListener('click', (e) => {
+                if (!['play-btn','rewind-btn','forward-btn'].includes(e.target.id)) {
+                    resetHideTimer();
+                }
             });
 
             setupSpatialAnchoring();
