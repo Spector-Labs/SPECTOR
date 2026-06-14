@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0F0F0F">
-    <title>Spector • Eyes Forward</title>
+    <title>Spector™ • Eyes Forward</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="manifest" href="manifest.json">
 </head>
@@ -13,13 +12,13 @@
         <header>
             <div class="logo">Spector<span class="tm">™</span></div>
             <p class="tagline">Eyes Forward.</p>
-            <p class="subtitle">The teleprompter for smart glasses.</p>
+            <p class="subtitle">The calm teleprompter for smart glasses.</p>
         </header>
 
         <div class="input-section">
             <label>Your Script</label>
             <textarea id="script-input" placeholder="Paste your speech, presentation, or notes here..."></textarea>
-            
+
             <div class="file-upload" id="file-area">
                 Drop .txt file here or click to browse
                 <input type="file" id="file-input" accept=".txt" style="display:none;">
@@ -30,62 +29,71 @@
     </div>
 
     <script>
-        // Register Service Worker
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js')
-                    .then(registration => {
-                        console.log('ServiceWorker registered');
-                    })
-                    .catch(err => {
-                        console.log('ServiceWorker registration failed');
-                    });
+        function initFileUpload() {
+            const fileArea = document.getElementById('file-area');
+            const fileInput = document.getElementById('file-input');
+            const textarea = document.getElementById('script-input');
+
+            fileArea.addEventListener('click', () => fileInput.click());
+
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file && file.type === "text/plain") {
+                    const reader = new FileReader();
+                    reader.onload = (event) => textarea.value = event.target.result;
+                    reader.readAsText(file);
+                }
+            });
+
+            fileArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileArea.classList.add('dragover');
+            });
+
+            fileArea.addEventListener('dragleave', () => fileArea.classList.remove('dragover'));
+
+            fileArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileArea.classList.remove('dragover');
+                const file = e.dataTransfer.files[0];
+                if (file && file.type === "text/plain") {
+                    const reader = new FileReader();
+                    reader.onload = (event) => textarea.value = event.target.result;
+                    reader.readAsText(file);
+                }
             });
         }
 
-        // File Upload Logic
-        const fileArea = document.getElementById('file-area');
-        const fileInput = document.getElementById('file-input');
-        const textarea = document.getElementById('script-input');
+        function initLaunchButton() {
+            const launchBtn = document.getElementById('launch-btn');
+            const textarea = document.getElementById('script-input');
 
-        fileArea.addEventListener('click', () => fileInput.click());
+            launchBtn.addEventListener('click', () => {
+                const text = textarea.value.trim();
+                if (!text) {
+                    alert("Please enter a script first.");
+                    return;
+                }
+                localStorage.setItem('spectorScript', text);
+                window.location.href = 'app.html';
+            });
+        }
 
-        fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => textarea.value = event.target.result;
-                reader.readAsText(file);
-            }
-        });
+        function init() {
+            initFileUpload();
+            initLaunchButton();
+        }
 
-        fileArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            fileArea.classList.add('dragover');
-        });
+        window.onload = init;
 
-        fileArea.addEventListener('dragleave', () => fileArea.classList.remove('dragover'));
-
-        fileArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            fileArea.classList.remove('dragover');
-            const file = e.dataTransfer.files[0];
-            if (file && file.type === "text/plain") {
-                const reader = new FileReader();
-                reader.onload = (event) => textarea.value = event.target.result;
-                reader.readAsText(file);
-            }
-        });
-
-        document.getElementById('launch-btn').addEventListener('click', () => {
-            const text = textarea.value.trim();
-            if (!text) {
-                alert("Please enter a script first.");
-                return;
-            }
-            localStorage.setItem('spectorScript', text);
-            window.location.href = 'app.html';
-        });
+        // PWA Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(reg => console.log('Service worker registered'))
+                    .catch(err => console.log('Service worker failed', err));
+            });
+        }
     </script>
 </body>
 </html>
