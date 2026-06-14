@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0F0F0F">
     <title>Spector • Eyes Forward</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
 </head>
 <body class="landing">
     <div class="container">
@@ -28,6 +30,20 @@
     </div>
 
     <script>
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registered');
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed');
+                    });
+            });
+        }
+
+        // File Upload Logic
         const fileArea = document.getElementById('file-area');
         const fileInput = document.getElementById('file-input');
         const textarea = document.getElementById('script-input');
