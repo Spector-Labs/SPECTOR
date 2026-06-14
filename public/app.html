@@ -29,21 +29,12 @@
 
         .controls.hidden,
         .progress-container.hidden,
-        .speed-presets.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
+        .speed-presets.hidden { opacity: 0; pointer-events: none; }
 
         .end-screen {
-            position: fixed;
-            inset: 0;
-            background: #0F0F0F;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 40px 24px;
+            position: fixed; inset: 0; background: #0F0F0F;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 40px 24px;
         }
         .end-screen h2 { font-size: 28px; font-weight: 600; color: #E8D5B7; margin-bottom: 8px; }
         .end-screen .subtitle { color: #888; margin-bottom: 40px; }
@@ -53,15 +44,8 @@
         .stat .label { font-size: 13px; color: #888; margin-top: 4px; }
         .end-actions { display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 280px; }
         .btn-secondary {
-            width: 100%;
-            padding: 16px;
-            background: rgba(255,255,255,0.06);
-            color: #CCC;
-            border: none;
-            border-radius: 9999px;
-            font-size: 15.5px;
-            font-weight: 500;
-            cursor: pointer;
+            width: 100%; padding: 16px; background: rgba(255,255,255,0.06); color: #CCC;
+            border: none; border-radius: 9999px; font-size: 15.5px; font-weight: 500; cursor: pointer;
         }
     </style>
 </head>
@@ -98,6 +82,45 @@
     </div>
 
     <script>
+        // ==================== HAPTIC FEEDBACK PATTERNS ====================
+        const Haptics = {
+            // Light single tick (chunk advance)
+            tick: () => {
+                if (navigator.vibrate) navigator.vibrate(8);
+            },
+
+            // Double light tap (play)
+            play: () => {
+                if (navigator.vibrate) navigator.vibrate([10, 30, 10]);
+            },
+
+            // Slightly stronger double (pause)
+            pause: () => {
+                if (navigator.vibrate) navigator.vibrate([15, 50, 15]);
+            },
+
+            // Quick double tick (rewind/forward)
+            navigation: () => {
+                if (navigator.vibrate) navigator.vibrate([8, 35, 8]);
+            },
+
+            // Triple tap (mode switch)
+            modeChange: () => {
+                if (navigator.vibrate) navigator.vibrate([12, 40, 12, 40, 12]);
+            },
+
+            // Very light double (speed change)
+            speedChange: () => {
+                if (navigator.vibrate) navigator.vibrate([6, 25, 6]);
+            },
+
+            // Stronger completion pattern (end of script)
+            complete: () => {
+                if (navigator.vibrate) navigator.vibrate([20, 60, 20, 60, 30]);
+            }
+        };
+
+        // ==================== STATE ====================
         let chunks = [];
         let currentIndex = 0;
         let isPlaying = false;
@@ -256,6 +279,7 @@
             isPlaying = true;
             if (!startTime) startTime = Date.now();
             stopBreathing();
+            Haptics.play();
             document.getElementById('play-btn').textContent = '⏸';
             resetHideTimer();
 
@@ -263,9 +287,10 @@
                 if (currentIndex < chunks.length - 1) {
                     currentIndex++;
                     updateActiveChunk();
-                    if (navigator.vibrate) navigator.vibrate(8);
+                    Haptics.tick();
                 } else {
                     stopPlayback();
+                    Haptics.complete();
                     showEndScreen();
                 }
             }, speed);
@@ -273,6 +298,7 @@
 
         function stopPlayback() {
             isPlaying = false;
+            Haptics.pause();
             document.getElementById('play-btn').textContent = '▶';
             if (interval) { clearInterval(interval); interval = null; }
             clearTimeout(hideControlsTimeout);
@@ -291,6 +317,7 @@
             stopBreathing();
             clearTimeout(hideControlsTimeout);
             showControls();
+            Haptics.modeChange();
 
             if (mode === 'comfort' && !isPlaying) setTimeout(startBreathing, 300);
         }
@@ -299,6 +326,7 @@
             speed = newSpeed;
             document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
             if (btnElement) btnElement.classList.add('active');
+            Haptics.speedChange();
 
             if (isPlaying) {
                 clearInterval(interval);
@@ -306,8 +334,10 @@
                     if (currentIndex < chunks.length - 1) {
                         currentIndex++;
                         updateActiveChunk();
+                        Haptics.tick();
                     } else {
                         stopPlayback();
+                        Haptics.complete();
                         showEndScreen();
                     }
                 }, speed);
@@ -360,26 +390,21 @@
             renderChunks();
             updateActiveChunk();
 
-            // Mode buttons
             document.querySelectorAll('.mode-btn').forEach(btn => btn.addEventListener('click', () => applyMode(btn.dataset.mode)));
 
-            // Speed presets
             document.querySelectorAll('.preset-btn').forEach(btn => {
                 btn.addEventListener('click', () => setSpeed(parseInt(btn.dataset.speed), btn));
             });
 
-            // Controls
             document.getElementById('play-btn').addEventListener('click', togglePlay);
-            document.getElementById('rewind-btn').addEventListener('click', () => { if (currentIndex > 0) currentIndex = Math.max(0, currentIndex - 2); updateActiveChunk(); resetHideTimer(); });
-            document.getElementById('forward-btn').addEventListener('click', () => { if (currentIndex < chunks.length - 1) currentIndex++; updateActiveChunk(); resetHideTimer(); });
+            document.getElementById('rewind-btn').addEventListener('click', () => { if (currentIndex > 0) currentIndex = Math.max(0, currentIndex - 2); updateActiveChunk(); resetHideTimer(); Haptics.navigation(); });
+            document.getElementById('forward-btn').addEventListener('click', () => { if (currentIndex < chunks.length - 1) currentIndex++; updateActiveChunk(); resetHideTimer(); Haptics.navigation(); });
 
-            // Keyboard
             document.addEventListener('keydown', (e) => {
                 if (e.key === ' ' || e.key === 'k') { e.preventDefault(); togglePlay(); }
                 if (e.key.toLowerCase() === 'r') { if (currentIndex > 0) currentIndex = Math.max(0, currentIndex - 2); updateActiveChunk(); }
             });
 
-            // Tap anywhere to show controls + reset hide timer
             document.addEventListener('click', (e) => {
                 if (!['play-btn','rewind-btn','forward-btn'].includes(e.target.id)) {
                     resetHideTimer();
