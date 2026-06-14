@@ -1,1 +1,580 @@
-[PASTE THE FULL POLISHED app.html CODE FROM MY PREVIOUS MESSAGE HERE]
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spector • Glasses Mode</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body.glasses-mode {
+            background: #0F0F0F;
+            color: #E8E8E8;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .glasses-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .mode-switcher {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            background: rgba(255,255,255,0.06);
+            border-radius: 9999px;
+            padding: 4px;
+            z-index: 100;
+        }
+        .mode-btn {
+            padding: 8px 20px;
+            border: none;
+            background: transparent;
+            color: #999;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .mode-btn.active {
+            background: #E8D5B7;
+            color: #111;
+        }
+        .chunk-display {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 60px;
+            text-align: center;
+            position: relative;
+        }
+        .chunk {
+            font-size: 42px;
+            line-height: 1.35;
+            font-weight: 500;
+            max-width: 820px;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), 
+                        opacity 0.35s ease;
+            will-change: transform;
+        }
+        .chunk.active {
+            color: #E8D5B7;
+        }
+        .controls {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            z-index: 50;
+            transition: opacity 0.3s ease;
+        }
+        .controls.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .control-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 9999px;
+            background: rgba(255,255,255,0.08);
+            border: none;
+            color: #E8E8E8;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .control-btn:active {
+            transform: scale(0.92);
+            background: rgba(255,255,255,0.15);
+        }
+        #play-btn {
+            width: 72px;
+            height: 72px;
+            font-size: 28px;
+            background: #E8D5B7;
+            color: #111;
+        }
+        .speed-presets {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .preset-btn {
+            padding: 6px 16px;
+            border-radius: 9999px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: transparent;
+            color: #999;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .preset-btn.active {
+            background: #E8D5B7;
+            color: #111;
+            border-color: #E8D5B7;
+        }
+        .progress-container {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            max-width: 500px;
+        }
+        .progress-bar {
+            height: 3px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #E8D5B7;
+            transition: width 0.3s ease;
+        }
+        .end-screen {
+            position: absolute;
+            inset: 0;
+            background: #0F0F0F;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 24px;
+        }
+        .end-screen.show {
+            display: flex;
+        }
+        .end-check {
+            width: 64px;
+            height: 64px;
+            border-radius: 9999px;
+            background: rgba(232, 213, 183, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        .end-check span {
+            font-size: 32px;
+            color: #E8D5B7;
+        }
+    </style>
+</head>
+<body class="glasses-mode">
+    <div class="glasses-container">
+        
+        <!-- Mode Switcher -->
+        <div class="mode-switcher">
+            <button class="mode-btn active" data-mode="comfort">Comfort</button>
+            <button class="mode-btn" data-mode="focus">Focus</button>
+        </div>
+
+        <!-- Chunk Display -->
+        <div class="chunk-display" id="chunk-display">
+            <div class="chunk" id="active-chunk"></div>
+        </div>
+
+        <!-- Progress -->
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 13px; color: #666;">
+                <span id="time-elapsed">0:00</span>
+                <span id="time-remaining">- / -</span>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls" id="controls">
+            <button class="control-btn" id="rewind-btn">⟲</button>
+            <button class="control-btn" id="play-btn">▶</button>
+            <button class="control-btn" id="forward-btn">⟳</button>
+        </div>
+
+        <!-- Speed Presets -->
+        <div class="speed-presets" style="position: absolute; bottom: 180px; left: 50%; transform: translateX(-50%);">
+            <button class="preset-btn" data-speed="3200">Slow</button>
+            <button class="preset-btn active" data-speed="2600">Medium</button>
+            <button class="preset-btn" data-speed="2000">Fast</button>
+        </div>
+
+        <!-- End Screen -->
+        <div class="end-screen" id="end-screen">
+            <div class="end-check">
+                <span>✓</span>
+            </div>
+            <h2 style="font-size: 28px; margin-bottom: 8px; font-weight: 600;">Done reading.</h2>
+            <p style="color: #888; margin-bottom: 36px; font-size: 15px;">You finished the script.</p>
+            
+            <div style="margin-bottom: 48px; font-size: 15px; color: #aaa; line-height: 1.6;">
+                <div><strong id="stats-chunks"></strong> chunks</div>
+                <div style="margin-top: 4px;"><strong id="stats-time"></strong> total time</div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 280px;">
+                <button onclick="restartScript()" class="btn-primary" style="padding: 16px 32px;">Read Again</button>
+                <button onclick="goToLanding()" class="btn-secondary" style="padding: 16px 32px; background: rgba(255,255,255,0.06); color: #ccc;">New Script</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ==================== STATE ====================
+        let chunks = [];
+        let currentIndex = 0;
+        let isPlaying = false;
+        let interval = null;
+        let speed = 2600;
+        let currentMode = 'comfort';
+        let startTime = null;
+
+        let orientationListener = null;
+        let breathingFrame = null;
+
+        // ==================== HAPTICS ====================
+        const Haptics = {
+            tick: () => { if (navigator.vibrate) navigator.vibrate(8); },
+            play: () => { if (navigator.vibrate) navigator.vibrate([10, 30, 10]); },
+            pause: () => { if (navigator.vibrate) navigator.vibrate(20); },
+            modeChange: () => { if (navigator.vibrate) navigator.vibrate([8, 20, 8]); }
+        };
+
+        // ==================== CHUNKING ====================
+        function hybridChunk(text) {
+            const sentences = text.match(/[^.!?]+[.!?]+/g) || [];
+            let result = [];
+            
+            sentences.forEach(sentence => {
+                const words = sentence.trim().split(/\s+/);
+                if (words.length <= 8) {
+                    result.push(sentence.trim());
+                } else {
+                    for (let i = 0; i < words.length; i += 6) {
+                        result.push(words.slice(i, i + 6).join(' '));
+                    }
+                }
+            });
+            
+            if (result.length === 0) {
+                const words = text.trim().split(/\s+/);
+                for (let i = 0; i < words.length; i += 6) {
+                    result.push(words.slice(i, i + 6).join(' '));
+                }
+            }
+            return result;
+        }
+
+        // ==================== RENDER ====================
+        function renderChunks() {
+            const container = document.getElementById('active-chunk');
+            container.innerHTML = chunks[currentIndex] || '';
+        }
+
+        function updateActiveChunk() {
+            const chunkEl = document.getElementById('active-chunk');
+            chunkEl.style.transition = 'none';
+            chunkEl.style.transform = 'translateY(14px)';
+            chunkEl.style.opacity = '0.15';
+            
+            setTimeout(() => {
+                chunkEl.innerHTML = chunks[currentIndex] || '';
+                chunkEl.style.transition = 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.4s ease';
+                chunkEl.style.transform = 'translateY(0)';
+                chunkEl.style.opacity = '1';
+                
+                if (currentMode === 'comfort') {
+                    applyBreathing(chunkEl);
+                }
+            }, 50);
+
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progress = chunks.length > 0 ? ((currentIndex + 1) / chunks.length) * 100 : 0;
+            document.getElementById('progress-fill').style.width = `${progress}%`;
+
+            const elapsed = startTime ? Math.floor((Date.now() - startTime) / 1000) : 0;
+            document.getElementById('time-elapsed').textContent = formatTime(elapsed);
+
+            const remainingChunks = chunks.length - currentIndex - 1;
+            const remainingSec = Math.floor((remainingChunks * speed) / 1000);
+            document.getElementById('time-remaining').textContent = `~${formatTime(remainingSec)} left`;
+        }
+
+        function formatTime(seconds) {
+            const min = Math.floor(seconds / 60);
+            const sec = seconds % 60;
+            return `${min}:${sec.toString().padStart(2, '0')}`;
+        }
+
+        // ==================== IMPROVED BREATHING (Much More Subtle) ====================
+        function applyBreathing(element) {
+            if (breathingFrame) cancelAnimationFrame(breathingFrame);
+            
+            let start = Date.now();
+            
+            function animate() {
+                if (!isPlaying || currentMode !== 'comfort') return;
+                
+                const elapsed = (Date.now() - start) / 1000;
+                
+                // Much more subtle and organic breathing
+                const scale = 1 + Math.sin(elapsed * 0.48) * 0.005;
+                const y = Math.sin(elapsed * 0.38) * 1.8;
+                
+                element.style.transform = `translateY(${y}px) scale(${scale})`;
+                breathingFrame = requestAnimationFrame(animate);
+            }
+            
+            animate();
+        }
+
+        // ==================== IMPROVED SPATIAL ANCHORING (Smoother) ====================
+        function setupSpatialAnchoring() {
+            if (!window.DeviceOrientationEvent) return;
+
+            let lastBeta = 0;
+            let lastGamma = 0;
+
+            orientationListener = (event) => {
+                if (!isPlaying || currentMode !== 'comfort') return;
+
+                const chunkEl = document.getElementById('active-chunk');
+                if (!chunkEl) return;
+
+                const beta = event.beta || 0;
+                const gamma = event.gamma || 0;
+
+                // Stronger smoothing for less jitter
+                const smoothBeta = lastBeta * 0.92 + beta * 0.08;
+                const smoothGamma = lastGamma * 0.92 + gamma * 0.08;
+
+                lastBeta = smoothBeta;
+                lastGamma = smoothGamma;
+
+                const deadzone = 6;
+                let x = 0, y = 0;
+
+                if (Math.abs(smoothGamma) > deadzone) {
+                    x = (smoothGamma - Math.sign(smoothGamma) * deadzone) * 0.48;
+                }
+                if (Math.abs(smoothBeta) > deadzone) {
+                    y = (smoothBeta - Math.sign(smoothBeta) * deadzone) * 0.32;
+                }
+
+                chunkEl.style.transform = `translate(${x}px, ${y}px)`;
+            };
+
+            window.addEventListener('deviceorientation', orientationListener);
+        }
+
+        // ==================== PLAYBACK ====================
+        function startPlayback() {
+            if (isPlaying || chunks.length === 0) return;
+            
+            isPlaying = true;
+            document.getElementById('play-btn').textContent = '⏸';
+            Haptics.play();
+            
+            if (!startTime) startTime = Date.now();
+
+            interval = setInterval(() => {
+                if (currentIndex < chunks.length - 1) {
+                    currentIndex++;
+                    updateActiveChunk();
+                    Haptics.tick();
+                } else {
+                    stopPlayback();
+                    showEndScreen();
+                }
+            }, speed);
+        }
+
+        function stopPlayback() {
+            isPlaying = false;
+            document.getElementById('play-btn').textContent = '▶';
+            clearInterval(interval);
+            if (breathingFrame) cancelAnimationFrame(breathingFrame);
+            Haptics.pause();
+        }
+
+        function togglePlay() {
+            if (isPlaying) {
+                stopPlayback();
+            } else {
+                startPlayback();
+            }
+        }
+
+        // ==================== MODE ====================
+        function applyMode(mode) {
+            currentMode = mode;
+            const chunkEl = document.getElementById('active-chunk');
+            
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.mode === mode);
+            });
+
+            if (mode === 'focus') {
+                chunkEl.style.transition = 'transform 0.2s ease';
+                if (orientationListener) {
+                    window.removeEventListener('deviceorientation', orientationListener);
+                }
+            } else {
+                chunkEl.style.transition = 'transform 0.6s cubic-bezier(0.23,1,0.32,1)';
+                setupSpatialAnchoring();
+            }
+            
+            Haptics.modeChange();
+        }
+
+        // ==================== SPEED ====================
+        function setupSpeedPresets() {
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    speed = parseInt(btn.dataset.speed);
+                    
+                    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    if (isPlaying) {
+                        clearInterval(interval);
+                        interval = setInterval(() => {
+                            if (currentIndex < chunks.length - 1) {
+                                currentIndex++;
+                                updateActiveChunk();
+                            } else {
+                                stopPlayback();
+                                showEndScreen();
+                            }
+                        }, speed);
+                    }
+                });
+            });
+        }
+
+        // ==================== AUTO HIDE CONTROLS ====================
+        let hideTimeout;
+        
+        function showControls() {
+            const controls = document.getElementById('controls');
+            controls.classList.remove('hidden');
+            clearTimeout(hideTimeout);
+            
+            if (isPlaying) {
+                hideTimeout = setTimeout(() => {
+                    controls.classList.add('hidden');
+                }, 2600);
+            }
+        }
+
+        function setupAutoHide() {
+            const controls = document.getElementById('controls');
+            const chunkArea = document.getElementById('chunk-display');
+
+            chunkArea.addEventListener('click', () => {
+                if (controls.classList.contains('hidden')) {
+                    showControls();
+                } else {
+                    controls.classList.add('hidden');
+                }
+            });
+
+            controls.addEventListener('click', showControls);
+        }
+
+        // ==================== END SCREEN ====================
+        function showEndScreen() {
+            document.getElementById('end-screen').classList.add('show');
+            document.getElementById('controls').style.display = 'none';
+            
+            const elapsed = startTime ? Math.floor((Date.now() - startTime) / 1000) : 0;
+            document.getElementById('stats-chunks').textContent = chunks.length;
+            document.getElementById('stats-time').textContent = formatTime(elapsed);
+        }
+
+        function restartScript() {
+            document.getElementById('end-screen').classList.remove('show');
+            document.getElementById('controls').style.display = 'flex';
+            currentIndex = 0;
+            isPlaying = false;
+            startTime = null;
+            document.getElementById('play-btn').textContent = '▶';
+            updateActiveChunk();
+        }
+
+        function goToLanding() {
+            window.location.href = 'index.html';
+        }
+
+        // ==================== INIT ====================
+        function init() {
+            const script = localStorage.getItem('spectorScript');
+            if (!script) {
+                alert("No script found. Please go back and enter a script.");
+                window.location.href = 'index.html';
+                return;
+            }
+
+            chunks = hybridChunk(script);
+            currentIndex = 0;
+
+            renderChunks();
+            updateActiveChunk();
+
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.addEventListener('click', () => applyMode(btn.dataset.mode));
+            });
+
+            document.getElementById('play-btn').addEventListener('click', togglePlay);
+            document.getElementById('rewind-btn').addEventListener('click', () => {
+                if (currentIndex > 0) currentIndex = Math.max(0, currentIndex - 2);
+                updateActiveChunk();
+            });
+            document.getElementById('forward-btn').addEventListener('click', () => {
+                if (currentIndex < chunks.length - 1) currentIndex++;
+                updateActiveChunk();
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === ' ' || e.key === 'k') {
+                    e.preventDefault();
+                    togglePlay();
+                }
+                if (e.key.toLowerCase() === 'r') {
+                    if (currentIndex > 0) currentIndex = Math.max(0, currentIndex - 2);
+                    updateActiveChunk();
+                }
+            });
+
+            setupSpeedPresets();
+            setupAutoHide();
+            setupSpatialAnchoring();
+            applyMode('comfort');
+
+            setTimeout(showControls, 800);
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
