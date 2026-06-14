@@ -1,22 +1,23 @@
 {
   "name": "Spector",
   "short_name": "Spector",
-  "description": "The teleprompter for smart glasses",
-  "start_url": "/index.html",
+  "description": "Calm teleprompter for smart glasses. Read naturally with spatial awareness.",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#0F0F0F",
   "theme_color": "#E8D5B7",
-  "orientation": "portrait",
   "icons": [
     {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
+      "src": "icon-light.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "icon-512.png",
+      "src": "icon-dark.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
