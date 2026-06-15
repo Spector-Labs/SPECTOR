@@ -1,62 +1,55 @@
 <!DOCTYPE html>
-<html lang="en"><header style="text-align: center; margin-bottom: 48px; position: relative;">
-    <div id="three-container" style="width: 100%; height: 220px; margin-bottom: 20px;"></div>
-    
-    <div class="logo">Spector<span class="tm">™</span></div>
-    <p class="tagline">Eyes Forward.</p>
-    <p class="subtitle">A calm, spatially-aware teleprompter designed for smart glasses.</p>
-</header>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spector • Eyes Forward</title>
+    <title>Spector™ • Eyes Forward</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="manifest" href="manifest.json">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         .landing {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 60px 24px;
+            padding: 40px 20px;
             background: #0F0F0F;
         }
         .container {
             max-width: 620px;
             width: 100%;
-        }
-        header {
             text-align: center;
-            margin-bottom: 48px;
         }
         .logo {
-            font-size: 48px;
+            font-size: 42px;
             font-weight: 700;
             letter-spacing: -0.04em;
-            color: #E8E8E8;
             margin-bottom: 8px;
         }
         .tm {
-            font-size: 0.5em;
+            font-size: 0.55em;
             vertical-align: super;
-            opacity: 0.5;
+            margin-left: 3px;
+            opacity: 0.6;
         }
         .tagline {
-            font-size: 22px;
+            font-size: 21px;
             color: #E8D5B7;
-            font-weight: 600;
             margin: 0 0 8px;
+            font-weight: 600;
         }
         .subtitle {
             color: #888;
-            font-size: 16px;
-            max-width: 420px;
-            margin: 0 auto;
+            font-size: 15.5px;
+            margin-bottom: 48px;
         }
         .input-section {
             background: #1A1A1A;
             border-radius: 20px;
             padding: 32px;
-            border: 1px solid #333;
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         .input-section label {
             display: block;
@@ -67,24 +60,23 @@
         }
         textarea {
             width: 100%;
-            height: 200px;
+            height: 180px;
             background: #111;
-            border: 1px solid #444;
+            border: 1px solid #333;
             border-radius: 14px;
-            padding: 20px;
+            padding: 18px;
             color: #E8E8E8;
             font-size: 15.5px;
             resize: vertical;
             margin-bottom: 20px;
             outline: none;
             font-family: inherit;
-            line-height: 1.5;
         }
         textarea:focus {
-            border-color: #666;
+            border-color: #555;
         }
         .file-upload {
-            border: 1.5px dashed #555;
+            border: 1.5px dashed #444;
             border-radius: 14px;
             padding: 28px 20px;
             text-align: center;
@@ -95,12 +87,8 @@
             font-size: 15px;
         }
         .file-upload:hover {
-            border-color: #777;
+            border-color: #666;
             background: rgba(255,255,255,0.015);
-        }
-        .file-upload.dragover {
-            border-color: #E8D5B7;
-            background: rgba(232, 213, 183, 0.03);
         }
         .btn-primary {
             width: 100%;
@@ -118,17 +106,19 @@
             transform: scale(0.985);
             background: #D4B98A;
         }
-        footer {
-            text-align: center;
-            margin-top: 48px;
+        .footer {
+            margin-top: 40px;
+            font-size: 12px;
             color: #555;
-            font-size: 13px;
         }
     </style>
 </head>
 <body class="landing">
     <div class="container">
-        <header>
+        <!-- Three.js Floating Glasses -->
+        <div id="three-container" style="width: 100%; height: 220px; margin-bottom: 20px;"></div>
+
+        <header style="margin-bottom: 40px;">
             <div class="logo">Spector<span class="tm">™</span></div>
             <p class="tagline">Eyes Forward.</p>
             <p class="subtitle">A calm, spatially-aware teleprompter designed for smart glasses.</p>
@@ -146,12 +136,83 @@
             <button id="launch-btn" class="btn-primary">Open in Glasses Mode</button>
         </div>
 
-        <footer>
+        <div class="footer">
             Built for Meta Ray-Ban Display • Works in Developer Mode
-        </footer>
+        </div>
     </div>
 
     <script>
+        // Three.js Floating Glasses
+        function initThreeJS() {
+            const container = document.getElementById('three-container');
+            if (!container) return;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+
+            // Simple elegant glasses model
+            const glasses = new THREE.Group();
+
+            // Left frame
+            const leftFrame = new THREE.Mesh(
+                new THREE.TorusGeometry(0.9, 0.06, 16, 48),
+                new THREE.MeshPhongMaterial({ color: 0xE8D5B7, shininess: 30 })
+            );
+            leftFrame.position.x = -1.1;
+            glasses.add(leftFrame);
+
+            // Right frame
+            const rightFrame = leftFrame.clone();
+            rightFrame.position.x = 1.1;
+            glasses.add(rightFrame);
+
+            // Bridge
+            const bridge = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.05, 0.05, 0.9, 12),
+                new THREE.MeshPhongMaterial({ color: 0xE8D5B7, shininess: 30 })
+            );
+            bridge.rotation.z = Math.PI / 2;
+            glasses.add(bridge);
+
+            scene.add(glasses);
+
+            // Lighting
+            const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambient);
+            
+            const light = new THREE.DirectionalLight(0xffffff, 0.8);
+            light.position.set(5, 10, 5);
+            scene.add(light);
+
+            camera.position.z = 5;
+
+            let time = 0;
+            function animate() {
+                requestAnimationFrame(animate);
+                time += 0.016;
+
+                // Gentle floating + breathing
+                glasses.position.y = Math.sin(time * 0.8) * 0.12;
+                const scale = 1 + Math.sin(time * 0.6) * 0.012;
+                glasses.scale.set(scale, scale, scale);
+                glasses.rotation.y = Math.sin(time * 0.3) * 0.25;
+
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        }
+
+        // File upload + launch logic
         function initFileUpload() {
             const fileArea = document.getElementById('file-area');
             const fileInput = document.getElementById('file-input');
@@ -161,7 +222,7 @@
 
             fileInput.addEventListener('change', (e) => {
                 const file = e.target.files[0];
-                if (file && file.type === "text/plain") {
+                if (file) {
                     const reader = new FileReader();
                     reader.onload = (event) => textarea.value = event.target.result;
                     reader.readAsText(file);
@@ -172,9 +233,7 @@
                 e.preventDefault();
                 fileArea.classList.add('dragover');
             });
-
             fileArea.addEventListener('dragleave', () => fileArea.classList.remove('dragover'));
-
             fileArea.addEventListener('drop', (e) => {
                 e.preventDefault();
                 fileArea.classList.remove('dragover');
@@ -203,20 +262,21 @@
         }
 
         function init() {
+            initThreeJS();
             initFileUpload();
             initLaunchButton();
+
+            // PWA Service Worker
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('service-worker.js')
+                        .then(() => console.log('Service worker registered'))
+                        .catch(err => console.log('Service worker failed', err));
+                });
+            }
         }
 
         window.onload = init;
-
-        // PWA Service Worker
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('service-worker.js')
-                    .then(reg => console.log('Service worker registered'))
-                    .catch(err => console.log('Service worker failed', err));
-            });
-        }
     </script>
 </body>
 </html>
