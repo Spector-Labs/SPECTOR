@@ -6,7 +6,6 @@
     <title>Spector™ • Eyes Forward</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="manifest" href="manifest.json">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         body.landing {
             min-height: 100vh;
@@ -115,9 +114,6 @@
 </head>
 <body class="landing">
     <div class="container">
-        <!-- Three.js Glasses -->
-        <div id="three-container" style="width: 100%; height: 260px; margin-bottom: 10px;"></div>
-
         <header style="margin-bottom: 40px;">
             <div class="logo">Spector<span class="tm">™</span></div>
             <p class="tagline">Eyes Forward.</p>
@@ -142,123 +138,6 @@
     </div>
 
     <script>
-        function initThreeJS() {
-            const container = document.getElementById('three-container');
-            if (!container) return;
-
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setSize(container.clientWidth, container.clientHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            container.appendChild(renderer.domElement);
-
-            const glasses = new THREE.Group();
-
-            // Black frame material (like real Meta Ray-Ban)
-            const frameMat = new THREE.MeshPhongMaterial({
-                color: 0x1a1a1a,
-                shininess: 25,
-                specular: 0x333333
-            });
-
-            // Lens material
-            const lensMat = new THREE.MeshPhongMaterial({
-                color: 0x0a0a0a,
-                shininess: 60,
-                specular: 0x222222,
-                transparent: true,
-                opacity: 0.65
-            });
-
-            // === LEFT FRAME (more rectangular Wayfarer shape) ===
-            const leftFrame = new THREE.Mesh(
-                new THREE.BoxGeometry(2.1, 1.35, 0.18),
-                frameMat
-            );
-            leftFrame.position.x = -1.15;
-            glasses.add(leftFrame);
-
-            // === RIGHT FRAME ===
-            const rightFrame = leftFrame.clone();
-            rightFrame.position.x = 1.15;
-            glasses.add(rightFrame);
-
-            // === LENSES (slightly inset) ===
-            const leftLens = new THREE.Mesh(
-                new THREE.BoxGeometry(1.85, 1.15, 0.05),
-                lensMat
-            );
-            leftLens.position.x = -1.15;
-            leftLens.position.z = 0.1;
-            glasses.add(leftLens);
-
-            const rightLens = leftLens.clone();
-            rightLens.position.x = 1.15;
-            glasses.add(rightLens);
-
-            // === BRIDGE ===
-            const bridge = new THREE.Mesh(
-                new THREE.BoxGeometry(0.9, 0.22, 0.18),
-                frameMat
-            );
-            glasses.add(bridge);
-
-            // === TEMPLE ARMS ===
-            const leftTemple = new THREE.Mesh(
-                new THREE.BoxGeometry(0.12, 0.18, 2.6),
-                frameMat
-            );
-            leftTemple.position.set(-2.35, 0, -0.4);
-            leftTemple.rotation.set(0, 0.7, 0);
-            glasses.add(leftTemple);
-
-            const rightTemple = leftTemple.clone();
-            rightTemple.position.x = 2.35;
-            rightTemple.rotation.y = -0.7;
-            glasses.add(rightTemple);
-
-            scene.add(glasses);
-
-            // Lighting
-            const ambient = new THREE.AmbientLight(0xffffff, 0.6);
-            scene.add(ambient);
-
-            const keyLight = new THREE.DirectionalLight(0xffffff, 0.7);
-            keyLight.position.set(5, 8, 6);
-            scene.add(keyLight);
-
-            const fillLight = new THREE.DirectionalLight(0xaaaaaa, 0.4);
-            fillLight.position.set(-5, -3, -4);
-            scene.add(fillLight);
-
-            camera.position.z = 5.5;
-            camera.position.y = 0.2;
-
-            // Calm animation
-            let time = 0;
-            function animate() {
-                requestAnimationFrame(animate);
-                time += 0.016;
-
-                glasses.position.y = Math.sin(time * 0.55) * 0.06;
-                const breathe = 1 + Math.sin(time * 0.45) * 0.006;
-                glasses.scale.set(breathe, breathe, breathe);
-
-                glasses.rotation.y = Math.sin(time * 0.15) * 0.12;
-                glasses.rotation.x = Math.sin(time * 0.3) * 0.02;
-
-                renderer.render(scene, camera);
-            }
-            animate();
-
-            window.addEventListener('resize', () => {
-                camera.aspect = container.clientWidth / container.clientHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(container.clientWidth, container.clientHeight);
-            });
-        }
-
         function initFileUpload() {
             const fileArea = document.getElementById('file-area');
             const fileInput = document.getElementById('file-input');
@@ -308,7 +187,6 @@
         }
 
         function init() {
-            initThreeJS();
             initFileUpload();
             initLaunchButton();
 
