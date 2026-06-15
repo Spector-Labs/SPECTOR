@@ -237,8 +237,26 @@
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 280px;">
-                <button onclick="restartScript()" class="btn-primary" style="padding: 16px 32px;">Read Again</button>
-                <button onclick="goToLanding()" class="btn-secondary" style="padding: 16px 32px; background: rgba(255,255,255,0.06); color: #ccc;">New Script</button>
+                
+                <!-- Primary Button -->
+                <button onclick="restartScript()" class="btn-primary" style="padding: 16px 32px;">
+                    Read Again
+                </button>
+                
+                <!-- Secondary Button -->
+                <button onclick="goToLanding()" 
+                        style="padding: 16px 32px; 
+                               background: transparent; 
+                               color: #ccc; 
+                               border: 1px solid rgba(255,255,255,0.2); 
+                               border-radius: 9999px; 
+                               font-size: 15.5px; 
+                               font-weight: 500; 
+                               cursor: pointer;
+                               transition: all 0.2s ease;">
+                    New Script
+                </button>
+                
             </div>
         </div>
 
@@ -340,7 +358,7 @@
             return `${min}:${sec.toString().padStart(2, '0')}`;
         }
 
-        // ==================== BREATHING (Subtle) ====================
+        // ==================== BREATHING ====================
         function applyBreathing(element) {
             if (breathingFrame) cancelAnimationFrame(breathingFrame);
             if (currentMode !== 'comfort') return;
@@ -351,7 +369,7 @@
                 if (!isPlaying || currentMode !== 'comfort') return;
                 
                 const elapsed = (Date.now() - start) / 1000;
-                const scale = 1 + Math.sin(elapsed * 0.45) * 0.0045;   // More subtle
+                const scale = 1 + Math.sin(elapsed * 0.45) * 0.0045;
                 const y = Math.sin(elapsed * 0.36) * 1.6;
                 
                 element.style.transform = `translateY(${y}px) scale(${scale})`;
@@ -361,7 +379,7 @@
             animate();
         }
 
-        // ==================== DESKTOP DRAG + INERTIA ====================
+        // ==================== DESKTOP DRAG FALLBACK ====================
         function setupDesktopDrag() {
             const display = document.getElementById('chunk-display');
             const chunkEl = document.getElementById('active-chunk');
@@ -485,7 +503,7 @@
                 velocityX = 0;
                 velocityY = 0;
             } else {
-                // COMFORT MODE: Breathing + drag enabled
+                // COMFORT MODE: Enable breathing + spatial
                 chunkEl.style.transition = 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
                 applyBreathing(chunkEl);
             }
