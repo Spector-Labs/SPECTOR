@@ -56,6 +56,7 @@
             text-align: center;
             position: relative;
             cursor: grab;
+            user-select: none;
         }
         .chunk-display:active {
             cursor: grabbing;
@@ -187,9 +188,9 @@
             <button class="mode-btn" data-mode="focus">Focus</button>
         </div>
 
-        <!-- Fallback Notice (Desktop) -->
+        <!-- Desktop Fallback Notice -->
         <div class="fallback-notice" id="fallback-notice">
-            Desktop mode • Drag to simulate head movement
+            Desktop testing mode • Drag to simulate head movement
         </div>
 
         <!-- Chunk Display -->
@@ -253,9 +254,14 @@
         let currentMode = 'comfort';
         let startTime = null;
 
-        let orientationListener = null;
         let breathingFrame = null;
-        let isDesktopFallback = false;
+        let isDragging = false;
+        let lastMouseX = 0;
+        let lastMouseY = 0;
+        let currentTranslateX = 0;
+        let currentTranslateY = 0;
+        let velocityX = 0;
+        let velocityY = 0;
 
         // ==================== HAPTICS ====================
         const Haptics = {
@@ -334,9 +340,10 @@
             return `${min}:${sec.toString().padStart(2, '0')}`;
         }
 
-        // ==================== IMPROVED BREATHING ====================
+        // ==================== BREATHING ====================
         function applyBreathing(element) {
             if (breathingFrame) cancelAnimationFrame(breathingFrame);
+            if (currentMode !== 'comfort') return;
             
             let start = Date.now();
             
@@ -354,123 +361,72 @@
             animate();
         }
 
-        // ==================== IMPROVED SPATIAL ANCHORING MATH ====================
-        function setupSpatialAnchoring() {
+        // ==================== DESKTOP MOUSE DRAG (Fallback) ====================
+        function setupDesktopDrag() {
+            const display = document.getElementById('chunk-display');
             const chunkEl = document.getElementById('active-chunk');
             const notice = document.getElementById('fallback-notice');
 
-            // Check if device orientation is supported
-            if (!window.DeviceOrientationEvent) {
-                enableDesktopFallback(chunkEl, notice);
-                return;
-            }
-
-            let lastBeta = 0;
-            let lastGamma = 0;
-            let velocityX = 0;
-            let velocityY = 0;
-
-            orientationListener = (event) => {
-                if (!isPlaying || currentMode !== 'comfort') return;
-
-                const beta = event.beta || 0;
-                const gamma = event.gamma || 0;
-
-                // Low-pass filter with better tuning (alpha = 0.08)
-                const alpha = 0.08;
-                const smoothBeta = lastBeta * (1 - alpha) + beta * alpha;
-                const smoothGamma = lastGamma * (1 - alpha) + gamma * alpha;
-
-                lastBeta = smoothBeta;
-                lastGamma = smoothGamma;
-
-                const deadzone = 5.5;
-                let targetX = 0;
-                let targetY = 0;
-
-                if (Math.abs(smoothGamma) > deadzone) {
-                    targetX = (smoothGamma - Math.sign(smoothGamma) * deadzone) * 0.45;
-                }
-                if (Math.abs(smoothBeta) > deadzone) {
-                    targetY = (smoothBeta - Math.sign(smoothBeta) * deadzone) * 0.30;
-                }
-
-                // Add slight inertia for smoother feel
-                velocityX = velocityX * 0.85 + (targetX - velocityX) * 0.15;
-                velocityY = velocityY * 0.85 + (targetY - velocityY) * 0.15;
-
-                chunkEl.style.transform = `translate(${velocityX}px, ${velocityY}px)`;
-            };
-
-            window.addEventListener('deviceorientation', orientationListener);
-        }
-
-        // ==================== DESKTOP FALLBACK (Mouse Drag with Inertia) ====================
-        function enableDesktopFallback(chunkEl, notice) {
-            isDesktopFallback = true;
+            // Show notice on desktop
             notice.style.display = 'block';
 
-            let isDragging = false;
-            let lastX = 0;
-            let lastY = 0;
-            let currentX = 0;
-            let currentY = 0;
-            let velocityX = 0;
-            let velocityY = 0;
-
-            const animate = () => {
-                if (!isDragging && (Math.abs(velocityX) > 0.1 || Math.abs(velocityY) > 0.1)) {
-                    currentX += velocityX;
-                    currentY += velocityY;
-                    velocityX *= 0.92; // inertia decay
-                    velocityY *= 0.92;
-                    chunkEl.style.transform = `translate(${currentX}px, ${currentY}px)`;
-                    requestAnimationFrame(animate);
-                }
-            };
-
-            chunkEl.addEventListener('mousedown', (e) => {
+            display.addEventListener('mousedown', (e) => {
+                if (currentMode !== 'comfort' || !isPlaying) return;
                 isDragging = true;
-                lastX = e.clientX;
-                lastY = e.clientY;
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
                 velocityX = 0;
                 velocityY = 0;
             });
 
             window.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
+                if (!isDragging || currentMode !== 'comfort' || !isPlaying) return;
 
-                const deltaX = e.clientX - lastX;
-                const deltaY = e.clientY - lastY;
+                const deltaX = e.clientX - lastMouseX;
+                const deltaY = e.clientY - lastMouseY;
 
-                currentX += deltaX * 1.2;
-                currentY += deltaY * 1.2;
+                currentTranslateX += deltaX * 1.1;
+                currentTranslateY += deltaY * 1.1;
 
-                velocityX = deltaX * 0.6;
-                velocityY = deltaY * 0.6;
+                velocityX = deltaX * 0.7;
+                velocityY = deltaY * 0.7;
 
-                chunkEl.style.transform = `translate(${currentX}px, ${currentY}px)`;
+                chunkEl.style.transform = `translate(${currentTranslateX}px, ${currentTranslateY}px)`;
 
-                lastX = e.clientX;
-                lastY = e.clientY;
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
             });
 
             window.addEventListener('mouseup', () => {
+                if (!isDragging) return;
                 isDragging = false;
-                requestAnimationFrame(animate);
+
+                // Apply inertia
+                const inertia = () => {
+                    if (Math.abs(velocityX) < 0.3 && Math.abs(velocityY) < 0.3) return;
+                    if (currentMode !== 'comfort' || !isPlaying) return;
+
+                    currentTranslateX += velocityX;
+                    currentTranslateY += velocityY;
+                    velocityX *= 0.92;
+                    velocityY *= 0.92;
+
+                    chunkEl.style.transform = `translate(${currentTranslateX}px, ${currentTranslateY}px)`;
+                    requestAnimationFrame(inertia);
+                };
+                requestAnimationFrame(inertia);
             });
 
-            // Keyboard fallback (arrow keys)
+            // Keyboard support
             document.addEventListener('keydown', (e) => {
-                if (!isPlaying || currentMode !== 'comfort') return;
+                if (currentMode !== 'comfort' || !isPlaying) return;
+                const step = 22;
+                if (e.key === 'ArrowLeft') currentTranslateX -= step;
+                if (e.key === 'ArrowRight') currentTranslateX += step;
+                if (e.key === 'ArrowUp') currentTranslateY -= step;
+                if (e.key === 'ArrowDown') currentTranslateY += step;
 
-                const step = 18;
-                if (e.key === 'ArrowLeft') currentX -= step;
-                if (e.key === 'ArrowRight') currentX += step;
-                if (e.key === 'ArrowUp') currentY -= step;
-                if (e.key === 'ArrowDown') currentY += step;
-
-                chunkEl.style.transform = `translate(${currentX}px, ${currentY}px)`;
+                chunkEl.style.transform = `translate(${currentTranslateX}px, ${currentTranslateY}px)`;
             });
         }
 
@@ -512,25 +468,29 @@
             }
         }
 
-        // ==================== MODE ====================
+        // ==================== MODE SWITCHING ====================
         function applyMode(mode) {
             currentMode = mode;
             const chunkEl = document.getElementById('active-chunk');
-            
+            const display = document.getElementById('chunk-display');
+
             document.querySelectorAll('.mode-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.mode === mode);
             });
 
             if (mode === 'focus') {
+                // Focus mode: static, no movement, no breathing
                 chunkEl.style.transition = 'transform 0.2s ease';
-                if (orientationListener) {
-                    window.removeEventListener('deviceorientation', orientationListener);
-                }
+                if (breathingFrame) cancelAnimationFrame(breathingFrame);
+                chunkEl.style.transform = 'translateY(0) scale(1)';
+                currentTranslateX = 0;
+                currentTranslateY = 0;
+                velocityX = 0;
+                velocityY = 0;
             } else {
-                chunkEl.style.transition = 'transform 0.6s cubic-bezier(0.23,1,0.32,1)';
-                if (!isDesktopFallback) {
-                    setupSpatialAnchoring();
-                }
+                // Comfort mode: enable breathing + spatial
+                chunkEl.style.transition = 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
+                applyBreathing(chunkEl);
             }
             
             Haptics.modeChange();
@@ -578,9 +538,9 @@
 
         function setupAutoHide() {
             const controls = document.getElementById('controls');
-            const chunkArea = document.getElementById('chunk-display');
+            const display = document.getElementById('chunk-display');
 
-            chunkArea.addEventListener('click', () => {
+            display.addEventListener('click', () => {
                 if (controls.classList.contains('hidden')) {
                     showControls();
                 } else {
@@ -607,6 +567,8 @@
             currentIndex = 0;
             isPlaying = false;
             startTime = null;
+            currentTranslateX = 0;
+            currentTranslateY = 0;
             document.getElementById('play-btn').textContent = '▶';
             updateActiveChunk();
         }
@@ -630,10 +592,12 @@
             renderChunks();
             updateActiveChunk();
 
+            // Mode buttons
             document.querySelectorAll('.mode-btn').forEach(btn => {
                 btn.addEventListener('click', () => applyMode(btn.dataset.mode));
             });
 
+            // Playback
             document.getElementById('play-btn').addEventListener('click', togglePlay);
             document.getElementById('rewind-btn').addEventListener('click', () => {
                 if (currentIndex > 0) currentIndex = Math.max(0, currentIndex - 2);
@@ -644,6 +608,7 @@
                 updateActiveChunk();
             });
 
+            // Keyboard
             document.addEventListener('keydown', (e) => {
                 if (e.key === ' ' || e.key === 'k') {
                     e.preventDefault();
@@ -657,8 +622,8 @@
 
             setupSpeedPresets();
             setupAutoHide();
-            setupSpatialAnchoring();
-            applyMode('comfort');
+            setupDesktopDrag();           // Always enable desktop drag for testing
+            applyMode('comfort');         // Start in Comfort mode
 
             setTimeout(showControls, 800);
         }
