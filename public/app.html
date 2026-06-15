@@ -340,7 +340,7 @@
             return `${min}:${sec.toString().padStart(2, '0')}`;
         }
 
-        // ==================== BREATHING ====================
+        // ==================== BREATHING (Subtle) ====================
         function applyBreathing(element) {
             if (breathingFrame) cancelAnimationFrame(breathingFrame);
             if (currentMode !== 'comfort') return;
@@ -351,8 +351,8 @@
                 if (!isPlaying || currentMode !== 'comfort') return;
                 
                 const elapsed = (Date.now() - start) / 1000;
-                const scale = 1 + Math.sin(elapsed * 0.48) * 0.005;
-                const y = Math.sin(elapsed * 0.38) * 1.8;
+                const scale = 1 + Math.sin(elapsed * 0.45) * 0.0045;   // More subtle
+                const y = Math.sin(elapsed * 0.36) * 1.6;
                 
                 element.style.transform = `translateY(${y}px) scale(${scale})`;
                 breathingFrame = requestAnimationFrame(animate);
@@ -361,13 +361,12 @@
             animate();
         }
 
-        // ==================== DESKTOP MOUSE DRAG (Fallback) ====================
+        // ==================== DESKTOP DRAG + INERTIA ====================
         function setupDesktopDrag() {
             const display = document.getElementById('chunk-display');
             const chunkEl = document.getElementById('active-chunk');
             const notice = document.getElementById('fallback-notice');
 
-            // Show notice on desktop
             notice.style.display = 'block';
 
             display.addEventListener('mousedown', (e) => {
@@ -385,11 +384,11 @@
                 const deltaX = e.clientX - lastMouseX;
                 const deltaY = e.clientY - lastMouseY;
 
-                currentTranslateX += deltaX * 1.1;
-                currentTranslateY += deltaY * 1.1;
+                currentTranslateX += deltaX * 1.05;
+                currentTranslateY += deltaY * 1.05;
 
-                velocityX = deltaX * 0.7;
-                velocityY = deltaY * 0.7;
+                velocityX = deltaX * 0.65;
+                velocityY = deltaY * 0.65;
 
                 chunkEl.style.transform = `translate(${currentTranslateX}px, ${currentTranslateY}px)`;
 
@@ -401,26 +400,25 @@
                 if (!isDragging) return;
                 isDragging = false;
 
-                // Apply inertia
-                const inertia = () => {
-                    if (Math.abs(velocityX) < 0.3 && Math.abs(velocityY) < 0.3) return;
+                const applyInertia = () => {
+                    if (Math.abs(velocityX) < 0.25 && Math.abs(velocityY) < 0.25) return;
                     if (currentMode !== 'comfort' || !isPlaying) return;
 
                     currentTranslateX += velocityX;
                     currentTranslateY += velocityY;
-                    velocityX *= 0.92;
-                    velocityY *= 0.92;
+                    velocityX *= 0.91;
+                    velocityY *= 0.91;
 
                     chunkEl.style.transform = `translate(${currentTranslateX}px, ${currentTranslateY}px)`;
-                    requestAnimationFrame(inertia);
+                    requestAnimationFrame(applyInertia);
                 };
-                requestAnimationFrame(inertia);
+                requestAnimationFrame(applyInertia);
             });
 
             // Keyboard support
             document.addEventListener('keydown', (e) => {
                 if (currentMode !== 'comfort' || !isPlaying) return;
-                const step = 22;
+                const step = 20;
                 if (e.key === 'ArrowLeft') currentTranslateX -= step;
                 if (e.key === 'ArrowRight') currentTranslateX += step;
                 if (e.key === 'ArrowUp') currentTranslateY -= step;
@@ -472,23 +470,22 @@
         function applyMode(mode) {
             currentMode = mode;
             const chunkEl = document.getElementById('active-chunk');
-            const display = document.getElementById('chunk-display');
 
             document.querySelectorAll('.mode-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.mode === mode);
             });
 
             if (mode === 'focus') {
-                // Focus mode: static, no movement, no breathing
-                chunkEl.style.transition = 'transform 0.2s ease';
+                // FOCUS MODE: Completely static
                 if (breathingFrame) cancelAnimationFrame(breathingFrame);
+                chunkEl.style.transition = 'transform 0.2s ease';
                 chunkEl.style.transform = 'translateY(0) scale(1)';
                 currentTranslateX = 0;
                 currentTranslateY = 0;
                 velocityX = 0;
                 velocityY = 0;
             } else {
-                // Comfort mode: enable breathing + spatial
+                // COMFORT MODE: Breathing + drag enabled
                 chunkEl.style.transition = 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
                 applyBreathing(chunkEl);
             }
@@ -592,12 +589,10 @@
             renderChunks();
             updateActiveChunk();
 
-            // Mode buttons
             document.querySelectorAll('.mode-btn').forEach(btn => {
                 btn.addEventListener('click', () => applyMode(btn.dataset.mode));
             });
 
-            // Playback
             document.getElementById('play-btn').addEventListener('click', togglePlay);
             document.getElementById('rewind-btn').addEventListener('click', () => {
                 if (currentIndex > 0) currentIndex = Math.max(0, currentIndex - 2);
@@ -608,7 +603,6 @@
                 updateActiveChunk();
             });
 
-            // Keyboard
             document.addEventListener('keydown', (e) => {
                 if (e.key === ' ' || e.key === 'k') {
                     e.preventDefault();
@@ -622,8 +616,8 @@
 
             setupSpeedPresets();
             setupAutoHide();
-            setupDesktopDrag();           // Always enable desktop drag for testing
-            applyMode('comfort');         // Start in Comfort mode
+            setupDesktopDrag();
+            applyMode('comfort');
 
             setTimeout(showControls, 800);
         }
