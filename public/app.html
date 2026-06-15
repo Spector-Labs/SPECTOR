@@ -55,6 +55,10 @@
             padding: 40px 60px;
             text-align: center;
             position: relative;
+            cursor: grab;
+        }
+        .chunk-display:active {
+            cursor: grabbing;
         }
         .chunk {
             font-size: 42px;
@@ -160,19 +164,17 @@
         .end-screen.show {
             display: flex;
         }
-        .end-check {
-            width: 64px;
-            height: 64px;
+        .fallback-notice {
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,0.06);
+            color: #888;
+            font-size: 12px;
+            padding: 4px 12px;
             border-radius: 9999px;
-            background: rgba(232, 213, 183, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 24px;
-        }
-        .end-check span {
-            font-size: 32px;
-            color: #E8D5B7;
+            display: none;
         }
     </style>
 </head>
@@ -183,6 +185,11 @@
         <div class="mode-switcher">
             <button class="mode-btn active" data-mode="comfort">Comfort</button>
             <button class="mode-btn" data-mode="focus">Focus</button>
+        </div>
+
+        <!-- Fallback Notice (Desktop) -->
+        <div class="fallback-notice" id="fallback-notice">
+            Desktop mode • Drag to simulate head movement
         </div>
 
         <!-- Chunk Display -->
@@ -248,6 +255,7 @@
 
         let orientationListener = null;
         let breathingFrame = null;
+        let isDesktopFallback = false;
 
         // ==================== HAPTICS ====================
         const Haptics = {
@@ -326,7 +334,7 @@
             return `${min}:${sec.toString().padStart(2, '0')}`;
         }
 
-        // ==================== IMPROVED BREATHING (Much More Subtle) ====================
+        // ==================== IMPROVED BREATHING ====================
         function applyBreathing(element) {
             if (breathingFrame) cancelAnimationFrame(breathingFrame);
             
@@ -336,8 +344,6 @@
                 if (!isPlaying || currentMode !== 'comfort') return;
                 
                 const elapsed = (Date.now() - start) / 1000;
-                
-                // Much more subtle and organic breathing
                 const scale = 1 + Math.sin(elapsed * 0.48) * 0.005;
                 const y = Math.sin(elapsed * 0.38) * 1.8;
                 
@@ -348,43 +354,124 @@
             animate();
         }
 
-        // ==================== IMPROVED SPATIAL ANCHORING (Smoother) ====================
+        // ==================== IMPROVED SPATIAL ANCHORING MATH ====================
         function setupSpatialAnchoring() {
-            if (!window.DeviceOrientationEvent) return;
+            const chunkEl = document.getElementById('active-chunk');
+            const notice = document.getElementById('fallback-notice');
+
+            // Check if device orientation is supported
+            if (!window.DeviceOrientationEvent) {
+                enableDesktopFallback(chunkEl, notice);
+                return;
+            }
 
             let lastBeta = 0;
             let lastGamma = 0;
+            let velocityX = 0;
+            let velocityY = 0;
 
             orientationListener = (event) => {
                 if (!isPlaying || currentMode !== 'comfort') return;
 
-                const chunkEl = document.getElementById('active-chunk');
-                if (!chunkEl) return;
-
                 const beta = event.beta || 0;
                 const gamma = event.gamma || 0;
 
-                // Stronger smoothing for less jitter
-                const smoothBeta = lastBeta * 0.92 + beta * 0.08;
-                const smoothGamma = lastGamma * 0.92 + gamma * 0.08;
+                // Low-pass filter with better tuning (alpha = 0.08)
+                const alpha = 0.08;
+                const smoothBeta = lastBeta * (1 - alpha) + beta * alpha;
+                const smoothGamma = lastGamma * (1 - alpha) + gamma * alpha;
 
                 lastBeta = smoothBeta;
                 lastGamma = smoothGamma;
 
-                const deadzone = 6;
-                let x = 0, y = 0;
+                const deadzone = 5.5;
+                let targetX = 0;
+                let targetY = 0;
 
                 if (Math.abs(smoothGamma) > deadzone) {
-                    x = (smoothGamma - Math.sign(smoothGamma) * deadzone) * 0.48;
+                    targetX = (smoothGamma - Math.sign(smoothGamma) * deadzone) * 0.45;
                 }
                 if (Math.abs(smoothBeta) > deadzone) {
-                    y = (smoothBeta - Math.sign(smoothBeta) * deadzone) * 0.32;
+                    targetY = (smoothBeta - Math.sign(smoothBeta) * deadzone) * 0.30;
                 }
 
-                chunkEl.style.transform = `translate(${x}px, ${y}px)`;
+                // Add slight inertia for smoother feel
+                velocityX = velocityX * 0.85 + (targetX - velocityX) * 0.15;
+                velocityY = velocityY * 0.85 + (targetY - velocityY) * 0.15;
+
+                chunkEl.style.transform = `translate(${velocityX}px, ${velocityY}px)`;
             };
 
             window.addEventListener('deviceorientation', orientationListener);
+        }
+
+        // ==================== DESKTOP FALLBACK (Mouse Drag with Inertia) ====================
+        function enableDesktopFallback(chunkEl, notice) {
+            isDesktopFallback = true;
+            notice.style.display = 'block';
+
+            let isDragging = false;
+            let lastX = 0;
+            let lastY = 0;
+            let currentX = 0;
+            let currentY = 0;
+            let velocityX = 0;
+            let velocityY = 0;
+
+            const animate = () => {
+                if (!isDragging && (Math.abs(velocityX) > 0.1 || Math.abs(velocityY) > 0.1)) {
+                    currentX += velocityX;
+                    currentY += velocityY;
+                    velocityX *= 0.92; // inertia decay
+                    velocityY *= 0.92;
+                    chunkEl.style.transform = `translate(${currentX}px, ${currentY}px)`;
+                    requestAnimationFrame(animate);
+                }
+            };
+
+            chunkEl.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                lastX = e.clientX;
+                lastY = e.clientY;
+                velocityX = 0;
+                velocityY = 0;
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+
+                const deltaX = e.clientX - lastX;
+                const deltaY = e.clientY - lastY;
+
+                currentX += deltaX * 1.2;
+                currentY += deltaY * 1.2;
+
+                velocityX = deltaX * 0.6;
+                velocityY = deltaY * 0.6;
+
+                chunkEl.style.transform = `translate(${currentX}px, ${currentY}px)`;
+
+                lastX = e.clientX;
+                lastY = e.clientY;
+            });
+
+            window.addEventListener('mouseup', () => {
+                isDragging = false;
+                requestAnimationFrame(animate);
+            });
+
+            // Keyboard fallback (arrow keys)
+            document.addEventListener('keydown', (e) => {
+                if (!isPlaying || currentMode !== 'comfort') return;
+
+                const step = 18;
+                if (e.key === 'ArrowLeft') currentX -= step;
+                if (e.key === 'ArrowRight') currentX += step;
+                if (e.key === 'ArrowUp') currentY -= step;
+                if (e.key === 'ArrowDown') currentY += step;
+
+                chunkEl.style.transform = `translate(${currentX}px, ${currentY}px)`;
+            });
         }
 
         // ==================== PLAYBACK ====================
@@ -441,7 +528,9 @@
                 }
             } else {
                 chunkEl.style.transition = 'transform 0.6s cubic-bezier(0.23,1,0.32,1)';
-                setupSpatialAnchoring();
+                if (!isDesktopFallback) {
+                    setupSpatialAnchoring();
+                }
             }
             
             Haptics.modeChange();
