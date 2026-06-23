@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>SW Prime</title></head>
+<body>
+<pre id="prime-result">pending</pre>
+<script>
+/* Register shipped sw.js without awaiting (headless-safe), poll cache + controller, verify shell. */
+(function() {
+    var out = document.getElementById('prime-result');
+    var result = { phase: 'prime', pass: false, steps: [] };
+    var origin = location.origin;
+    var deadline = Date.now() + 18000;
+    var attempts = 0;
+
+    function finish() {
+        out.textContent = JSON.stringify(result, null, 2);
+        document.title = result.pass ? 'SWPrime: PASS' : 'SWPrime: FAIL';
+    }
+
+    function probe() {
+        return caches.match(origin + '/app.html').then(function(shell) {
+            result.steps.push({ step: 'cache-shell', ok: !!shell, url: origin + '/app.html' });
+            result.steps.push({ step: 'controller', ok: !!navigator.serviceWorker.controller });
+            return fetch(origin + '/app.html?script=probe');
+        }).then(function(r) {
+            return r.text().then(function(t) {
+                result.steps.push({ step: 'fetch-shell', status: r.status, hasPlayer: t.indexOf('play-btn') >= 0 });
+                var cacheOk = result.steps.some(function(s) { return s.step === 'cache-shell' && s.ok; });
+                var fetchOk = result.steps.some(function(s) { return s.step === 'fetch-shell' && s.hasPlayer; });
+                result.pass = cacheOk && fetchOk;
+                finish();
+            });
+        });
+    }
+
+    if (!('serviceWorker' in navigator)) {
+        result.error = 'no serviceWorker';
+        return finish();
+    }
+
+    try {
+        navigator.serviceWorker.register('/sw.js');
+        result.steps.push({ step: 'register-fired', ok: true });
+    } catch (e) {
+        result.error = String(e);
+        return finish();
+    }
+
+    function poll() {
+        attempts++;
+        if (Date.now() > deadline) {
+            result.error = 'poll timeout after ' + attempts + ' attempts';
+            result.steps.push({ step: 'poll-attempts', count: attempts });
+            return finish();
+        }
+        caches.match(origin + '/app.html').then(function(shell) {
+            var ctrl = !!navigator.serviceWorker.controller;
+            if (shell && ctrl) return probe();
+            setTimeout(poll, 250);
+        }).catch(function() { setTimeout(poll, 250); });
+    }
+
+    poll();
+})();
+</script>
+</body>
+</html>

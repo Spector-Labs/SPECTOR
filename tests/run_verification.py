@@ -88,7 +88,7 @@ class HttpServer:
     def capture_window(self, seconds: float, label: str) -> str:
         start = time.time()
         # trigger access lines
-        for path in ("index.html", "app.html", "style.css"):
+        for path in ("index.html", "app.html", "style.css", "app.html?script=dGVzdA=="):
             try:
                 self.request(path)
             except Exception:
@@ -122,6 +122,26 @@ def find_browser() -> Path | None:
         return EDGE
     chrome = Path(r"C:\Program Files\Google\Chrome\Application\chrome.exe")
     return chrome if chrome.is_file() else None
+
+
+def edge_visit(url: str, profile: Path, seconds: float = 6.0):
+    browser = find_browser()
+    if not browser:
+        return
+    cmd = [
+        str(browser), "--disable-gpu", "--no-sandbox", "--no-first-run",
+        "--disable-background-timer-throttling",
+        f"--user-data-dir={str(profile).replace(chr(92), '/')}",
+        "--window-size=500,400", "--window-position=-3000,-3000",
+        url,
+    ]
+    proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    time.sleep(seconds)
+    proc.terminate()
+    try:
+        proc.wait(timeout=3)
+    except subprocess.TimeoutExpired:
+        proc.kill()
 
 
 def edge_dump(url: str, dump_path: Path, profile: Path | None = None, budget: int = 10000) -> str:
@@ -242,7 +262,7 @@ def step3_pwa_tests(server: HttpServer):
     # Offline SW — real sw.js registration with persistent profile
     sw_src = (PUBLIC / "sw.js").read_text(encoding="utf-8")
     lines += ["", "=== OFFLINE SW (shipped sw.js) ==="]
-    for token in ("spector-v2", "shellForPath", "addEventListener('fetch'", "./app.html"):
+    for token in ("spector-v3", "shellPathFor", "addEventListener('fetch'", "/app.html"):
         lines.append(f"  sw.js has '{token}': {token in sw_src}")
 
     if browser:
@@ -250,31 +270,38 @@ def step3_pwa_tests(server: HttpServer):
             shutil.rmtree(EDGE_PROFILE, ignore_errors=True)
         EDGE_PROFILE.mkdir(parents=True, exist_ok=True)
 
-        # Register real sw.js via index.html (same as production path)
-        edge_dump(f"{BASE_URL}/index.html", SCRATCH / "sw-index.html", profile=EDGE_PROFILE, budget=12000)
-        time.sleep(1)
+        # Headless Edge cannot await serviceWorker.register(); prime with visible Edge first.
+        lines.append("PRIME: non-headless index.html visits (SW install + cache)")
+        edge_visit(f"{BASE_URL}/index.html", EDGE_PROFILE, seconds=6.0)
+        edge_visit(f"{BASE_URL}/index.html", EDGE_PROFILE, seconds=3.0)
 
-        reg_dump = ""
-        online = {}
-        for budget in (15000, 25000, 40000):
-            reg_dump = edge_dump(f"{BASE_URL}/verify-sw.html", SCRATCH / "sw-register.html",
-                                 profile=EDGE_PROFILE, budget=budget)
-            m = re.search(r'<pre id="offline-result">(.*?)</pre>', reg_dump, re.DOTALL)
-            if m:
-                raw = html.unescape(m.group(1).strip())
-                if not raw.startswith("pending") and raw.startswith("{"):
-                    try:
-                        online = json.loads(raw)
-                        break
-                    except json.JSONDecodeError:
-                        pass
-        if online:
-            lines.append("ONLINE cache-probe:")
-            lines.append(json.dumps(online, indent=2))
-            if not online.get("pass"):
-                lines.append("NOTE: online cache-probe incomplete; continuing offline test")
+        prime_dump = edge_dump(
+            f"{BASE_URL}/sw-prime.html", SCRATCH / "sw-prime.html",
+            profile=EDGE_PROFILE, budget=35000,
+        )
+        prime = {}
+        m = re.search(r'<pre id="prime-result">(.*?)</pre>', prime_dump, re.DOTALL)
+        if m:
+            raw = html.unescape(m.group(1).strip())
+            if raw.startswith("{"):
+                try:
+                    prime = json.loads(raw)
+                except json.JSONDecodeError:
+                    pass
+        if prime:
+            lines.append("ONLINE sw-prime:")
+            lines.append(json.dumps(prime, indent=2))
+            if not prime.get("pass"):
+                fail("sw-prime did not pass online cache registration")
         else:
-            lines.append(f"verify-sw dump snippet: {reg_dump[:500]}")
+            lines.append(f"sw-prime dump snippet: {prime_dump[:500]}")
+            fail("sw-prime produced no parseable result")
+
+        online_dump = edge_dump(
+            f"{BASE_URL}/app.html?script=SGVsbG8u",
+            SCRATCH / "sw-online-player.html", profile=EDGE_PROFILE, budget=20000,
+        )
+        lines.append(f"ONLINE player warm (play-btn): {'play-btn' in online_dump}")
 
         server.stop()
         time.sleep(0.5)
@@ -282,7 +309,7 @@ def step3_pwa_tests(server: HttpServer):
 
         off_dump = edge_dump(
             f"{BASE_URL}/app.html?script=SGVsbG8u",
-            SCRATCH / "sw-offline.html", profile=EDGE_PROFILE, budget=20000,
+            SCRATCH / "sw-offline.html", profile=EDGE_PROFILE, budget=25000,
         )
         title_m = re.search(r"<title>([^<]*)</title>", off_dump)
         off_title = title_m.group(1) if title_m else ""
@@ -291,8 +318,8 @@ def step3_pwa_tests(server: HttpServer):
         lines.append(f"OFFLINE title: {off_title!r}")
         lines.append(f"OFFLINE shell served (play-btn): {offline_player}")
         lines.append(f"OFFLINE 503/offline fallback: {offline_503}")
-        if not offline_player and not offline_503:
-            fail("offline SW did not serve shell or offline response")
+        if not offline_player:
+            fail("offline SW did not serve app.html shell (play-btn missing)")
 
         server.start()
     else:
@@ -352,8 +379,23 @@ def step_static_verify():
         fail("runSpectorCoreTests(); should have exactly one call site")
     if "removeEventListener('deviceorientation'" not in app:
         fail("missing deviceorientation removeEventListener")
-    if "teardownSpatialAnchoring();" not in app.split("function setupSpatialAnchoring")[1][:200]:
-        fail("setupSpatialAnchoring should call teardown first")
+    setup_block = app.split("function setupSpatialAnchoring")[1][:300]
+    if "if (spatialAnchoringReady) return" not in setup_block:
+        fail("setupSpatialAnchoring should guard with spatialAnchoringReady")
+
+
+def spector_changed_files() -> str:
+    lines = [meta(0), "=== SPECTOR CHANGED FILES (harness honesty) ===", f"repo: {ROOT}", ""]
+    for cmd in (
+        ["git", "-C", str(ROOT), "ls-files"],
+        ["git", "-C", str(ROOT), "diff", "--name-only", "HEAD~4..HEAD"],
+        ["git", "-C", str(ROOT), "log", "-4", "--name-only", "--pretty=format:commit %h"],
+    ):
+        lines.append(f"$ {' '.join(cmd)}")
+        p = subprocess.run(cmd, capture_output=True, text=True)
+        lines.append((p.stdout or p.stderr or "").strip())
+        lines.append("")
+    return "\n".join(lines)
 
 
 def git_evidence() -> str:
@@ -373,6 +415,7 @@ def git_evidence() -> str:
 
 def write_bundle():
     ARTIFACTS["git-evidence.txt"] = git_evidence()
+    ARTIFACTS["SPECTOR-changed-files.txt"] = spector_changed_files()
     ARTIFACTS["verify-static-output.txt"] = "\n".join([
         meta(0),
         "=== verify_static (orchestrator inline) ===",

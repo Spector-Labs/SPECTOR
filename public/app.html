@@ -360,7 +360,7 @@
 
     function setupSpatialAnchoring() {
         if (!window.DeviceOrientationEvent) return;
-        teardownSpatialAnchoring();
+        if (spatialAnchoringReady) return;
         spatialHandler = (event) => {
             if (!isPlaying) return;
             const rawBeta = event.beta || 0;

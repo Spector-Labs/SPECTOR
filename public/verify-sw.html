@@ -4,28 +4,36 @@
 <body>
 <pre id="offline-result">pending</pre>
 <script>
-/* Cache + fetch probe after index.html registered shipped sw.js in same profile. */
+/* Cache + fetch probe after sw-prime.html registered shipped sw.js in same profile. */
 (function() {
     var out = document.getElementById('offline-result');
     var result = { phase: 'cache-probe', pass: false, steps: [] };
+    var origin = location.origin;
+
     function finish() {
         out.textContent = JSON.stringify(result, null, 2);
         document.title = result.pass ? 'SWVerify: PASS' : 'SWVerify: FAIL';
     }
+
     if (!('serviceWorker' in navigator)) {
         result.error = 'no serviceWorker';
         return finish();
     }
+
     result.steps.push({ step: 'controller', ok: !!navigator.serviceWorker.controller });
-    caches.match('./app.html').then(function(shell) {
-        return caches.match(location.origin + '/app.html?script=probe').then(function(exact) {
-            result.steps.push({ step: 'cache', shellHit: !!shell, exactQueryMiss: !exact });
-            return fetch('./app.html?script=probe');
+
+    caches.match(origin + '/app.html').then(function(shell) {
+        return caches.match(origin + '/app.html?script=probe').then(function(exact) {
+            result.steps.push({ step: 'cache', shellHit: !!shell, exactQueryMiss: !exact, url: origin + '/app.html' });
+            return fetch(origin + '/app.html?script=probe');
         });
     }).then(function(r) {
         return r.text().then(function(t) {
             result.steps.push({ step: 'fetch', status: r.status, hasPlayer: t.indexOf('play-btn') >= 0 });
-            result.pass = !!result.steps[0].ok && result.steps[1].shellHit && result.steps[1].exactQueryMiss && result.steps[2].hasPlayer;
+            var ctrl = result.steps.find(function(s) { return s.step === 'controller'; });
+            var cache = result.steps.find(function(s) { return s.step === 'cache'; });
+            var fetch = result.steps.find(function(s) { return s.step === 'fetch'; });
+            result.pass = !!(ctrl && ctrl.ok && cache && cache.shellHit && cache.exactQueryMiss && fetch && fetch.hasPlayer);
             finish();
         });
     }).catch(function(e) {
