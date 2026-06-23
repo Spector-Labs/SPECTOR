@@ -359,7 +359,8 @@
     }
 
     function setupSpatialAnchoring() {
-        if (!window.DeviceOrientationEvent || spatialAnchoringReady) return;
+        if (!window.DeviceOrientationEvent) return;
+        teardownSpatialAnchoring();
         spatialHandler = (event) => {
             if (!isPlaying) return;
             const rawBeta = event.beta || 0;

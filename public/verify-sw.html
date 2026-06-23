@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>SW Verify</title></head>
+<body>
+<pre id="offline-result">pending</pre>
+<script>
+/* Cache + fetch probe after index.html registered shipped sw.js in same profile. */
+(function() {
+    var out = document.getElementById('offline-result');
+    var result = { phase: 'cache-probe', pass: false, steps: [] };
+    function finish() {
+        out.textContent = JSON.stringify(result, null, 2);
+        document.title = result.pass ? 'SWVerify: PASS' : 'SWVerify: FAIL';
+    }
+    if (!('serviceWorker' in navigator)) {
+        result.error = 'no serviceWorker';
+        return finish();
+    }
+    result.steps.push({ step: 'controller', ok: !!navigator.serviceWorker.controller });
+    caches.match('./app.html').then(function(shell) {
+        return caches.match(location.origin + '/app.html?script=probe').then(function(exact) {
+            result.steps.push({ step: 'cache', shellHit: !!shell, exactQueryMiss: !exact });
+            return fetch('./app.html?script=probe');
+        });
+    }).then(function(r) {
+        return r.text().then(function(t) {
+            result.steps.push({ step: 'fetch', status: r.status, hasPlayer: t.indexOf('play-btn') >= 0 });
+            result.pass = !!result.steps[0].ok && result.steps[1].shellHit && result.steps[1].exactQueryMiss && result.steps[2].hasPlayer;
+            finish();
+        });
+    }).catch(function(e) {
+        result.error = String(e);
+        finish();
+    });
+})();
+</script>
+</body>
+</html>
