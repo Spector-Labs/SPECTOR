@@ -3,7 +3,7 @@
 **Last updated:** June 24, 2026 (deployment confirmed live)
 **Repository:** [github.com/hydrogenbondss/SPECTOR](https://github.com/hydrogenbondss/SPECTOR)  
 **Live URL:** [spector-plum.vercel.app](https://spector-plum.vercel.app)  
-**Latest commit:** `760e788` (main)
+**Latest commit:** `730df73` (main)
 
 ---
 
@@ -30,7 +30,7 @@ As smart glasses become more common, more people will need rehearsal tools *befo
 | **Cue markers** | Done | `**emphasis**`, `[pause]`, `[pause:3s]` inline syntax |
 | **Rehearsal analytics** | Done | End-screen pacing %, hesitations, slowest chunk |
 | **PWA / offline** | Done | `manifest.json`, `sw.js` v3, offline shell verified |
-| **iOS motion fix** | Done | `motionReadyForPlay()` skips re-prompt when already granted |
+| **iOS motion fix** | Done | `ensureMotionForPlayback()` skips motion setup when already bound |
 | **Meta positioning** | Done | Landing “Glasses & Future” section; compatibility notes, not hardware sales |
 | **Modular core** | Done | `window.SpectorCore` — chunk registry, hooks, `createMotion()` |
 
