@@ -1,6 +1,6 @@
 /* Spector service worker — offline shell for installed PWA rehearsal */
 const CACHE = 'spector-v4';
-const ORIGIN = self.location.origin;
+const ORIGIN = self.location.origin; 
 
 function assetUrl(path) {
     if (path.startsWith('http')) return path;
