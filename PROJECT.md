@@ -11,7 +11,7 @@
 
 SPECTOR is a premium digital teleprompter positioned to outperform Meta’s built-in Ray-Ban glasses teleprompter — the same way Google Maps wins against Apple Maps: deeper workflow, not default placement.
 
-Meta announced new smart glasses starting at **$299** (June 23, 2026), which will bring millions of new users who need rehearsal tools *before* HUD teleprompter features mature. SPECTOR targets that wave with phone/PWA rehearsal today and a portable `SpectorCore` engine ready for Meta’s rumored glasses app store (late 2026–early 2027).
+As smart glasses become more common, more people will need rehearsal tools *before* built-in HUD teleprompters mature. SPECTOR is a **teleprompter app** (not a glasses retailer) — phone/PWA rehearsal today, portable `SpectorCore` engine ready for Meta’s rumored glasses app store (late 2026–early 2027). Not affiliated with Meta or Ray-Ban.
 
 ---
 
@@ -31,7 +31,7 @@ Meta announced new smart glasses starting at **$299** (June 23, 2026), which wil
 | **Rehearsal analytics** | Done | End-screen pacing %, hesitations, slowest chunk |
 | **PWA / offline** | Done | `manifest.json`, `sw.js` v3, offline shell verified |
 | **iOS motion fix** | Done | `motionReadyForPlay()` skips re-prompt when already granted |
-| **Meta positioning** | Done | Landing “Glasses & Future” section, $299 market note |
+| **Meta positioning** | Done | Landing “Glasses & Future” section; compatibility notes, not hardware sales |
 | **Modular core** | Done | `window.SpectorCore` — chunk registry, hooks, `createMotion()` |
 
 ### Infrastructure & quality
@@ -64,7 +64,7 @@ Meta announced new smart glasses starting at **$299** (June 23, 2026), which wil
 **Verified on production:**
 
 - `href="style.css"` (canonical asset path)
-- Saved Scripts library, hero badge, $299 market note
+- Saved Scripts library, hero badge, teleprompter disclaimer
 - GitHub → Vercel auto-deploy connected and working
 
 **Live:** [spector-plum.vercel.app](https://spector-plum.vercel.app)
@@ -88,7 +88,7 @@ Meta announced new smart glasses starting at **$299** (June 23, 2026), which wil
 - [ ] **Section bookmarks** — `## Section` headers → jump list in player
 - [ ] **Export/share** — copy script + stats summary for collaborators
 
-### Phase 3 — Mass-market $299 wave (Q3–Q4 2026)
+### Phase 3 — Broader smart-glasses adoption (Q3–Q4 2026)
 
 - [ ] **Onboarding flow** — first-run tour for new glasses owners (“rehearse on phone → perform on glasses”)
 - [ ] **Preset scripts** — demo keynotes/interviews for instant wow
@@ -159,7 +159,7 @@ https://spector-plum.vercel.app/app.html?test
 - **GitHub:** https://github.com/hydrogenbondss/SPECTOR  
 - **Live:** https://spector-plum.vercel.app
 - **Competition:** Meta Ray-Ban teleprompter (in-app, paste + manual advance)  
-- **Market event:** Meta smart glasses from $299 — June 23, 2026  
+- **Note:** SPECTOR sells teleprompter software only — not smart glasses or Meta hardware
 
 ---
 

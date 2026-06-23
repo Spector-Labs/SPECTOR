@@ -200,7 +200,7 @@
         const out = [];
         segments.forEach((seg, i) => {
             const trimmed = seg.trim();
-            if (trimmed) out.push(...SpectorCore.chunk(trimmed, 'hybrid'));
+            if (trimmed) out.push(...chunkStrategies.hybrid(trimmed));
             if (i < segments.length - 1) out.push('[pause]');
         });
         return out.length ? out : [''];
@@ -476,7 +476,9 @@
 
     function stopPlayback() {
         if (isPlaying && lastChunkAdvanceAt) {
-            recordChunkTiming(currentIndex, true);
+            const elapsed = Date.now() - lastChunkAdvanceAt;
+            const expected = SpectorCore.getMs(currentMode, currentSpeed, chunks[currentIndex] || '');
+            if (elapsed < expected * 0.85) recordChunkTiming(currentIndex, true);
             lastChunkAdvanceAt = Date.now();
         }
         isPlaying = false;
@@ -690,12 +692,17 @@
         document.getElementById('play-btn').addEventListener('click', () => { handlePlayGesture(); });
         document.getElementById('rewind-btn').addEventListener('click', () => {
             Haptics.rewind();
-            if (currentIndex > 0) { currentIndex = Math.max(0, currentIndex - 3); updateDisplay(); }
+            if (currentIndex > 0) {
+                currentIndex = Math.max(0, currentIndex - 3);
+                lastChunkAdvanceAt = Date.now();
+                updateDisplay();
+            }
         });
         document.getElementById('forward-btn').addEventListener('click', () => {
             Haptics.forward();
             if (currentIndex < chunks.length - 1) {
                 currentIndex = Math.min(chunks.length - 1, currentIndex + 3);
+                lastChunkAdvanceAt = Date.now();
                 updateDisplay();
             }
         });
