@@ -1,6 +1,6 @@
 # SPECTOR — Project Status & Roadmap 
 
-**Last updated:** June 24, 2026 (deployment confirmed live)
+**Last updated:** June 24, 2026 (deployment confirmed live; landing visibility+education pass landed in main)
 **Repository:** [github.com/hydrogenbondss/SPECTOR](https://github.com/hydrogenbondss/SPECTOR)  
 **Live URL:** [spector-plum.vercel.app](https://spector-plum.vercel.app)  
 **Latest commit:** `730df73` (main)
