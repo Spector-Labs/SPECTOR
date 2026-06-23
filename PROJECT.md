@@ -1,6 +1,6 @@
 # SPECTOR — Project Status & Roadmap
 
-**Last updated:** June 24, 2026  
+**Last updated:** June 24, 2026 (deployment confirmed live)
 **Repository:** [github.com/hydrogenbondss/SPECTOR](https://github.com/hydrogenbondss/SPECTOR)  
 **Live URL:** [spector-plum.vercel.app](https://spector-plum.vercel.app)  
 **Latest commit:** `760e788` (main)
@@ -59,33 +59,15 @@ Meta announced new smart glasses starting at **$299** (June 23, 2026), which wil
 |-------|--------|
 | URL responds | **Yes** — `https://spector-plum.vercel.app` returns HTTP 200 |
 | Hosted on Vercel | **Yes** — `X-Vercel-Id` header present |
-| Serving latest code | **No** — live site still shows **pre-revamp** build |
+| Serving latest code | **Yes** — verified live (revamp build) |
 
-**Evidence the live site is stale:**
+**Verified on production:**
 
-- Live HTML references `styles.css` (old) — repo uses `style.css`
-- Live footer: “Built for Meta Ray-Ban Display • Works in Developer Mode” (old)
-- Missing from live: Saved Scripts library, hero badge, $299 note, mirror toggle, cue markers, `SpectorCore` test harness markers
+- `href="style.css"` (canonical asset path)
+- Saved Scripts library, hero badge, $299 market note
+- GitHub → Vercel auto-deploy connected and working
 
-**Conclusion:** Vercel is **up** but **not deployed to latest `main`**. GitHub has the revamp; production needs a fresh deploy.
-
-### How to redeploy (pick one)
-
-1. **Vercel Dashboard (recommended)**  
-   - Open [vercel.com](https://vercel.com) → project **spector-plum** (or linked SPECTOR repo)  
-   - Deployments → **Redeploy** latest, or confirm GitHub integration is connected to `hydrogenbondss/SPECTOR` `main`  
-   - Ensure **Root Directory** is repo root and **Output Directory** is `public` (matches `vercel.json`)
-
-2. **Git push trigger**  
-   - If auto-deploy is enabled, any new commit to `main` should trigger a build. This doc commit will attempt that.
-
-3. **Vercel CLI** (when Node/npm available)  
-   ```bash
-   cd SPECTOR
-   npx vercel --prod
-   ```
-
-After redeploy, confirm live site contains: `Saved Scripts`, `mirror-toggle`, `market-note`, and `href="style.css"`.
+**Live:** [spector-plum.vercel.app](https://spector-plum.vercel.app)
 
 ---
 
@@ -93,7 +75,7 @@ After redeploy, confirm live site contains: `Saved Scripts`, `mirror-toggle`, `m
 
 ### Phase 1 — Ship & validate (now → 2 weeks)
 
-- [ ] **Redeploy Vercel** to latest `main` and verify live matches GitHub
+- [x] **Redeploy Vercel** to latest `main` and verify live matches GitHub
 - [ ] **Set `git config --global user.name`** for commit attribution (email already set)
 - [ ] **Beta test on real glasses** via Developer Mode ([TESTING.md](./TESTING.md))
 - [ ] **Gather feedback** on mirror mode, cue syntax, analytics usefulness
@@ -175,7 +157,7 @@ https://spector-plum.vercel.app/app.html?test
 ## Contact & links
 
 - **GitHub:** https://github.com/hydrogenbondss/SPECTOR  
-- **Live (redeploy needed):** https://spector-plum.vercel.app  
+- **Live:** https://spector-plum.vercel.app
 - **Competition:** Meta Ray-Ban teleprompter (in-app, paste + manual advance)  
 - **Market event:** Meta smart glasses from $299 — June 23, 2026  
 
