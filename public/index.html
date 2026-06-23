@@ -29,11 +29,21 @@
             <label for="script-input">Your Script</label>
             <textarea id="script-input" placeholder="Paste your speech, presentation, or notes here…"></textarea>
 
+            <div id="script-meta" style="font-size:12px;color:#888;margin-bottom:8px;display:flex;gap:8px;align-items:center;">
+                <span id="word-count">0 words</span>
+                <span>·</span>
+                <span>~<span id="est-minutes">0</span> min at speaking pace</span>
+            </div>
+
             <div class="samples-row" style="margin-bottom:12px;">
                 <span class="samples-label">Or start with a sample script:</span>
                 <button type="button" class="sample-btn" data-sample="keynote">Keynote Opener</button>
                 <button type="button" class="sample-btn" data-sample="pitch">Investor Pitch</button>
                 <button type="button" class="sample-btn" data-sample="demo">Product Demo</button>
+            </div>
+
+            <div class="cue-legend" style="font-size:11px;color:#777;margin-bottom:12px;line-height:1.4;">
+                Supports <code>**emphasis**</code> (stronger hold) and <code>[pause]</code> / <code>[pause:3s]</code> markers.
             </div>
 
             <div class="file-upload" id="file-area">
@@ -42,9 +52,10 @@
             </div>
 
             <div class="btn-row">
-                <button id="launch-btn" class="btn-primary">Open in Glasses Mode</button>
+                <button id="launch-btn" class="btn-primary">Launch Teleprompter</button>
                 <button id="save-btn" class="btn-secondary">Save</button>
             </div>
+            <div style="font-size:11px;color:#777;margin-bottom:8px;">Optimized for phone rehearsal and future glasses use</div>
         </div>
 
         <section class="library-section" id="library-section">
@@ -170,6 +181,7 @@
                     const reader = new FileReader();
                     reader.onload = (event) => {
                         textarea.value = event.target.result;
+                        updateScriptMeta();
                         const titleEl = document.getElementById('script-title');
                         if (!titleEl.value) titleEl.value = file.name.replace(/\.txt$/i, '');
                     };
@@ -186,6 +198,7 @@
                     const reader = new FileReader();
                     reader.onload = (event) => {
                         textarea.value = event.target.result;
+                        updateScriptMeta();
                         const titleEl = document.getElementById('script-title');
                         if (!titleEl.value) titleEl.value = file.name.replace(/\.txt$/i, '');
                     };
@@ -217,6 +230,7 @@
                     if (!sample) return;
                     document.getElementById('script-title').value = sample.title;
                     document.getElementById('script-input').value = sample.text;
+                    updateScriptMeta();
                     // optional: auto-launch hint or just populate
                     btn.style.transition = 'none';
                     btn.textContent = 'Loaded ✓';
@@ -227,6 +241,18 @@
                     }, 900);
                 });
             });
+        }
+
+        function updateScriptMeta() {
+            const textarea = document.getElementById('script-input');
+            const text = textarea.value.trim();
+            const words = text ? text.split(/\s+/).filter(Boolean).length : 0;
+            const estMinutes = words > 0 ? Math.max(1, Math.round(words / 140)) : 0; // ~140 wpm speaking rate
+
+            const countEl = document.getElementById('word-count');
+            const minEl = document.getElementById('est-minutes');
+            if (countEl) countEl.textContent = `${words} words`;
+            if (minEl) minEl.textContent = estMinutes;
         }
 
         function initButtons() {
@@ -302,14 +328,25 @@
             registerServiceWorker();
             initInstallPrompt();
 
+            const textarea = document.getElementById('script-input');
+            if (textarea) {
+                textarea.addEventListener('input', updateScriptMeta);
+            }
+
             const draft = localStorage.getItem('spector_draft');
             if (draft) {
                 try {
                     const { title, text } = JSON.parse(draft);
-                    if (text) document.getElementById('script-input').value = text;
+                    if (text) {
+                        document.getElementById('script-input').value = text;
+                        updateScriptMeta();
+                    }
                     if (title) document.getElementById('script-title').value = title;
                     localStorage.removeItem('spector_draft');
                 } catch {}
+            } else {
+                // initial count
+                updateScriptMeta();
             }
         }
 

@@ -826,3 +826,37 @@ body.mirror-mode #script-container .chunk {
     .control-btn { padding: 16px 12px; }
     .customize-panel { gap: 12px; }
 }
+
+/* First-time / Comfort discovery tip in player */
+.comfort-tip {
+    max-width: 620px;
+    margin: 8px auto 0;
+    padding: 8px 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    font-size: 12px;
+    color: #aaa;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.comfort-tip.hidden {
+    display: none;
+}
+
+.comfort-tip button {
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid rgba(232, 213, 183, 0.3);
+    border-radius: 999px;
+    padding: 2px 10px;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.comfort-tip button:hover {
+    background: rgba(232, 213, 183, 0.1);
+}

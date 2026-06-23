@@ -28,7 +28,7 @@ This guide explains how to test Spector on real Meta Ray-Ban smart glasses using
 ## 3. How to Use Spector
 
 - Paste or upload your script on the landing page.
-- Tap **"Open in Glasses Mode"**.
+- Tap **"Launch Teleprompter"**.
 - **Comfort mode**: Subtle breathing + gentle spatial movement when you move your head. Feels more natural and calm.
 - **Focus mode**: Completely static. No breathing, no movement. Best for when you want maximum stability.
 - Tap the screen or press play to start/stop.

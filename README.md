@@ -102,7 +102,7 @@ Cues are processed in `hybridChunkWithCues` and respected by `getMs()` timing.
 1. Open [spector-plum.vercel.app](https://spector-plum.vercel.app)
 2. Paste text, drop a `.txt`, or click one of the sample scripts
 3. (Optional) Title it and **Save** to your library
-4. Hit **Open in Glasses Mode**
+4. Hit **Launch Teleprompter**
 5. Choose mode (try Comfort), speed, and text size
 6. Tap Play (or press Space / tap the screen)
 7. (In Comfort) Move your head gently — the text responds with subtle spatial movement

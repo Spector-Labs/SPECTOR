@@ -16,7 +16,7 @@
         <div id="script-text"></div>
     </div>
 
-    <button class="toggle-chip motion-chip hidden" id="motion-permit-btn" type="button" aria-label="Enable device motion for spatial anchoring">Enable motion</button>
+    <button class="toggle-chip motion-chip hidden" id="motion-permit-btn" type="button" aria-label="Enable head tracking for Comfort mode spatial effects">Enable head tracking</button>
 
     <div class="customize-panel" id="customize-panel">
         <div class="customize-group">
@@ -61,9 +61,14 @@
         <button class="mode-btn" data-mode="presentation">Presentation</button>
     </div>
 
+    <div id="comfort-tip" class="comfort-tip hidden">
+        <span>In Comfort mode: gently move your head to feel the spatial breathing &amp; drift.</span>
+        <button id="dismiss-comfort-tip" type="button">Got it</button>
+    </div>
+
     <div id="end-screen" class="end-screen hidden">
         <h2>Well done.</h2>
-        <p class="subtitle">You finished with calm focus — ready for the real moment.</p>
+        <p class="subtitle">Rehearsal complete. Review your pacing and iterate.</p>
 
         <div class="stats">
             <div>
@@ -636,6 +641,37 @@
         document.querySelectorAll('.mode-btn').forEach(btn =>
             btn.classList.toggle('active', btn.dataset.mode === mode));
         Haptics.modeChange();
+
+        // Gentle first-run education for the killer Comfort spatial feature
+        if (mode === 'comfort') {
+            showComfortTipOnce();
+        } else {
+            hideComfortTip();
+        }
+    }
+
+    function showComfortTipOnce() {
+        const tip = document.getElementById('comfort-tip');
+        if (!tip) return;
+        try {
+            if (localStorage.getItem('spector_seen_comfort_tip') === '1') return;
+        } catch {}
+        tip.classList.remove('hidden');
+    }
+
+    function hideComfortTip() {
+        const tip = document.getElementById('comfort-tip');
+        if (tip) tip.classList.add('hidden');
+    }
+
+    function setupComfortTip() {
+        const tip = document.getElementById('comfort-tip');
+        const dismiss = document.getElementById('dismiss-comfort-tip');
+        if (!tip || !dismiss) return;
+        dismiss.addEventListener('click', () => {
+            try { localStorage.setItem('spector_seen_comfort_tip', '1'); } catch {}
+            tip.classList.add('hidden');
+        });
     }
 
     function setupSpeedPresets() {
@@ -814,6 +850,7 @@
         render();
         setupControls();
         setupModeSwitcher();
+        setupComfortTip();
         setupSpeedPresets();
         setupMotionPermissionUI();
         setupCustomization();
