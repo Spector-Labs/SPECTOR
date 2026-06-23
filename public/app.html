@@ -655,14 +655,17 @@
         });
     }
 
-    function motionReadyForPlay() {
+    async function ensureMotionForPlayback() {
+        if (playerMotion.bound) return true;
         const ps = playerMotion.permissionState;
         if (ps === 'granted' || ps === 'unnecessary') {
-            if (!playerMotion.bound) setupSpatialAnchoring();
+            setupSpatialAnchoring();
             return true;
         }
         if (ps === 'denied') return false;
-        return null;
+        const granted = await playerMotion.ensurePermission();
+        if (granted && !playerMotion.bound) setupSpatialAnchoring();
+        return granted;
     }
 
     function setupMotionPermissionUI() {
@@ -670,21 +673,13 @@
         if (!btn || typeof DeviceOrientationEvent?.requestPermission !== 'function') return;
         btn.classList.remove('hidden');
         btn.addEventListener('click', async () => {
-            let granted = motionReadyForPlay();
-            if (granted === null) granted = await playerMotion.ensurePermission();
+            const granted = await ensureMotionForPlayback();
             btn.textContent = granted ? 'Motion enabled ✓' : 'Motion denied';
-            if (granted && !playerMotion.bound) setupSpatialAnchoring();
         });
     }
 
     async function handlePlayGesture() {
-        if (!isPlaying) {
-            let granted = motionReadyForPlay();
-            if (granted === null) {
-                granted = await playerMotion.ensurePermission();
-                if (granted && !playerMotion.bound) setupSpatialAnchoring();
-            }
-        }
+        if (!isPlaying) await ensureMotionForPlayback();
         togglePlay();
     }
 
@@ -940,6 +935,12 @@
             || gestureMotion.permissionState === 'unnecessary';
         if (!skipEnsure) await gestureMotion.ensurePermission();
         assert('play gesture skips ensure when granted', skipEnsure && gestureCalls === 0);
+        const resumeMotion = SpectorCore.createMotion(cacheWin);
+        await resumeMotion.ensurePermission();
+        resumeMotion.bind(() => {});
+        permCalls = 0;
+        if (!resumeMotion.bound) await resumeMotion.ensurePermission();
+        assert('resume skips motion when already bound', resumeMotion.bound && permCalls === 0);
         testMotion.bind(() => {});
         assert('motion bind sets bound', testMotion.bound);
         assert('deviceorientation listener added',
