@@ -25,7 +25,7 @@ Spector is a premium digital teleprompter PWA (software only). It gives creators
 - Get rehearsal analytics (pacing %, hesitations, slowest chunk) at the end
 - **Install as PWA** for offline daily use (Add to Home Screen)
 
-**Install prompt appears automatically** in supporting browsers after you interact with the page. Look for the "Install Spector" button.
+**Install button** is prominent on the landing. One-tap PWA install where supported (Chrome/Edge); clear guidance for iOS and others. Full offline support via service worker.
 
 ---
 
