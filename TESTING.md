@@ -29,8 +29,11 @@ This guide explains how to test Spector on real Meta Ray-Ban smart glasses using
 
 - Paste or upload your script on the landing page.
 - Tap **"Launch Teleprompter"**.
-- **Comfort mode**: Subtle breathing + gentle spatial movement when you move your head. Feels more natural and calm.
+- **Comfort mode**: Subtle breathing + gentle spatial movement when you move your head. Feels more natural and calm. On Display glasses, the right-temple button/touch controls (and future Neural Band gestures) can advance or pause the script where supported by the platform.
 - **Focus mode**: Completely static. No breathing, no movement. Best for when you want maximum stability.
+- **Non-Display models (Gen 1/2)**: Use as phone companion rehearsal tool with haptics and audio. Glasses provide camera/AI.
+- **Display / HUD models**: Run directly on the glasses lens for heads-up teleprompting.
+- **Other smart glasses** (XREAL, Viture, Brilliant Labs, etc.): Works via PWA on phone companion or browser-supported devices. Controls depend on the hardware (touch, voice, external controller).
 - Tap the screen or press play to start/stop.
 - Use the speed presets (Slow / Normal / Fast) to match your speaking pace.
 - Tap anywhere to show/hide controls.

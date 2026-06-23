@@ -93,7 +93,7 @@ Cues are processed in `hybridChunkWithCues` and respected by `getMs()` timing.
 | Offline / Daily use       | Requires app connection                   | Full PWA install, offline shell              |
 | Future glasses path       | In-app only                               | Modular SpectorCore ready for app store      |
 
-**Primary use case for Ray-Ban Meta users today:** Use Spector on phone (Gen 1/2 or Display models) to perfect delivery before stepping in front of the camera or relying on the lighter in-app tool for the final take.
+**Primary use case for Ray-Ban Meta users today:** Use Spector on phone (non-Display Gen 1/2 or Display/HUD models) to perfect delivery before stepping in front of the camera or relying on the lighter in-app teleprompter. On Display models, the right-temple button/touchpad (and future Neural Band) can control script navigation when events are exposed.
 
 ---
 
@@ -108,7 +108,12 @@ Cues are processed in `hybridChunkWithCues` and respected by `getMs()` timing.
 7. (In Comfort) Move your head gently — the text responds with subtle spatial movement
 8. When done, review your pacing, hesitations, and slowest chunk on the end screen
 
-**On real glasses (Ray-Ban Meta Display etc.):** See [TESTING.md](TESTING.md) for Developer Mode + "Add a Web App" steps.
+**On real glasses:**
+- Ray-Ban Meta Display / HUD models: Run via web app on the glasses lens. Right temple button + touchpad (and future Neural Band) for script control where the platform forwards events.
+- Non-Display (Gen 1/2 etc.): Phone rehearsal companion.
+- Other brands (XREAL, Viture, etc.): Broad PWA support via phone or browser.
+
+See [TESTING.md](TESTING.md) for Developer Mode + "Add a Web App" steps on Ray-Ban Meta.
 
 ---
 

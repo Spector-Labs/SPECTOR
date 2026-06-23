@@ -49,7 +49,11 @@ As smart glasses become more common, more people will need rehearsal tools *befo
 - **Meta today:** Paste in Meta AI app → basic scroll/cards → manual Neural Band advance  
 - **SPECTOR:** Script library → adaptive auto-pace → comfort spatial effects → cue markers → rehearsal analytics → PWA install for daily use  
 
-**Device coverage:** Ray-Ban Meta Display (primary HUD path), Gen 1/2 (phone companion rehearsal), and any smart-glasses user via web + PWA — not Ray-Ban exclusive.
+**Device coverage:** 
+- Ray-Ban Meta Display / HUD (primary: run on-glasses lens HUD; right temple button + touch + future Neural Band for control).
+- Gen 1/2 and non-Display (phone companion rehearsal with haptics).
+- Other brands (XREAL, Viture, Brilliant Labs, Even Realities, etc.): PWA on phone or browser. Varying input methods.
+Not Ray-Ban exclusive. Web + PWA approach maximizes compatibility today.
 
 ---
 
@@ -92,7 +96,7 @@ As smart glasses become more common, more people will need rehearsal tools *befo
 
 - [ ] **Onboarding flow** — first-run tour for new glasses owners (“rehearse on phone → perform on glasses”)
 - [ ] **Preset scripts** — demo keynotes/interviews for instant wow
-- [ ] **Neural Band gesture map** — when Meta exposes APIs: tap = next, double = rewind
+- [ ] **Hardware controls & gesture map** — right temple button/touch on Display models today (where events forward); Neural Band subtle gestures (pinch/advance/pause/rewind) when Meta exposes APIs. Support other brands' controllers/touch too.
 - [ ] **Landing refresh** — social proof, short demo video, comparison table vs Meta teleprompter
 
 ### Phase 4 — App store founding developer (late 2026–2027)
