@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Spector Core Tests</title></head>
+<body>
+<p id="out">Running…</p>
+<script>
+/* Committed test harness — drives shipped SpectorCore from app.html via iframe */
+const iframe = document.createElement('iframe');
+iframe.style.display = 'none';
+iframe.src = '../public/app.html?test';
+document.body.appendChild(iframe);
+iframe.onload = () => {
+    const win = iframe.contentWindow;
+    const results = win.__spectorTestResults;
+    const out = document.getElementById('out');
+    if (!results) { out.textContent = 'FAIL: no test results'; document.title = 'FAIL'; return; }
+    out.textContent = results.allPass ? 'ALL PASS (' + results.results.length + ' assertions)' : 'FAILURES: ' + JSON.stringify(results.results.filter(r => !r.pass));
+    document.title = results.allPass ? 'PASS' : 'FAIL';
+};
+</script>
+</body>
+</html>

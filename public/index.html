@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Spector — the superior teleprompter for Ray-Ban Meta and smart glasses. Auto-paced, comfort-tuned, ready for the glasses app store.">
+    <meta name="theme-color" content="#0A0A0A">
     <title>Spector™ • Eyes Forward</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
 </head>
 <body class="landing">
 
@@ -12,75 +15,207 @@
         <header>
             <div class="logo">Spector<span class="tm">™</span></div>
             <p class="tagline">Eyes Forward.</p>
-            <p class="subtitle">The premium teleprompter for smart glasses.</p>
+            <p class="subtitle">The superior teleprompter for smart glasses — auto-paced, comfort-tuned, and ready before the Meta glasses app store opens.</p>
+            <div class="hero-badge">Beyond Meta's basic scroll · Founding-dev ready</div>
         </header>
 
         <div class="input-section">
-            <label>Your Script</label>
-            <textarea id="script-input" placeholder="Paste your speech, presentation, or notes here..."></textarea>
+            <label for="script-title">Script Title</label>
+            <input type="text" id="script-title" class="script-title-input" placeholder="e.g. Keynote opener, investor pitch…" maxlength="80">
+
+            <label for="script-input">Your Script</label>
+            <textarea id="script-input" placeholder="Paste your speech, presentation, or notes here…"></textarea>
 
             <div class="file-upload" id="file-area">
                 Drop .txt file here or click to browse
                 <input type="file" id="file-input" accept=".txt" style="display:none;">
             </div>
 
-            <button id="launch-btn" class="btn-primary">Open in Glasses Mode</button>
+            <div class="btn-row">
+                <button id="launch-btn" class="btn-primary">Open in Glasses Mode</button>
+                <button id="save-btn" class="btn-secondary">Save</button>
+            </div>
         </div>
+
+        <section class="library-section" id="library-section">
+            <h3>Saved Scripts</h3>
+            <ul class="library-list" id="library-list">
+                <li class="library-empty" id="library-empty">No saved scripts yet — save one to build your library.</li>
+            </ul>
+        </section>
+
+        <!--
+            CUSTOMER JOURNEY: paste/upload → save to library → configure in player →
+            rehearse with spatial comfort → review stats → iterate.
+            POSITIONING vs Meta: their tool is paste-only, manual Neural Band advance,
+            basic vertical/cards. Spector offers intelligent chunking, adaptive pacing,
+            comfort spatial effects, script library, and PWA install for daily rehearsal.
+        -->
+        <section class="glasses-future">
+            <h3>Glasses &amp; Future</h3>
+            <p><strong>Ray-Ban Meta Display (primary):</strong> Use Spector on your phone as a superior rehearsal companion — perfect your pacing, then mirror key lines to Display when Meta's teleprompter is too raw.</p>
+            <ul>
+                <li><strong>Gen 1 &amp; Gen 2</strong> (camera + AI, no HUD): rehearse here; audio cues via haptics prepare you for live delivery without looking down.</li>
+                <li><strong>Display / HUD models</strong>: optimized chunk sizes and HUD-friendly typography for glanceable reading.</li>
+                <li><strong>App store (late 2026–2027)</strong>: modular engine (<code>SpectorCore</code>) is structured for porting as a founding developer app.</li>
+            </ul>
+            <p>Not limited to Ray-Ban Meta — any smart-glasses user benefits from Spector's web + PWA workflow today.</p>
+        </section>
     </div>
 
     <script>
+        const STORAGE_KEY = 'spector_scripts_v1';
+
+        function getLibrary() {
+            try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+            catch { return []; }
+        }
+
+        function setLibrary(scripts) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(scripts));
+        }
+
+        function saveScript(title, text) {
+            const library = getLibrary();
+            const entry = {
+                id: Date.now().toString(36),
+                title: title || 'Untitled Script',
+                text,
+                savedAt: Date.now()
+            };
+            const existing = library.findIndex(s => s.title === entry.title && s.text === text);
+            if (existing >= 0) library[existing] = entry;
+            else library.unshift(entry);
+            if (library.length > 20) library.length = 20;
+            setLibrary(library);
+            renderLibrary();
+        }
+
+        function deleteScript(id) {
+            setLibrary(getLibrary().filter(s => s.id !== id));
+            renderLibrary();
+        }
+
+        function launchScript(text) {
+            const encoded = btoa(encodeURIComponent(text));
+            window.location.href = `app.html?script=${encoded}`;
+        }
+
+        function renderLibrary() {
+            const list = document.getElementById('library-list');
+            const empty = document.getElementById('library-empty');
+            const scripts = getLibrary();
+            list.innerHTML = '';
+            if (!scripts.length) {
+                list.appendChild(empty);
+                empty.style.display = 'block';
+                return;
+            }
+            scripts.forEach(script => {
+                const li = document.createElement('li');
+                li.className = 'library-item';
+                const meta = document.createElement('div');
+                meta.innerHTML = `<div class="library-item-title">${escapeHtml(script.title)}</div>
+                    <div class="library-item-meta">${new Date(script.savedAt).toLocaleDateString()} · ${script.text.split(/\s+/).length} words</div>`;
+                const del = document.createElement('button');
+                del.className = 'btn-ghost';
+                del.textContent = 'Delete';
+                del.addEventListener('click', (e) => { e.stopPropagation(); deleteScript(script.id); });
+                li.appendChild(meta);
+                li.appendChild(del);
+                li.addEventListener('click', () => {
+                    document.getElementById('script-input').value = script.text;
+                    document.getElementById('script-title').value = script.title;
+                });
+                li.addEventListener('dblclick', () => launchScript(script.text));
+                list.appendChild(li);
+            });
+        }
+
+        function escapeHtml(str) {
+            const d = document.createElement('div');
+            d.textContent = str;
+            return d.innerHTML;
+        }
+
         function initFileUpload() {
             const fileArea = document.getElementById('file-area');
             const fileInput = document.getElementById('file-input');
             const textarea = document.getElementById('script-input');
 
             fileArea.addEventListener('click', () => fileInput.click());
-
             fileInput.addEventListener('change', (e) => {
                 const file = e.target.files[0];
                 if (file) {
                     const reader = new FileReader();
-                    reader.onload = (event) => textarea.value = event.target.result;
+                    reader.onload = (event) => {
+                        textarea.value = event.target.result;
+                        const titleEl = document.getElementById('script-title');
+                        if (!titleEl.value) titleEl.value = file.name.replace(/\.txt$/i, '');
+                    };
                     reader.readAsText(file);
                 }
             });
-
-            fileArea.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                fileArea.classList.add('dragover');
-            });
-
+            fileArea.addEventListener('dragover', (e) => { e.preventDefault(); fileArea.classList.add('dragover'); });
             fileArea.addEventListener('dragleave', () => fileArea.classList.remove('dragover'));
             fileArea.addEventListener('drop', (e) => {
                 e.preventDefault();
                 fileArea.classList.remove('dragover');
                 const file = e.dataTransfer.files[0];
-                if (file && file.type === "text/plain") {
+                if (file) {
                     const reader = new FileReader();
-                    reader.onload = (event) => textarea.value = event.target.result;
+                    reader.onload = (event) => {
+                        textarea.value = event.target.result;
+                        const titleEl = document.getElementById('script-title');
+                        if (!titleEl.value) titleEl.value = file.name.replace(/\.txt$/i, '');
+                    };
                     reader.readAsText(file);
                 }
             });
         }
 
-        function initLaunchButton() {
+        function initButtons() {
             const launchBtn = document.getElementById('launch-btn');
+            const saveBtn = document.getElementById('save-btn');
             const textarea = document.getElementById('script-input');
+            const titleEl = document.getElementById('script-title');
 
             launchBtn.addEventListener('click', () => {
                 const text = textarea.value.trim();
-                if (!text) {
-                    alert("Please enter a script first.");
-                    return;
-                }
-                const encoded = btoa(encodeURIComponent(text));
-                window.location.href = `app.html?script=${encoded}`;
+                if (!text) { alert('Please enter a script first.'); return; }
+                launchScript(text);
             });
+
+            saveBtn.addEventListener('click', () => {
+                const text = textarea.value.trim();
+                if (!text) { alert('Nothing to save — add your script first.'); return; }
+                saveScript(titleEl.value.trim() || 'Untitled Script', text);
+                saveBtn.textContent = 'Saved ✓';
+                setTimeout(() => { saveBtn.textContent = 'Save'; }, 1500);
+            });
+        }
+
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js').catch(() => {});
+            }
         }
 
         function init() {
             initFileUpload();
-            initLaunchButton();
+            initButtons();
+            renderLibrary();
+            registerServiceWorker();
+
+            const draft = localStorage.getItem('spector_draft');
+            if (draft) {
+                try {
+                    const { title, text } = JSON.parse(draft);
+                    if (text) document.getElementById('script-input').value = text;
+                    if (title) document.getElementById('script-title').value = title;
+                    localStorage.removeItem('spector_draft');
+                } catch {}
+            }
         }
 
         window.onload = init;

@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0A0A0A">
     <title>Spector • Glasses Mode</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
 </head>
 <body class="glasses">
 
@@ -14,13 +16,27 @@
         <div id="script-text"></div>
     </div>
 
+    <div class="customize-panel" id="customize-panel">
+        <div class="customize-group">
+            <label for="text-size">Text</label>
+            <input type="range" id="text-size" min="22" max="42" value="31" step="1">
+            <span class="customize-value" id="text-size-val">31px</span>
+        </div>
+        <div class="customize-group">
+            <label for="line-spacing">Leading</label>
+            <input type="range" id="line-spacing" min="1.3" max="2.0" value="1.55" step="0.05">
+            <span class="customize-value" id="line-spacing-val">1.55</span>
+        </div>
+        <button class="toggle-chip" id="compact-toggle" type="button">Compact HUD</button>
+    </div>
+
     <div class="progress-container">
         <div class="progress-bar">
             <div id="progress-fill" class="progress-fill"></div>
         </div>
         <div class="timer">
-            <span id="time-elapsed">00:00</span>
-            <span id="time-remaining">– / –</span>
+            <span id="time-elapsed">0:00</span>
+            <span id="time-remaining">– remaining</span>
         </div>
     </div>
 
@@ -44,7 +60,7 @@
 
     <div id="end-screen" class="end-screen hidden">
         <h2>Well done.</h2>
-        <p class="subtitle">You finished the script with calm focus.</p>
+        <p class="subtitle">You finished with calm focus — ready for the real moment.</p>
 
         <div class="stats">
             <div>
@@ -55,366 +71,570 @@
                 <span class="value" id="end-time">—</span>
                 <span>minutes</span>
             </div>
+            <div>
+                <span class="value" id="end-wpm">—</span>
+                <span>avg wpm</span>
+            </div>
         </div>
 
         <div class="end-actions">
             <button id="restart-btn" class="btn-primary">Read Again</button>
+            <button id="edit-script-btn" class="btn-secondary">Edit Script</button>
+            <button id="save-end-btn" class="btn-secondary">Save to Library</button>
             <button id="new-script-btn" class="btn-secondary">New Script</button>
             <button id="exit-end-btn" class="btn-secondary">Exit</button>
         </div>
     </div>
 
     <script>
-        // SPECTOR - FINAL POLISHED VERSION
-        let chunks = [];
-        let currentIndex = 0;
-        let isPlaying = false;
-        let interval = null;
-        let currentMode = 'focus';
-        let currentSpeed = 'normal';
-        let startTime = 0;
+    /*
+     * SPECTOR PLAYER ENGINE
+     * ─────────────────────
+     * Customer journey: load script → customize text/leading → pick mode/speed →
+     * play with spatial anchoring + haptics → end review with WPM → save/edit/iterate.
+     *
+     * vs Meta teleprompter: Meta requires paste in Meta AI app, manual Neural Band
+     * taps or touchpad swipes, basic vertical scroll or swipeable cards. Spector
+     * provides intelligent hybrid chunking, adaptive punctuation-aware pacing,
+     * comfort breathing/drift, script library, and installable PWA rehearsal.
+     *
+     * Ray-Ban Meta support strategy:
+     *   • Display/HUD — primary target; HUD-friendly typography + compact mode
+     *   • Gen 1/2 — phone companion rehearsal with haptic cadence training
+     *   • Future app store — SpectorCore is plugin-ready for SDK port
+     *
+     * Infrastructure: zero-dependency static web + PWA now; SpectorCore modular
+     * for future glasses SDK / app store founding-developer submission.
+     */
 
-        class KalmanFilter {
-            constructor(processNoise = 0.0025, measurementNoise = 1.2) {
-                this.Q = processNoise; this.R = measurementNoise; this.P = 1; this.X = 0; this.K = 0;
-            }
-            update(measurement) {
-                this.P = this.P + this.Q;
-                this.K = this.P / (this.P + this.R);
-                this.X = this.X + this.K * (measurement - this.X);
-                this.P = (1 - this.K) * this.P;
-                return this.X;
-            }
-            reset() { this.X = 0; this.P = 1; }
+    // ─── SpectorCore: pure logic layer (testable, portable) ───
+    class KalmanFilter {
+        constructor(processNoise = 0.0025, measurementNoise = 1.2) {
+            this.Q = processNoise;
+            this.R = measurementNoise;
+            this.P = 1;
+            this.X = 0;
+            this.K = 0;
         }
-
-        const kalmanBeta = new KalmanFilter();
-        const kalmanGamma = new KalmanFilter();
-
-        const Haptics = {
-            tick: () => navigator.vibrate?.([8]),
-            play: () => navigator.vibrate?.([28, 14, 42]),
-            rewind: () => navigator.vibrate?.([18, 8, 28]),
-            forward: () => navigator.vibrate?.([18, 8, 28]),
-            modeChange: () => navigator.vibrate?.([12, 6, 18]),
-            preset: () => navigator.vibrate?.([10]),
-        };
-
-        function getScriptFromURL() {
-            const params = new URLSearchParams(window.location.search);
-            const encoded = params.get('script');
-            if (encoded) {
-                try { return decodeURIComponent(atob(encoded)); } 
-                catch (e) { return "Welcome to Spector. This is a sample script."; }
-            }
-            return "Welcome to Spector. Paste your script on the landing page.";
+        update(measurement) {
+            this.P = this.P + this.Q;
+            this.K = this.P / (this.P + this.R);
+            this.X = this.X + this.K * (measurement - this.X);
+            this.P = (1 - this.K) * this.P;
+            return this.X;
         }
+        reset() { this.X = 0; this.P = 1; }
+    }
 
-        function hybridChunk(text) {
+    const chunkStrategies = {
+        hybrid(text) {
             const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
-            let result = [];
+            const result = [];
             sentences.forEach(sentence => {
                 const words = sentence.trim().split(/\s+/);
                 if (words.length <= 7) result.push(sentence.trim());
-                else for (let i = 0; i < words.length; i += 6) result.push(words.slice(i, i + 6).join(' '));
+                else for (let i = 0; i < words.length; i += 6)
+                    result.push(words.slice(i, i + 6).join(' '));
             });
             return result.filter(c => c.length > 0);
+        },
+        sentence(text) {
+            return (text.match(/[^.!?]+[.!?]+/g) || [text]).map(s => s.trim()).filter(Boolean);
+        },
+        word(text) {
+            return text.trim().split(/\s+/).filter(Boolean);
         }
+    };
 
-        function render() {
-            const container = document.getElementById('script-text');
-            container.innerHTML = '';
-            chunks.forEach((chunk, index) => {
-                const div = document.createElement('div');
-                div.className = 'chunk';
-                div.dataset.index = index;
-                div.textContent = chunk;
-                container.appendChild(div);
-            });
+    const postChunkHooks = [];
+
+    function hybridChunk(text) {
+        return SpectorCore.chunk(text, 'hybrid');
+    }
+
+    function computeMs(mode, speed, chunkText) {
+        let base = 2400;
+        if (mode === 'comfort') base = 2800;
+        if (mode === 'presentation') base = 3200;
+        if (speed === 'slow') base *= 1.25;
+        if (speed === 'fast') base *= 0.75;
+        if (/[.!?]$/.test(chunkText)) base *= 1.35;
+        if (/,/.test(chunkText)) base *= 1.15;
+        return Math.max(1200, base);
+    }
+
+    function computeSpatialDeltas(filteredGamma, filteredBeta, lastGamma, lastBeta, mode) {
+        const sensitivity = mode === 'comfort' ? 0.19 : 0.11;
+        const rotationAmount = mode === 'comfort' ? 0.11 : 0.055;
+        const scaleAmount = mode === 'comfort' ? 0.00042 : 0.00026;
+        return {
+            deltaX: (filteredGamma - lastGamma) * sensitivity,
+            deltaY: (filteredBeta - lastBeta) * sensitivity,
+            deltaRotate: (filteredGamma - lastGamma) * rotationAmount,
+            deltaScale: 1 + ((filteredGamma - lastGamma) * scaleAmount)
+        };
+    }
+
+    function estimateWpm(wordCount, elapsedMs) {
+        if (!elapsedMs || elapsedMs < 1000) return 0;
+        return Math.round(wordCount / (elapsedMs / 60000));
+    }
+
+    const SpectorCore = {
+        KalmanFilter,
+        chunkStrategies,
+        postChunkHooks,
+        chunk(text, strategyName = 'hybrid') {
+            const fn = chunkStrategies[strategyName] || chunkStrategies.hybrid;
+            let chunks = fn(text);
+            postChunkHooks.forEach(hook => { chunks = hook(chunks, text) || chunks; });
+            return chunks;
+        },
+        registerChunker(name, fn) { chunkStrategies[name] = fn; },
+        registerPostChunkHook(fn) { postChunkHooks.push(fn); },
+        getMs: computeMs,
+        computeSpatialDeltas,
+        estimateWpm,
+        decodeScript(encoded) {
+            try { return decodeURIComponent(atob(encoded)); }
+            catch { return null; }
         }
+    };
+    window.SpectorCore = SpectorCore;
 
-        function updateDisplay() {
-            document.querySelectorAll('.chunk').forEach(el => el.classList.remove('active'));
-            const active = document.querySelector(`.chunk[data-index="${currentIndex}"]`);
-            if (active) {
-                active.classList.add('active');
-                active.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                settleActiveChunk();
-            }
-            const progress = ((currentIndex + 1) / chunks.length) * 100;
-            document.getElementById('progress-fill').style.width = `${progress}%`;
+    // ─── Player state ───
+    let chunks = [];
+    let rawScript = '';
+    let currentIndex = 0;
+    let isPlaying = false;
+    let interval = null;
+    let currentMode = 'focus';
+    let currentSpeed = 'normal';
+    let startTime = 0;
+    let totalWords = 0;
 
+    const kalmanBeta = new KalmanFilter();
+    const kalmanGamma = new KalmanFilter();
+
+    const Haptics = {
+        tick: () => navigator.vibrate?.([8]),
+        play: () => navigator.vibrate?.([28, 14, 42]),
+        rewind: () => navigator.vibrate?.([18, 8, 28]),
+        forward: () => navigator.vibrate?.([18, 8, 28]),
+        modeChange: () => navigator.vibrate?.([12, 6, 18]),
+        preset: () => navigator.vibrate?.([10]),
+    };
+
+    function getScriptFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        const encoded = params.get('script');
+        if (encoded) {
+            const decoded = SpectorCore.decodeScript(encoded);
+            if (decoded) return decoded;
+            return 'Welcome to Spector. This is a sample script.';
+        }
+        return 'Welcome to Spector. Paste your script on the landing page.';
+    }
+
+    function getMs() {
+        const chunk = chunks[currentIndex] || '';
+        return SpectorCore.getMs(currentMode, currentSpeed, chunk);
+    }
+
+    function render() {
+        const container = document.getElementById('script-text');
+        container.innerHTML = '';
+        chunks.forEach((chunk, index) => {
+            const div = document.createElement('div');
+            div.className = 'chunk';
+            div.dataset.index = index;
+            div.textContent = chunk;
+            container.appendChild(div);
+        });
+    }
+
+    function formatTime(seconds) {
+        return `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`;
+    }
+
+    function estimateRemainingSeconds() {
+        let total = 0;
+        for (let i = currentIndex; i < chunks.length; i++)
+            total += SpectorCore.getMs(currentMode, currentSpeed, chunks[i] || '') / 1000;
+        return Math.ceil(total);
+    }
+
+    function updateDisplay() {
+        document.querySelectorAll('.chunk').forEach(el => el.classList.remove('active'));
+        const active = document.querySelector(`.chunk[data-index="${currentIndex}"]`);
+        if (active) {
+            active.classList.add('active');
+            const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            active.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
+            settleActiveChunk();
+        }
+        const progress = chunks.length ? ((currentIndex + 1) / chunks.length) * 100 : 0;
+        document.getElementById('progress-fill').style.width = `${progress}%`;
+
+        if (startTime) {
             const elapsed = Math.floor((Date.now() - startTime) / 1000);
-            document.getElementById('time-elapsed').textContent = 
-                `${Math.floor(elapsed / 60)}:${(elapsed % 60).toString().padStart(2, '0')}`;
+            document.getElementById('time-elapsed').textContent = formatTime(elapsed);
+            document.getElementById('time-remaining').textContent =
+                `${formatTime(estimateRemainingSeconds())} remaining`;
         }
+    }
 
-        function getMs() {
-            let base = 2400;
-            if (currentMode === 'comfort') base = 2800;
-            if (currentMode === 'presentation') base = 3200;
-            if (currentSpeed === 'slow') base *= 1.25;
-            if (currentSpeed === 'fast') base *= 0.75;
-            const chunk = chunks[currentIndex] || '';
-            if (/[.!?]$/.test(chunk)) base *= 1.35;
-            if (/,/.test(chunk)) base *= 1.15;
-            return Math.max(1200, base);
-        }
+    function startPlayback() {
+        if (isPlaying) return;
+        isPlaying = true;
+        if (!startTime) startTime = Date.now();
+        document.getElementById('play-btn').textContent = '⏸ Pause';
+        Haptics.play();
 
-        function startPlayback() {
-            if (isPlaying) return;
-            isPlaying = true;
-            startTime = Date.now();
-            document.getElementById('play-btn').textContent = '⏸ Pause';
-            Haptics.play();
-
-            const tick = () => {
-                if (!isPlaying) return;
-                if (currentIndex < chunks.length - 1) {
-                    currentIndex++;
-                    updateDisplay();
-                    Haptics.tick();
-                    interval = setTimeout(tick, getMs());
-                } else {
-                    showEndScreen();
-                }
-            };
-            interval = setTimeout(tick, getMs());
-        }
-
-        function stopPlayback() {
-            isPlaying = false;
-            clearTimeout(interval);
-            document.getElementById('play-btn').textContent = '▶';
-        }
-
-        function togglePlay() {
-            if (isPlaying) stopPlayback();
-            else startPlayback();
-        }
-
-        // Spatial System
-        let lastBeta = 0, lastGamma = 0, idleTimer = null, breathingFrame = null, driftFrame = null;
-        let isBreathing = false, isDrifting = false;
-
-        function setupSpatialAnchoring() {
-            if (!window.DeviceOrientationEvent) return;
-            window.addEventListener('deviceorientation', (event) => {
-                if (!isPlaying) return;
-                const rawBeta = event.beta || 0;
-                const rawGamma = event.gamma || 0;
-                const filteredBeta = kalmanBeta.update(rawBeta);
-                const filteredGamma = kalmanGamma.update(rawGamma);
-
-                const sensitivity = currentMode === 'comfort' ? 0.19 : 0.11;
-                const rotationAmount = currentMode === 'comfort' ? 0.11 : 0.055;
-                const scaleAmount = currentMode === 'comfort' ? 0.00042 : 0.00026;
-
-                const deltaX = (filteredGamma - lastGamma) * sensitivity;
-                const deltaY = (filteredBeta - lastBeta) * sensitivity;
-                const deltaRotate = (filteredGamma - lastGamma) * rotationAmount;
-                const deltaScale = 1 + ((filteredGamma - lastGamma) * scaleAmount);
-
-                const activeChunk = document.querySelector('.chunk.active');
-                if (activeChunk) {
-                    activeChunk.style.transition = currentMode === 'comfort' 
-                        ? 'transform 0.82s cubic-bezier(0.17, 1, 0.36, 1)' 
-                        : 'transform 0.22s ease-out';
-                    activeChunk.style.transform = `translate(${deltaX}px, ${deltaY}px) rotate(${deltaRotate}deg) scale(${deltaScale})`;
-                }
-                lastBeta = filteredBeta;
-                lastGamma = filteredGamma;
-
-                clearTimeout(idleTimer);
-                idleTimer = setTimeout(() => {
-                    if (isPlaying && currentMode === 'comfort' && activeChunk && !isBreathing && !isDrifting) {
-                        startDualSineBreathing(activeChunk);
-                    }
-                }, 880);
-            });
-        }
-
-        function startDualSineBreathing(chunk) {
-            if (!chunk || isBreathing) return;
-            isBreathing = true;
-            isDrifting = false;
-            cancelAnimationFrame(driftFrame);
-            let startTime = null;
-            const slowPeriod = 4600;
-            const fastPeriod = 2100;
-
-            const breathe = (timestamp) => {
-                if (!isPlaying || currentMode !== 'comfort' || !chunk.classList.contains('active')) {
-                    isBreathing = false; return;
-                }
-                if (!startTime) startTime = timestamp;
-                const elapsed = timestamp - startTime;
-                const slow = (elapsed % slowPeriod) / slowPeriod;
-                const slowY = Math.sin(slow * Math.PI * 2) * -2.1;
-                const slowScale = 1 + Math.sin(slow * Math.PI * 2) * 0.0023;
-                const fast = ((elapsed + 420) % fastPeriod) / fastPeriod;
-                const fastY = Math.sin(fast * Math.PI * 2) * -0.55;
-                const fastScale = 1 + Math.sin(fast * Math.PI * 2) * 0.0006;
-
-                chunk.style.transition = 'none';
-                chunk.style.transform = `translate(0px, ${slowY + fastY}px) rotate(0deg) scale(${slowScale + fastScale})`;
-                chunk.style.opacity = (0.980 + Math.sin(slow * Math.PI * 2) * 0.011).toFixed(3);
-                breathingFrame = requestAnimationFrame(breathe);
-            };
-            breathingFrame = requestAnimationFrame(breathe);
-
-            setTimeout(() => {
-                if (isPlaying && currentMode === 'comfort' && chunk.classList.contains('active')) {
-                    cancelAnimationFrame(breathingFrame);
-                    isBreathing = false;
-                    chunk.style.transition = 'transform 2.4s cubic-bezier(0.33, 1, 0.68, 1), opacity 2.4s ease-out';
-                    chunk.style.transform = 'translate(0px, 0px) rotate(0deg) scale(1)';
-                    chunk.style.opacity = '1';
-                    setTimeout(() => {
-                        if (isPlaying && currentMode === 'comfort' && chunk.classList.contains('active')) {
-                            startGentleDriftWithRotation(chunk);
-                        }
-                    }, 1150);
-                }
-            }, 4900);
-        }
-
-        function startGentleDriftWithRotation(chunk) {
-            if (!chunk || isDrifting || isBreathing) return;
-            isDrifting = true;
-            let driftTime = 0;
-            const drift = () => {
-                if (!isPlaying || currentMode !== 'comfort' || !chunk.classList.contains('active') || isBreathing) {
-                    isDrifting = false; return;
-                }
-                driftTime += 0.0075;
-                const driftX = Math.sin(driftTime * 0.65) * 1.15;
-                const driftY = Math.sin(driftTime * 0.42) * 0.95;
-                const driftRotate = Math.sin(driftTime * 0.38) * 0.035;
-                chunk.style.transition = 'transform 1.75s cubic-bezier(0.33, 1, 0.68, 1)';
-                chunk.style.transform = `translate(${driftX}px, ${driftY}px) rotate(${driftRotate}deg) scale(1.0004)`;
-                driftFrame = setTimeout(() => {
-                    if (isPlaying && currentMode === 'comfort' && chunk.classList.contains('active') && !isBreathing) drift();
-                    else isDrifting = false;
-                }, 1780);
-            };
-            drift();
-        }
-
-        function settleActiveChunk() {
-            const activeChunk = document.querySelector('.chunk.active');
-            if (!activeChunk) return;
-            isBreathing = false; isDrifting = false;
-            clearTimeout(idleTimer); cancelAnimationFrame(breathingFrame); clearTimeout(driftFrame);
-
-            activeChunk.style.transition = 'transform 0.68s cubic-bezier(0.23, 1.0, 0.32, 1)';
-            activeChunk.style.transform = 'translate(0px, 0px) rotate(0deg) scale(1.0075)';
-
-            setTimeout(() => {
-                if (activeChunk.classList.contains('active') && currentMode === 'comfort') {
-                    activeChunk.style.transition = 'transform 0.95s cubic-bezier(0.17, 1, 0.36, 1)';
-                    activeChunk.style.transform = 'translate(0px, 0px) rotate(0deg) scale(1)';
-                    setTimeout(() => {
-                        if (isPlaying && currentMode === 'comfort' && activeChunk.classList.contains('active')) {
-                            startDualSineBreathing(activeChunk);
-                        }
-                    }, 860);
-                }
-            }, 740);
-        }
-
-        function applyMode(mode) {
-            currentMode = mode;
-            document.body.classList.remove('comfort-mode', 'focus-mode', 'presentation-mode');
-            document.body.classList.add(`${mode}-mode`);
-            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.mode === mode));
-            Haptics.modeChange();
-        }
-
-        function setupSpeedPresets() {
-            document.querySelectorAll('.preset-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    currentSpeed = btn.dataset.speed;
-                    Haptics.preset();
-                });
-            });
-        }
-
-        function setupModeSwitcher() {
-            document.querySelectorAll('.mode-btn').forEach(btn => {
-                btn.addEventListener('click', () => applyMode(btn.dataset.mode));
-            });
-        }
-
-        function setupControls() {
-            const playBtn = document.getElementById('play-btn');
-            const rewindBtn = document.getElementById('rewind-btn');
-            const forwardBtn = document.getElementById('forward-btn');
-
-            playBtn.addEventListener('click', togglePlay);
-            rewindBtn.addEventListener('click', () => {
-                Haptics.rewind();
-                if (currentIndex > 0) { currentIndex = Math.max(0, currentIndex - 3); updateDisplay(); }
-            });
-            forwardBtn.addEventListener('click', () => {
-                Haptics.forward();
-                if (currentIndex < chunks.length - 1) { currentIndex = Math.min(chunks.length - 1, currentIndex + 3); updateDisplay(); }
-            });
-
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('button') && !e.target.closest('.mode-switcher') && !e.target.closest('.speed-presets')) {
-                    togglePlay();
-                }
-            });
-        }
-
-        function showEndScreen() {
-            stopPlayback();
-            const endScreen = document.getElementById('end-screen');
-            document.getElementById('end-chunks').textContent = chunks.length;
-            const minutes = Math.max(1, Math.round((Date.now() - startTime) / 60000));
-            document.getElementById('end-time').textContent = minutes;
-            endScreen.classList.remove('hidden');
-            endScreen.classList.add('visible');
-            Haptics.play();
-
-            document.getElementById('restart-btn').onclick = () => {
+        const tick = () => {
+            if (!isPlaying) return;
+            if (currentIndex < chunks.length - 1) {
+                currentIndex++;
+                updateDisplay();
                 Haptics.tick();
-                endScreen.classList.remove('visible');
+                interval = setTimeout(tick, getMs());
+            } else {
+                showEndScreen();
+            }
+        };
+        interval = setTimeout(tick, getMs());
+    }
+
+    function stopPlayback() {
+        isPlaying = false;
+        clearTimeout(interval);
+        document.getElementById('play-btn').textContent = '▶';
+    }
+
+    function togglePlay() {
+        if (isPlaying) stopPlayback();
+        else startPlayback();
+    }
+
+    // ─── Spatial system ───
+    let lastBeta = 0, lastGamma = 0, idleTimer = null, breathingFrame = null, driftFrame = null;
+    let isBreathing = false, isDrifting = false;
+
+    function setupSpatialAnchoring() {
+        if (!window.DeviceOrientationEvent) return;
+        window.addEventListener('deviceorientation', (event) => {
+            if (!isPlaying) return;
+            const rawBeta = event.beta || 0;
+            const rawGamma = event.gamma || 0;
+            const filteredBeta = kalmanBeta.update(rawBeta);
+            const filteredGamma = kalmanGamma.update(rawGamma);
+            const d = SpectorCore.computeSpatialDeltas(filteredGamma, filteredBeta, lastGamma, lastBeta, currentMode);
+
+            const activeChunk = document.querySelector('.chunk.active');
+            if (activeChunk) {
+                activeChunk.style.transition = currentMode === 'comfort'
+                    ? 'transform 0.82s cubic-bezier(0.17, 1, 0.36, 1)'
+                    : 'transform 0.22s ease-out';
+                activeChunk.style.transform =
+                    `translate(${d.deltaX}px, ${d.deltaY}px) rotate(${d.deltaRotate}deg) scale(${d.deltaScale})`;
+            }
+            lastBeta = filteredBeta;
+            lastGamma = filteredGamma;
+
+            clearTimeout(idleTimer);
+            idleTimer = setTimeout(() => {
+                if (isPlaying && currentMode === 'comfort' && activeChunk && !isBreathing && !isDrifting)
+                    startDualSineBreathing(activeChunk);
+            }, 880);
+        });
+    }
+
+    function startDualSineBreathing(chunk) {
+        if (!chunk || isBreathing) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        isBreathing = true;
+        isDrifting = false;
+        cancelAnimationFrame(driftFrame);
+        let breatheStart = null;
+        const slowPeriod = 4600;
+        const fastPeriod = 2100;
+
+        const breathe = (timestamp) => {
+            if (!isPlaying || currentMode !== 'comfort' || !chunk.classList.contains('active')) {
+                isBreathing = false; return;
+            }
+            if (!breatheStart) breatheStart = timestamp;
+            const elapsed = timestamp - breatheStart;
+            const slow = (elapsed % slowPeriod) / slowPeriod;
+            const slowY = Math.sin(slow * Math.PI * 2) * -2.1;
+            const slowScale = 1 + Math.sin(slow * Math.PI * 2) * 0.0023;
+            const fast = ((elapsed + 420) % fastPeriod) / fastPeriod;
+            const fastY = Math.sin(fast * Math.PI * 2) * -0.55;
+            const fastScale = 1 + Math.sin(fast * Math.PI * 2) * 0.0006;
+
+            chunk.style.transition = 'none';
+            chunk.style.transform = `translate(0px, ${slowY + fastY}px) rotate(0deg) scale(${slowScale + fastScale})`;
+            chunk.style.opacity = (0.980 + Math.sin(slow * Math.PI * 2) * 0.011).toFixed(3);
+            breathingFrame = requestAnimationFrame(breathe);
+        };
+        breathingFrame = requestAnimationFrame(breathe);
+
+        setTimeout(() => {
+            if (isPlaying && currentMode === 'comfort' && chunk.classList.contains('active')) {
+                cancelAnimationFrame(breathingFrame);
+                isBreathing = false;
+                chunk.style.transition = 'transform 2.4s cubic-bezier(0.33, 1, 0.68, 1), opacity 2.4s ease-out';
+                chunk.style.transform = 'translate(0px, 0px) rotate(0deg) scale(1)';
+                chunk.style.opacity = '1';
                 setTimeout(() => {
-                    endScreen.classList.add('hidden');
-                    currentIndex = 0;
-                    render();
-                    startPlayback();
-                }, 300);
-            };
-            document.getElementById('new-script-btn').onclick = () => window.location.href = 'index.html';
-            document.getElementById('exit-end-btn').onclick = () => window.location.href = 'index.html';
-        }
+                    if (isPlaying && currentMode === 'comfort' && chunk.classList.contains('active'))
+                        startGentleDriftWithRotation(chunk);
+                }, 1150);
+            }
+        }, 4900);
+    }
 
-        function init() {
-            const script = getScriptFromURL();
-            chunks = hybridChunk(script);
-            render();
-            setupControls();
-            setupModeSwitcher();
-            setupSpeedPresets();
-            setupSpatialAnchoring();
-            applyMode('focus');
-            updateDisplay();
+    function startGentleDriftWithRotation(chunk) {
+        if (!chunk || isDrifting || isBreathing) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        isDrifting = true;
+        let driftTime = 0;
+        const drift = () => {
+            if (!isPlaying || currentMode !== 'comfort' || !chunk.classList.contains('active') || isBreathing) {
+                isDrifting = false; return;
+            }
+            driftTime += 0.0075;
+            const driftX = Math.sin(driftTime * 0.65) * 1.15;
+            const driftY = Math.sin(driftTime * 0.42) * 0.95;
+            const driftRotate = Math.sin(driftTime * 0.38) * 0.035;
+            chunk.style.transition = 'transform 1.75s cubic-bezier(0.33, 1, 0.68, 1)';
+            chunk.style.transform = `translate(${driftX}px, ${driftY}px) rotate(${driftRotate}deg) scale(1.0004)`;
+            driftFrame = setTimeout(() => {
+                if (isPlaying && currentMode === 'comfort' && chunk.classList.contains('active') && !isBreathing) drift();
+                else isDrifting = false;
+            }, 1780);
+        };
+        drift();
+    }
 
-            document.addEventListener('keydown', (e) => {
-                if (e.key === ' ' || e.key === 'k') { e.preventDefault(); togglePlay(); }
-                if (e.key.toLowerCase() === 'r') {
-                    if (currentIndex > 0) currentIndex = Math.max(0, currentIndex - 3);
-                    updateDisplay();
-                }
+    function settleActiveChunk() {
+        const activeChunk = document.querySelector('.chunk.active');
+        if (!activeChunk) return;
+        isBreathing = false; isDrifting = false;
+        clearTimeout(idleTimer); cancelAnimationFrame(breathingFrame); clearTimeout(driftFrame);
+
+        activeChunk.style.transition = 'transform 0.68s cubic-bezier(0.23, 1.0, 0.32, 1)';
+        activeChunk.style.transform = 'translate(0px, 0px) rotate(0deg) scale(1.0075)';
+
+        setTimeout(() => {
+            if (activeChunk.classList.contains('active') && currentMode === 'comfort') {
+                activeChunk.style.transition = 'transform 0.95s cubic-bezier(0.17, 1, 0.36, 1)';
+                activeChunk.style.transform = 'translate(0px, 0px) rotate(0deg) scale(1)';
+                setTimeout(() => {
+                    if (isPlaying && currentMode === 'comfort' && activeChunk.classList.contains('active'))
+                        startDualSineBreathing(activeChunk);
+                }, 860);
+            }
+        }, 740);
+    }
+
+    function applyMode(mode) {
+        currentMode = mode;
+        document.body.classList.remove('comfort-mode', 'focus-mode', 'presentation-mode');
+        document.body.classList.add(`${mode}-mode`);
+        document.querySelectorAll('.mode-btn').forEach(btn =>
+            btn.classList.toggle('active', btn.dataset.mode === mode));
+        Haptics.modeChange();
+    }
+
+    function setupSpeedPresets() {
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentSpeed = btn.dataset.speed;
+                Haptics.preset();
             });
+        });
+    }
+
+    function setupModeSwitcher() {
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => applyMode(btn.dataset.mode));
+        });
+    }
+
+    function setupControls() {
+        document.getElementById('play-btn').addEventListener('click', togglePlay);
+        document.getElementById('rewind-btn').addEventListener('click', () => {
+            Haptics.rewind();
+            if (currentIndex > 0) { currentIndex = Math.max(0, currentIndex - 3); updateDisplay(); }
+        });
+        document.getElementById('forward-btn').addEventListener('click', () => {
+            Haptics.forward();
+            if (currentIndex < chunks.length - 1) {
+                currentIndex = Math.min(chunks.length - 1, currentIndex + 3);
+                updateDisplay();
+            }
+        });
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('button') && !e.target.closest('.mode-switcher') &&
+                !e.target.closest('.speed-presets') && !e.target.closest('.customize-panel'))
+                togglePlay();
+        });
+    }
+
+    function setupCustomization() {
+        const root = document.documentElement;
+        const textSize = document.getElementById('text-size');
+        const lineSpacing = document.getElementById('line-spacing');
+        const compactToggle = document.getElementById('compact-toggle');
+
+        textSize.addEventListener('input', () => {
+            root.style.setProperty('--chunk-size', textSize.value + 'px');
+            document.getElementById('text-size-val').textContent = textSize.value + 'px';
+        });
+        lineSpacing.addEventListener('input', () => {
+            root.style.setProperty('--chunk-leading', lineSpacing.value);
+            document.getElementById('line-spacing-val').textContent = lineSpacing.value;
+        });
+        compactToggle.addEventListener('click', () => {
+            compactToggle.classList.toggle('active');
+            if (compactToggle.classList.contains('active')) {
+                root.style.setProperty('--chunk-size', '26px');
+                textSize.value = 26;
+                document.getElementById('text-size-val').textContent = '26px';
+            }
+        });
+    }
+
+    function saveToLibrary() {
+        const STORAGE_KEY = 'spector_scripts_v1';
+        let library = [];
+        try { library = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch {}
+        const title = rawScript.slice(0, 40).trim() + (rawScript.length > 40 ? '…' : '');
+        const entry = { id: Date.now().toString(36), title, text: rawScript, savedAt: Date.now() };
+        library.unshift(entry);
+        if (library.length > 20) library.length = 20;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(library));
+    }
+
+    function showEndScreen() {
+        stopPlayback();
+        const endScreen = document.getElementById('end-screen');
+        const elapsed = Date.now() - startTime;
+        document.getElementById('end-chunks').textContent = chunks.length;
+        document.getElementById('end-time').textContent = Math.max(1, Math.round(elapsed / 60000));
+        document.getElementById('end-wpm').textContent = SpectorCore.estimateWpm(totalWords, elapsed);
+        endScreen.classList.remove('hidden');
+        endScreen.classList.add('visible');
+        Haptics.play();
+
+        document.getElementById('restart-btn').onclick = () => {
+            Haptics.tick();
+            endScreen.classList.remove('visible');
+            setTimeout(() => {
+                endScreen.classList.add('hidden');
+                currentIndex = 0;
+                startTime = 0;
+                render();
+                updateDisplay();
+                startPlayback();
+            }, 300);
+        };
+        document.getElementById('edit-script-btn').onclick = () => {
+            localStorage.setItem('spector_draft', JSON.stringify({ title: '', text: rawScript }));
+            window.location.href = 'index.html';
+        };
+        document.getElementById('save-end-btn').onclick = () => {
+            saveToLibrary();
+            document.getElementById('save-end-btn').textContent = 'Saved ✓';
+        };
+        document.getElementById('new-script-btn').onclick = () => window.location.href = 'index.html';
+        document.getElementById('exit-end-btn').onclick = () => window.location.href = 'index.html';
+    }
+
+    function init() {
+        if (new URLSearchParams(window.location.search).has('test')) {
+            runSpectorCoreTests();
+            return;
         }
 
-        window.onload = init;
+        rawScript = getScriptFromURL();
+        totalWords = rawScript.split(/\s+/).filter(Boolean).length;
+        chunks = hybridChunk(rawScript);
+        render();
+        setupControls();
+        setupModeSwitcher();
+        setupSpeedPresets();
+        setupSpatialAnchoring();
+        setupCustomization();
+        applyMode('focus');
+        updateDisplay();
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === ' ' || e.key === 'k') { e.preventDefault(); togglePlay(); }
+            if (e.key.toLowerCase() === 'r') {
+                if (currentIndex > 0) { currentIndex = Math.max(0, currentIndex - 3); updateDisplay(); }
+            }
+        });
+
+        if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+        runSpectorCoreTests();
+    }
+
+    // ─── Pure-logic exerciser (drives shipped SpectorCore functions) ───
+    function runSpectorCoreTests() {
+        const results = [];
+        const assert = (label, condition) => {
+            results.push({ label, pass: !!condition });
+            if (!condition) console.error('[SpectorTest FAIL]', label);
+        };
+
+        const sample = 'Hello world. This is a longer sentence with many words that should be split. Done!';
+        const chunked = SpectorCore.chunk(sample, 'hybrid');
+        assert('hybridChunk count >= 3', chunked.length >= 3);
+        assert('hybridChunk preserves content', chunked.join(' ').includes('Hello'));
+        assert('hybridChunk short sentence intact', chunked.some(c => c.includes('Hello world')));
+
+        const sentenceChunks = SpectorCore.chunk(sample, 'sentence');
+        assert('sentence strategy count >= 2', sentenceChunks.length >= 2);
+
+        const msFocus = SpectorCore.getMs('focus', 'normal', 'test, phrase.');
+        const msComfortSlow = SpectorCore.getMs('comfort', 'slow', 'End.');
+        const msPresFast = SpectorCore.getMs('presentation', 'fast', 'word');
+        assert('getMs focus normal in range', msFocus >= 1200 && msFocus <= 5000);
+        assert('getMs comfort slow > focus normal', msComfortSlow > msFocus);
+        assert('getMs presentation fast < comfort slow', msPresFast < msComfortSlow);
+        assert('getMs punctuation increases timing', SpectorCore.getMs('focus', 'normal', 'End.') > SpectorCore.getMs('focus', 'normal', 'word'));
+
+        const kf = new SpectorCore.KalmanFilter();
+        const readings = [10, 12, 11, 10.5, 11, 10.8];
+        let last = 0;
+        readings.forEach(r => { last = kf.update(r); });
+        assert('KalmanFilter converges near mean', last > 9 && last < 13);
+        kf.reset();
+        assert('KalmanFilter reset', kf.X === 0 && kf.P === 1);
+
+        const deltas = SpectorCore.computeSpatialDeltas(5, 10, 3, 8, 'comfort');
+        assert('spatial deltas have deltaX', typeof deltas.deltaX === 'number');
+        assert('comfort sensitivity > focus', Math.abs(SpectorCore.computeSpatialDeltas(5, 10, 3, 8, 'comfort').deltaX) >
+            Math.abs(SpectorCore.computeSpatialDeltas(5, 10, 3, 8, 'focus').deltaX));
+
+        assert('estimateWpm reasonable', SpectorCore.estimateWpm(150, 60000) === 150);
+
+        let hookCalled = false;
+        SpectorCore.registerPostChunkHook(ch => { hookCalled = true; return ch; });
+        SpectorCore.chunk('Test.');
+        assert('postChunkHook invoked', hookCalled);
+
+        const allPass = results.every(r => r.pass);
+        window.__spectorTestResults = { allPass, results };
+        console.log('[SpectorTest]', allPass ? 'ALL PASS' : 'FAILURES', results);
+        return allPass;
+    }
+
+    window.onload = init;
     </script>
 </body>
 </html>
