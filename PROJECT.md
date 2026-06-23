@@ -1,4 +1,4 @@
-# SPECTOR — Project Status & Roadmap
+# SPECTOR — Project Status & Roadmap 
 
 **Last updated:** June 24, 2026  
 **Repository:** [github.com/hydrogenbondss/SPECTOR](https://github.com/hydrogenbondss/SPECTOR)  
