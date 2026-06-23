@@ -196,11 +196,64 @@
         return Math.round(wordCount / (elapsedMs / 60000));
     }
 
+    /** Portable motion permission + listener lifecycle (testable via createMotion(fakeWin)). */
+    function createSpectorMotion(win) {
+        const target = win || window;
+        let handler = null;
+        let bound = false;
+        let permissionState = 'unknown';
+
+        return {
+            get bound() { return bound; },
+            get permissionState() { return permissionState; },
+
+            async ensurePermission() {
+                if (!target.DeviceOrientationEvent) return false;
+                const req = target.DeviceOrientationEvent.requestPermission;
+                if (typeof req !== 'function') {
+                    permissionState = 'unnecessary';
+                    return true;
+                }
+                try {
+                    const result = await req.call(target.DeviceOrientationEvent);
+                    permissionState = result;
+                    return result === 'granted';
+                } catch (err) {
+                    permissionState = 'denied';
+                    return false;
+                }
+            },
+
+            unbind() {
+                if (handler) {
+                    target.removeEventListener('deviceorientation', handler);
+                    handler = null;
+                }
+                bound = false;
+            },
+
+            bind(onOrientation) {
+                this.unbind();
+                if (!target.DeviceOrientationEvent || typeof onOrientation !== 'function') return false;
+                handler = (event) => onOrientation(event);
+                target.addEventListener('deviceorientation', handler);
+                bound = true;
+                return true;
+            },
+
+            registerPageHideOnce(onHide) {
+                if (typeof onHide !== 'function') return;
+                target.addEventListener('pagehide', onHide, { once: true });
+            }
+        };
+    }
+
     const SpectorCore = {
         KalmanFilter,
         chunkStrategies,
         postChunkHooks,
         splitSentences,
+        createMotion: createSpectorMotion,
         chunk(text, strategyName = 'hybrid') {
             const fn = chunkStrategies[strategyName] || chunkStrategies.hybrid;
             let chunks = fn(text);
@@ -218,6 +271,8 @@
         }
     };
     window.SpectorCore = SpectorCore;
+
+    const playerMotion = SpectorCore.createMotion(window);
 
     // ─── Player state ───
     let chunks = [];
@@ -333,37 +388,9 @@
         else startPlayback();
     }
 
-    // ─── Spatial system ───
+    // ─── Spatial system (bind only after motion permission on user gesture) ───
     let lastBeta = 0, lastGamma = 0, idleTimer = null, breathingFrame = null, driftFrame = null;
     let isBreathing = false, isDrifting = false;
-    let spatialHandler = null;
-    let spatialAnchoringReady = false;
-    let motionPermissionState = 'unknown';
-    let pageHideHandler = null;
-    let pageHideBound = false;
-
-    async function ensureMotionPermission() {
-        if (!window.DeviceOrientationEvent) return false;
-        if (typeof DeviceOrientationEvent.requestPermission !== 'function') {
-            motionPermissionState = 'unnecessary';
-            return true;
-        }
-        try {
-            const result = await DeviceOrientationEvent.requestPermission();
-            motionPermissionState = result;
-            return result === 'granted';
-        } catch (err) {
-            motionPermissionState = 'denied';
-            return false;
-        }
-    }
-
-    function bindPageHideTeardown() {
-        if (pageHideBound) return;
-        pageHideHandler = teardownSpatialAnchoring;
-        window.addEventListener('pagehide', pageHideHandler);
-        pageHideBound = true;
-    }
 
     function resetSpatialState() {
         kalmanBeta.reset();
@@ -378,18 +405,12 @@
     }
 
     function teardownSpatialAnchoring() {
-        if (spatialHandler) {
-            window.removeEventListener('deviceorientation', spatialHandler);
-            spatialHandler = null;
-        }
-        spatialAnchoringReady = false;
+        playerMotion.unbind();
         resetSpatialState();
     }
 
     function setupSpatialAnchoring() {
-        if (!window.DeviceOrientationEvent) return;
-        if (spatialAnchoringReady) return;
-        spatialHandler = (event) => {
+        playerMotion.bind((event) => {
             if (!isPlaying) return;
             const rawBeta = event.beta || 0;
             const rawGamma = event.gamma || 0;
@@ -413,9 +434,7 @@
                 if (isPlaying && currentMode === 'comfort' && activeChunk && !isBreathing && !isDrifting)
                     startDualSineBreathing(activeChunk);
             }, 880);
-        };
-        window.addEventListener('deviceorientation', spatialHandler);
-        spatialAnchoringReady = true;
+        });
     }
 
     function startDualSineBreathing(chunk) {
@@ -538,7 +557,7 @@
         if (!btn || typeof DeviceOrientationEvent?.requestPermission !== 'function') return;
         btn.classList.remove('hidden');
         btn.addEventListener('click', async () => {
-            const granted = await ensureMotionPermission();
+            const granted = await playerMotion.ensurePermission();
             btn.textContent = granted ? 'Motion enabled ✓' : 'Motion denied';
             if (granted) setupSpatialAnchoring();
         });
@@ -546,7 +565,7 @@
 
     async function handlePlayGesture() {
         if (!isPlaying) {
-            const granted = await ensureMotionPermission();
+            const granted = await playerMotion.ensurePermission();
             if (granted) setupSpatialAnchoring();
         }
         togglePlay();
@@ -645,10 +664,11 @@
 
     function init() {
         if (new URLSearchParams(window.location.search).has('test')) {
-            const pass = runSpectorCoreTests();
-            document.body.innerHTML = '<pre id="spector-test-output">' +
-                JSON.stringify(window.__spectorTestResults, null, 2) + '</pre>';
-            document.title = pass ? 'SpectorTest: ALL PASS' : 'SpectorTest: FAIL';
+            runSpectorCoreTests().then((pass) => {
+                document.body.innerHTML = '<pre id="spector-test-output">' +
+                    JSON.stringify(window.__spectorTestResults, null, 2) + '</pre>';
+                document.title = pass ? 'SpectorTest: ALL PASS' : 'SpectorTest: FAIL';
+            });
             return;
         }
 
@@ -677,11 +697,11 @@
             teardownSpatialAnchoring();
             window.location.href = 'index.html';
         });
-        bindPageHideTeardown();
+        playerMotion.registerPageHideOnce(() => teardownSpatialAnchoring());
     }
 
     // ─── Pure-logic exerciser (drives shipped SpectorCore functions) ───
-    function runSpectorCoreTests() {
+    async function runSpectorCoreTests() {
         const results = [];
         const assert = (label, condition) => {
             results.push({ label, pass: !!condition });
@@ -728,6 +748,34 @@
         SpectorCore.registerPostChunkHook(ch => { hookCalled = true; return ch; });
         SpectorCore.chunk('Test.');
         assert('postChunkHook invoked', hookCalled);
+
+        const motionEvents = { add: [], remove: [] };
+        const fakeWin = {
+            DeviceOrientationEvent: { requestPermission: async () => 'granted' },
+            addEventListener(type, fn, opts) {
+                motionEvents.add.push({ type, fn, opts: opts || null });
+            },
+            removeEventListener(type, fn) {
+                motionEvents.remove.push({ type, fn });
+            }
+        };
+        const testMotion = SpectorCore.createMotion(fakeWin);
+        assert('motion starts unbound', !testMotion.bound);
+        assert('motion ensurePermission granted', await testMotion.ensurePermission());
+        testMotion.bind(() => {});
+        assert('motion bind sets bound', testMotion.bound);
+        assert('deviceorientation listener added',
+            motionEvents.add.some(e => e.type === 'deviceorientation'));
+        const removeCount = motionEvents.remove.length;
+        testMotion.unbind();
+        assert('motion unbind clears bound', !testMotion.bound);
+        assert('deviceorientation listener removed',
+            motionEvents.remove.length > removeCount);
+        testMotion.bind(() => {});
+        assert('motion re-bind after unbind', testMotion.bound);
+        testMotion.registerPageHideOnce(() => testMotion.unbind());
+        assert('pagehide once registered',
+            motionEvents.add.some(e => e.type === 'pagehide' && e.opts && e.opts.once));
 
         const allPass = results.every(r => r.pass);
         window.__spectorTestResults = { allPass, results };

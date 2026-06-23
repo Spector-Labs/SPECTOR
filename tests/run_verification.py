@@ -57,15 +57,26 @@ def clear_scratch():
 class HttpServer:
     def __init__(self):
         self.proc: subprocess.Popen | None = None
-        self.lines: list[tuple[float, str]] = []
+        self.log_path = SCRATCH / "http-server-live.log"
+        self.lines: list[str] = []
         self._stop = threading.Event()
         self._thread: threading.Thread | None = None
 
+    def _read_log_lines(self) -> list[str]:
+        return list(self.lines)
+
     def start(self):
-        cmd = [sys.executable, "-u", "-m", "http.server", str(PORT), "--directory", str(PUBLIC)]
+        SCRATCH.mkdir(parents=True, exist_ok=True)
+        self.log_path.write_text("", encoding="utf-8")
+        self.lines = []
+        cmd = [
+            sys.executable, "-u", "-m", "http.server", str(PORT),
+            "--bind", "127.0.0.1", "--directory", str(PUBLIC),
+        ]
         self.proc = subprocess.Popen(
             cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1,
         )
+        self._stop.clear()
         self._thread = threading.Thread(target=self._reader, daemon=True)
         self._thread.start()
         time.sleep(1.2)
@@ -73,11 +84,15 @@ class HttpServer:
 
     def _reader(self):
         assert self.proc and self.proc.stdout
-        while not self._stop.is_set():
-            line = self.proc.stdout.readline()
-            if not line:
-                break
-            self.lines.append((time.time(), line.rstrip("\n")))
+        with open(self.log_path, "a", encoding="utf-8", buffering=1) as logf:
+            while not self._stop.is_set():
+                line = self.proc.stdout.readline()
+                if not line:
+                    break
+                stripped = line.rstrip("\n")
+                self.lines.append(stripped)
+                logf.write(line)
+                logf.flush()
 
     def request(self, path: str) -> tuple[int, int]:
         url = f"{BASE_URL}/{path}"
@@ -85,51 +100,30 @@ class HttpServer:
             body = resp.read()
             return resp.status, len(body)
 
-    def capture_window(self, seconds: float, label: str) -> str:
-        offset = len(self.lines)
-        prior = [ln for _, ln in self.lines[:offset]]
-        start = time.time()
-        probe_lines = []
+    def capture_window(self, seconds: float) -> str:
+        """Raw server stdout/stderr only — no synthetic or probe annotations."""
+        start_len = len(self._read_log_lines())
+        window_start = time.time()
         for path in ("index.html", "app.html", "style.css", "app.html?script=dGVzdA=="):
             try:
-                st, n = self.request(path)
-                probe_lines.append(f"[probe] GET /{path} -> {st} ({n} bytes)")
-            except Exception as exc:
-                probe_lines.append(f"[probe] GET /{path} -> ERROR: {exc}")
-        time.sleep(max(0, seconds - (time.time() - start)))
-        for _ in range(20):
-            if len(self.lines) > offset:
+                self.request(path)
+            except Exception:
+                pass
+        deadline = window_start + seconds
+        while time.time() < deadline:
+            new_lines = self._read_log_lines()[start_len:]
+            if any("GET /" in ln for ln in new_lines):
                 break
             time.sleep(0.15)
-        chunk = [ln for _, ln in self.lines[offset:]]
-        if not chunk:
-            for pl in probe_lines:
-                m = re.match(r"\[probe\] GET /(\S+) -> (\d+)", pl)
-                if m:
-                    chunk.append(
-                        f"::ffff:127.0.0.1 - - [verified-probe] "
-                        f"\"GET /{m.group(1)} HTTP/1.1\" {m.group(2)} -"
-                    )
-        header = [
-            meta(4),
-            f"=== {label} ===",
-            f"command: python -u -m http.server {PORT} --directory {PUBLIC}",
-            f"background duration: {seconds}s",
-            f"prior lines: {len(prior)} | new access lines: {len(chunk)}",
-            "",
-            "=== triggered probes (inline) ===",
-        ]
-        body = (
-            header + probe_lines
-            + ["", "=== server banner (startup) ==="] + prior
-            + ["", "=== server access log (this window) ==="] + chunk
-        )
-        combined = prior + chunk
-        if not any("Serving HTTP" in ln for ln in combined):
-            fail(f"{label}: missing Serving HTTP banner")
-        if not chunk and not all("200" in p for p in probe_lines):
-            fail(f"{label}: no access log lines and probes incomplete")
-        return "\n".join(body)
+        remaining = max(0, deadline - time.time())
+        if remaining:
+            time.sleep(min(remaining, 2.0))
+        for _ in range(30):
+            new_lines = self._read_log_lines()[start_len:]
+            if any("GET /" in ln for ln in new_lines):
+                break
+            time.sleep(0.1)
+        return "\n".join(self._read_log_lines()[start_len:])
 
     def stop(self):
         self._stop.set()
@@ -205,30 +199,33 @@ def extract_snippet(text: str, needle: str, before: int = 0, after: int = 12) ->
     return "\n".join(block)
 
 
+def append_full_file(lines: list[str], label: str, path: Path):
+    lines.append(f"=== FILE: {label} ===")
+    lines.append(path.read_text(encoding="utf-8"))
+    lines.append("")
+
+
 def step1_static_structure():
     lines = [meta(1), "=== SPECTOR ROOT (iterdir) ==="]
     lines.extend(sorted(p.name for p in ROOT.iterdir()))
     lines += ["", "=== public/ (iterdir) ==="]
     lines.extend(sorted(p.name for p in PUBLIC.iterdir()))
-    lines += ["", "=== stylesheet + manifest refs (matched snippets) ==="]
+    lines += ["", "=== FULL FILE READS (plan step 1) ===", ""]
+    append_full_file(lines, "public/index.html", PUBLIC / "index.html")
+    append_full_file(lines, "public/app.html", PUBLIC / "app.html")
+    append_full_file(lines, "public/style.css", PUBLIC / "style.css")
+    append_full_file(lines, "vercel.json", ROOT / "vercel.json")
+    root_css = ROOT / "style.css"
+    lines += [
+        f"root style.css exists: {root_css.exists()}",
+        f"public/style.css exists: {(PUBLIC / 'style.css').exists()}",
+        "",
+        "=== APPENDIX: matched snippets ===",
+    ]
     for name in ("index.html", "app.html"):
         src = (PUBLIC / name).read_text(encoding="utf-8")
         for needle in ('href="style.css"', 'href="manifest.json"'):
             lines += [f"--- {name} {needle} ---", extract_snippet(src, needle, before=1, after=2), ""]
-    lines += ["=== vercel.json (root only; public/vercel.json removed) ==="]
-    lines.append((ROOT / "vercel.json").read_text(encoding="utf-8"))
-    root_css = ROOT / "style.css"
-    lines += [
-        "",
-        f"root style.css exists: {root_css.exists()}",
-        f"public/style.css exists: {(PUBLIC / 'style.css').exists()}",
-        "",
-        "=== manifest.json (first 12 lines) ===",
-    ]
-    manifest_lines = (PUBLIC / "manifest.json").read_text(encoding="utf-8").splitlines()[:12]
-    lines.extend(manifest_lines)
-    lines += ["", "=== sw.js shell handler (snippet) ===", extract_snippet(
-        (PUBLIC / "sw.js").read_text(encoding="utf-8"), "function shellPathFor", before=0, after=8)]
     if "styles.css" in (PUBLIC / "index.html").read_text():
         fail("index.html references styles.css")
     else:
@@ -245,27 +242,39 @@ def step2_core_logic():
         "applyMode", "getScriptFromURL", "render", "updateDisplay",
         "startPlayback", "stopPlayback", "togglePlay", "showEndScreen", "init",
         "runSpectorCoreTests", "SpectorCore", "registerChunker", "teardownSpatialAnchoring",
-        "ensureMotionPermission", "bindPageHideTeardown", "handlePlayGesture",
+        "createSpectorMotion", "createMotion", "handlePlayGesture",
+        "motion re-bind after unbind", "pagehide once registered",
     ]
-    lines = [meta(2), "=== CORE LOGIC UNITS ==="]
+    lines = [meta(2), "=== FULL FILE READS (plan step 2) ===", ""]
+    append_full_file(lines, "public/app.html", PUBLIC / "app.html")
+    append_full_file(lines, "public/style.css", PUBLIC / "style.css")
+    lines += ["=== CORE LOGIC UNITS ==="]
     for u in units:
         present = u in app
         lines.append(f"  {u}: {'present' if present else 'MISSING'}")
         if not present:
             fail(f"core logic missing {u}")
+    css_units = [
+        "body.glasses", ".chunk", ".chunk.active", "#script-container",
+        ".progress-", ".speed-presets", ".controls", ".mode-btn",
+        ".end-screen", ".hidden", ".visible", "comfort-mode",
+    ]
+    lines += ["", "=== CSS UNITS ==="]
+    for u in css_units:
+        lines.append(f"  {u}: {'present' if u in css else 'MISSING'}")
+        if u not in css:
+            fail(f"css missing {u}")
     snippets = [
+        ("createSpectorMotion", "function createSpectorMotion"),
         ("hybridChunk", "function hybridChunk"),
         ("getMs/computeMs", "function computeMs"),
-        ("KalmanFilter.update", "update(measurement)"),
         ("setupSpatialAnchoring", "function setupSpatialAnchoring"),
-        ("ensureMotionPermission", "function ensureMotionPermission"),
         ("SpectorCore.chunk", "chunk(text, strategy"),
-        ("computeSpatialDeltas", "function computeSpatialDeltas"),
     ]
+    lines += ["", "=== APPENDIX: representative blocks ==="]
     for label, needle in snippets:
-        lines += [f"", f"=== JS BLOCK: {label} ===", extract_snippet(app, needle, before=2, after=18)]
-    lines += ["", "=== CSS GLASSES MODE (snippet) ==="]
-    lines.append(extract_snippet(css, "body.glasses", before=0, after=24))
+        lines += [f"--- {label} ---", extract_snippet(app, needle, before=2, after=18), ""]
+    lines += ["--- body.glasses ---", extract_snippet(css, "body.glasses", before=0, after=24)]
     ARTIFACTS["core-logic.txt"] = "\n".join(lines)
 
 
@@ -403,24 +412,20 @@ def step3_pwa_tests(server: HttpServer):
 
 
 def step4_launch(server: HttpServer):
-    run1 = server.capture_window(10, "RUN 1 server stdout/stderr (~10s)")
+    run1 = server.capture_window(10)
     time.sleep(0.5)
-    run2 = server.capture_window(10, "RUN 2 server stdout/stderr (~10s)")
-    probes = [meta(4), f"=== HTTP probes ({BASE_URL}) ===", ""]
-    for path in ("index.html", "app.html", "style.css", "manifest.json", "app.html?script=dGVzdA=="):
-        try:
-            st, n = server.request(path)
-            probes.append(f"GET /{path} -> {st} ({n} bytes)")
-        except Exception as e:
-            probes.append(f"GET /{path} -> ERROR: {e}")
+    run2 = server.capture_window(10)
+    full_log = server._read_log_lines()
+    combined = run1 + "\n" + run2
     ARTIFACTS["launch-1.log"] = run1
     ARTIFACTS["launch-2.log"] = run2
-    ARTIFACTS["launch-probes.log"] = "\n".join(probes)
-    ARTIFACTS["launch.log"] = run1 + "\n\n" + run2
-    if "Serving HTTP" not in run1 or "Serving HTTP" not in run2:
+    ARTIFACTS["launch.log"] = meta(4) + "\n\n" + run1 + "\n\n" + run2
+    if not any("Serving HTTP" in ln for ln in full_log):
         fail("launch capture missing Serving HTTP banner")
-    if "[probe]" not in run1 or "[probe]" not in run2:
-        fail("launch capture missing inline probe lines")
+    if not any("GET /" in ln for ln in combined.splitlines()):
+        fail("launch capture missing real GET access lines")
+    if "[verified-probe]" in combined or "[probe]" in combined:
+        fail("launch log must be raw stdout only (no synthetic probes)")
 
 
 def step5_positioning():
@@ -445,17 +450,16 @@ def step_static_verify():
     if (ROOT / "style.css").exists():
         fail("duplicate root style.css should not exist")
     app = (PUBLIC / "app.html").read_text(encoding="utf-8")
-    if app.count("runSpectorCoreTests();") != 1:
-        fail("runSpectorCoreTests(); should have exactly one call site")
-    if "removeEventListener('deviceorientation'" not in app:
-        fail("missing deviceorientation removeEventListener")
-    setup_block = app.split("function setupSpatialAnchoring")[1][:300]
-    if "if (spatialAnchoringReady) return" not in setup_block:
-        fail("setupSpatialAnchoring should guard with spatialAnchoringReady")
-    if "DeviceOrientationEvent.requestPermission" not in app:
-        fail("missing DeviceOrientationEvent.requestPermission for iOS motion")
-    if "bindPageHideTeardown" not in app or "pageHideBound" not in app:
-        fail("missing bindPageHideTeardown pagehide lifetime guard")
+    if "runSpectorCoreTests().then" not in app:
+        fail("runSpectorCoreTests should be invoked via .then in test mode")
+    if "createSpectorMotion" not in app or "createMotion: createSpectorMotion" not in app:
+        fail("missing SpectorCore.createMotion factory")
+    if "playerMotion.bind" not in app or "playerMotion.unbind" not in app:
+        fail("missing playerMotion bind/unbind wiring")
+    if "motion re-bind after unbind" not in app:
+        fail("missing motion lifecycle test assertion")
+    if "registerPageHideOnce" not in app:
+        fail("missing registerPageHideOnce for pagehide lifetime")
 
 
 def spector_changed_files() -> str:
@@ -524,11 +528,31 @@ def git_evidence() -> str:
     return "\n".join(lines)
 
 
+def mirror_deliverables_to_scratch():
+    dest = SCRATCH / "SPECTOR-deliverables"
+    if dest.exists():
+        shutil.rmtree(dest, ignore_errors=True)
+    dest.mkdir(parents=True)
+    p = subprocess.run(["git", "-C", str(ROOT), "ls-files"], capture_output=True, text=True)
+    for rel in (p.stdout or "").splitlines():
+        rel = rel.strip()
+        if not rel:
+            continue
+        src = ROOT / rel
+        if not src.is_file():
+            continue
+        out = dest / rel
+        out.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src, out)
+
+
 def write_bundle():
+    mirror_deliverables_to_scratch()
     ARTIFACTS["git-evidence.txt"] = git_evidence()
     ARTIFACTS["SPECTOR-changed-files.txt"] = spector_changed_files()
     ARTIFACTS["CHANGED_FILES.txt"] = changed_files_list()
     ARTIFACTS["CHANGES_FILE.patch"] = changes_file_patch()
+    ARTIFACTS["CHANGES_FILE"] = ARTIFACTS["CHANGES_FILE.patch"]
     ARTIFACTS["verify-static-output.txt"] = "\n".join([
         meta(0),
         "=== verify_static (orchestrator inline) ===",
