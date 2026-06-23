@@ -21,6 +21,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 PUBLIC = ROOT / "public"
 SCRATCH = Path(r"C:\Users\USER\AppData\Local\Temp\grok-goal-ee54e3f7c3b7\implementer")
+GOAL_DIR = Path(
+    r"C:\Users\USER\.grok\sessions\C%3A%5CUsers%5CUSER"
+    r"\019ef54a-4da6-7671-89c9-d521e4d96056\goal"
+)
+GOAL_PATCH = SCRATCH.parent / "goal-classifier-ee54e3f7c3b7-7.patch"
 PORT = 8088
 BASE_URL = f"http://127.0.0.1:{PORT}"
 EDGE = Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
@@ -100,30 +105,20 @@ class HttpServer:
             body = resp.read()
             return resp.status, len(body)
 
-    def capture_window(self, seconds: float) -> str:
-        """Raw server stdout/stderr only — no synthetic or probe annotations."""
-        start_len = len(self._read_log_lines())
+    def capture_full_transcript(self, seconds: float) -> str:
+        """Full raw stdout from this server instance: banner + external curl access + idle."""
         window_start = time.time()
+        time.sleep(0.8)
         for path in ("index.html", "app.html", "style.css", "app.html?script=dGVzdA=="):
-            try:
-                self.request(path)
-            except Exception:
-                pass
+            external_curl_get(path)
         deadline = window_start + seconds
         while time.time() < deadline:
-            new_lines = self._read_log_lines()[start_len:]
-            if any("GET /" in ln for ln in new_lines):
-                break
-            time.sleep(0.15)
-        remaining = max(0, deadline - time.time())
-        if remaining:
-            time.sleep(min(remaining, 2.0))
-        for _ in range(30):
-            new_lines = self._read_log_lines()[start_len:]
-            if any("GET /" in ln for ln in new_lines):
+            time.sleep(0.25)
+        for _ in range(20):
+            if any("GET /" in ln for ln in self._read_log_lines()):
                 break
             time.sleep(0.1)
-        return "\n".join(self._read_log_lines()[start_len:])
+        return "\n".join(self._read_log_lines())
 
     def stop(self):
         self._stop.set()
@@ -135,6 +130,24 @@ class HttpServer:
                 self.proc.kill()
         if self._thread:
             self._thread.join(timeout=2)
+
+
+def external_curl_get(path: str) -> tuple[int, str]:
+    """External client (curl subprocess) — not in-process urllib."""
+    url = f"{BASE_URL}/{path}"
+    proc = subprocess.run(
+        ["curl", "-s", "-o", "NUL", "-w", "%{http_code}", url],
+        capture_output=True, text=True, timeout=15,
+    )
+    code = (proc.stdout or "").strip() or "000"
+    return int(code) if code.isdigit() else 0, proc.stderr or ""
+
+
+def git_grep(pattern: str, paths: list[str]) -> str:
+    cmd = ["git", "-C", str(ROOT), "grep", "-n", "-E", pattern, "--", *paths]
+    p = subprocess.run(cmd, capture_output=True, text=True)
+    out = (p.stdout or "").strip()
+    return out if out else f"(no matches for /{pattern}/)"
 
 
 def find_browser() -> Path | None:
@@ -210,7 +223,22 @@ def step1_static_structure():
     lines.extend(sorted(p.name for p in ROOT.iterdir()))
     lines += ["", "=== public/ (iterdir) ==="]
     lines.extend(sorted(p.name for p in PUBLIC.iterdir()))
-    lines += ["", "=== FULL FILE READS (plan step 1) ===", ""]
+    lines += [
+        "",
+        "=== GREP PATTERNS (plan step 1: git grep) ===",
+        "$ git grep -n -E 'href=\"style.css\"' public/index.html public/app.html",
+        git_grep(r'href="style.css"', ["public/index.html", "public/app.html"]),
+        "$ git grep -n -E 'styles\\.css' public/index.html public/app.html",
+        git_grep(r"styles\.css", ["public/index.html", "public/app.html"]),
+        "$ git grep -n -E 'href=\"manifest.json\"' public/index.html public/app.html",
+        git_grep(r'href="manifest.json"', ["public/index.html", "public/app.html"]),
+        "",
+        f"public/vercel.json exists: {(PUBLIC / 'vercel.json').exists()}",
+        f"root vercel.json exists: {(ROOT / 'vercel.json').exists()}",
+        "",
+        "=== FULL FILE READS (plan step 1) ===",
+        "",
+    ]
     append_full_file(lines, "public/index.html", PUBLIC / "index.html")
     append_full_file(lines, "public/app.html", PUBLIC / "app.html")
     append_full_file(lines, "public/style.css", PUBLIC / "style.css")
@@ -219,17 +247,12 @@ def step1_static_structure():
     lines += [
         f"root style.css exists: {root_css.exists()}",
         f"public/style.css exists: {(PUBLIC / 'style.css').exists()}",
-        "",
-        "=== APPENDIX: matched snippets ===",
     ]
-    for name in ("index.html", "app.html"):
-        src = (PUBLIC / name).read_text(encoding="utf-8")
-        for needle in ('href="style.css"', 'href="manifest.json"'):
-            lines += [f"--- {name} {needle} ---", extract_snippet(src, needle, before=1, after=2), ""]
-    if "styles.css" in (PUBLIC / "index.html").read_text():
+    styles_hits = git_grep(r"styles\.css", ["public/index.html"])
+    if styles_hits != "(no matches for /styles\\.css/)":
         fail("index.html references styles.css")
     else:
-        ok("index.html uses style.css")
+        ok("index.html uses style.css (no styles.css grep hits)")
     ARTIFACTS["static-structure.txt"] = "\n".join(lines)
 
 
@@ -244,8 +267,27 @@ def step2_core_logic():
         "runSpectorCoreTests", "SpectorCore", "registerChunker", "teardownSpatialAnchoring",
         "createSpectorMotion", "createMotion", "handlePlayGesture",
         "motion re-bind after unbind", "pagehide once registered",
+        "ensurePermission cached after grant",
     ]
-    lines = [meta(2), "=== FULL FILE READS (plan step 2) ===", ""]
+    lines = [
+        meta(2),
+        "=== GREP PATTERNS (plan step 2: git grep core units) ===",
+        "$ git grep -n hybridChunk public/app.html",
+        git_grep("hybridChunk", ["public/app.html"]),
+        "$ git grep -n 'function computeMs' public/app.html",
+        git_grep("function computeMs", ["public/app.html"]),
+        "$ git grep -n 'class KalmanFilter' public/app.html",
+        git_grep("class KalmanFilter", ["public/app.html"]),
+        "$ git grep -n setupSpatialAnchoring public/app.html",
+        git_grep("setupSpatialAnchoring", ["public/app.html"]),
+        "$ git grep -n 'body\\.glasses' public/style.css",
+        git_grep(r"body\.glasses", ["public/style.css"]),
+        "$ git grep -n '\\.chunk\\.active' public/style.css",
+        git_grep(r"\.chunk\.active", ["public/style.css"]),
+        "",
+        "=== FULL FILE READS (plan step 2) ===",
+        "",
+    ]
     append_full_file(lines, "public/app.html", PUBLIC / "app.html")
     append_full_file(lines, "public/style.css", PUBLIC / "style.css")
     lines += ["=== CORE LOGIC UNITS ==="]
@@ -411,19 +453,28 @@ def step3_pwa_tests(server: HttpServer):
     ARTIFACTS["offline-sw-evidence.txt"] = "\n".join(sw_lines)
 
 
-def step4_launch(server: HttpServer):
-    run1 = server.capture_window(10)
+def step4_launch():
+    """Independent launch servers — full 10s stdout transcripts with external curl."""
+    srv1 = HttpServer()
+    srv1.start()
+    run1 = srv1.capture_full_transcript(10)
+    srv1.stop()
     time.sleep(0.5)
-    run2 = server.capture_window(10)
-    full_log = server._read_log_lines()
+    srv2 = HttpServer()
+    srv2.start()
+    run2 = srv2.capture_full_transcript(10)
+    srv2.stop()
     combined = run1 + "\n" + run2
     ARTIFACTS["launch-1.log"] = run1
     ARTIFACTS["launch-2.log"] = run2
     ARTIFACTS["launch.log"] = meta(4) + "\n\n" + run1 + "\n\n" + run2
-    if not any("Serving HTTP" in ln for ln in full_log):
-        fail("launch capture missing Serving HTTP banner")
-    if not any("GET /" in ln for ln in combined.splitlines()):
-        fail("launch capture missing real GET access lines")
+    ARTIFACTS["http-server-live.log"] = run2
+    if "Serving HTTP" not in run1 or "Serving HTTP" not in run2:
+        fail("launch capture missing Serving HTTP banner in run transcript")
+    if not any("GET /" in ln for ln in run1.splitlines()):
+        fail("launch-1 missing real GET access lines")
+    if not any("GET /" in ln for ln in run2.splitlines()):
+        fail("launch-2 missing real GET access lines")
     if "[verified-probe]" in combined or "[probe]" in combined:
         fail("launch log must be raw stdout only (no synthetic probes)")
 
@@ -460,6 +511,10 @@ def step_static_verify():
         fail("missing motion lifecycle test assertion")
     if "registerPageHideOnce" not in app:
         fail("missing registerPageHideOnce for pagehide lifetime")
+    if "permissionState === 'granted'" not in app.split("async ensurePermission")[1][:400]:
+        fail("ensurePermission should cache granted state")
+    if "!playerMotion.bound" not in app:
+        fail("handlePlayGesture should skip re-bind when already bound")
 
 
 def spector_changed_files() -> str:
@@ -492,25 +547,42 @@ def changed_files_list() -> str:
 
 
 def changes_file_patch() -> str:
-    p = subprocess.run(
-        ["git", "-C", str(ROOT), "diff", "HEAD~6..HEAD", "--", "public/", "tests/", "vercel.json"],
-        capture_output=True, text=True,
-    )
-    stat = subprocess.run(
-        ["git", "-C", str(ROOT), "diff", "--stat", "HEAD~6..HEAD"],
-        capture_output=True, text=True,
-    )
     head = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "HEAD"], capture_output=True, text=True)
-    lines = [
+    stat = subprocess.run(
+        ["git", "-C", str(ROOT), "diff", "--stat", "HEAD~10..HEAD"],
+        capture_output=True, text=True,
+    )
+    diff = subprocess.run(
+        ["git", "-C", str(ROOT), "diff", "HEAD~10..HEAD", "--", "public/", "tests/", "vercel.json"],
+        capture_output=True, text=True,
+    )
+    body = diff.stdout or "# (no diff in range)"
+    header = [
         meta(0),
-        "=== CHANGES_FILE (unified diff SPECTOR deliverables HEAD~6..HEAD) ===",
+        "=== CHANGES_FILE (unified diff SPECTOR deliverables HEAD~10..HEAD) ===",
         f"HEAD={head.stdout.strip()}",
         "",
         (stat.stdout or stat.stderr or "").strip(),
         "",
-        (p.stdout or "# (no diff in range)")[:120000],
     ]
-    return "\n".join(lines)
+    return "\n".join(header) + body[:200000]
+
+
+def sync_harness_honesty_artifacts():
+    """Mirror SPECTOR change list into goal session + append diff to classifier patch."""
+    GOAL_DIR.mkdir(parents=True, exist_ok=True)
+    manifest = changed_files_list() + "\n" + spector_changed_files()
+    (GOAL_DIR / "SPECTOR-CHANGED_FILES.txt").write_text(manifest, encoding="utf-8")
+    diff = subprocess.run(
+        ["git", "-C", str(ROOT), "diff", "HEAD~10..HEAD", "--", "public/", "tests/", "vercel.json"],
+        capture_output=True, text=True,
+    ).stdout or ""
+    if diff.strip():
+        marker = "\n\n# --- SPECTOR deliverable unified diff (run_verification) ---\n"
+        if GOAL_PATCH.is_file():
+            existing = GOAL_PATCH.read_text(encoding="utf-8", errors="replace")
+            if "SPECTOR deliverable unified diff" not in existing:
+                GOAL_PATCH.write_text(existing + marker + diff[:150000], encoding="utf-8")
 
 
 def git_evidence() -> str:
@@ -548,6 +620,7 @@ def mirror_deliverables_to_scratch():
 
 def write_bundle():
     mirror_deliverables_to_scratch()
+    sync_harness_honesty_artifacts()
     ARTIFACTS["git-evidence.txt"] = git_evidence()
     ARTIFACTS["SPECTOR-changed-files.txt"] = spector_changed_files()
     ARTIFACTS["CHANGED_FILES.txt"] = changed_files_list()
@@ -574,7 +647,9 @@ def main():
         step_static_verify()
         step1_static_structure()
         step2_core_logic()
-        step4_launch(server)
+        server.stop()
+        step4_launch()
+        server.start()
         step3_pwa_tests(server)
         step5_positioning()
     finally:

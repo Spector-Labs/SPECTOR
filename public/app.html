@@ -209,6 +209,8 @@
 
             async ensurePermission() {
                 if (!target.DeviceOrientationEvent) return false;
+                if (permissionState === 'granted' || permissionState === 'unnecessary') return true;
+                if (permissionState === 'denied') return false;
                 const req = target.DeviceOrientationEvent.requestPermission;
                 if (typeof req !== 'function') {
                     permissionState = 'unnecessary';
@@ -559,14 +561,14 @@
         btn.addEventListener('click', async () => {
             const granted = await playerMotion.ensurePermission();
             btn.textContent = granted ? 'Motion enabled ✓' : 'Motion denied';
-            if (granted) setupSpatialAnchoring();
+            if (granted && !playerMotion.bound) setupSpatialAnchoring();
         });
     }
 
     async function handlePlayGesture() {
         if (!isPlaying) {
             const granted = await playerMotion.ensurePermission();
-            if (granted) setupSpatialAnchoring();
+            if (granted && !playerMotion.bound) setupSpatialAnchoring();
         }
         togglePlay();
     }
@@ -762,6 +764,18 @@
         const testMotion = SpectorCore.createMotion(fakeWin);
         assert('motion starts unbound', !testMotion.bound);
         assert('motion ensurePermission granted', await testMotion.ensurePermission());
+        let permCalls = 0;
+        const cacheWin = {
+            DeviceOrientationEvent: {
+                requestPermission: async () => { permCalls++; return 'granted'; }
+            },
+            addEventListener() {},
+            removeEventListener() {}
+        };
+        const cacheMotion = SpectorCore.createMotion(cacheWin);
+        await cacheMotion.ensurePermission();
+        await cacheMotion.ensurePermission();
+        assert('ensurePermission cached after grant', permCalls === 1);
         testMotion.bind(() => {});
         assert('motion bind sets bound', testMotion.bound);
         assert('deviceorientation listener added',
