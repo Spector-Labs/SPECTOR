@@ -30,6 +30,7 @@
             <span class="customize-value" id="line-spacing-val">1.55</span>
         </div>
         <button class="toggle-chip" id="compact-toggle" type="button">Compact HUD</button>
+        <button class="toggle-chip" id="mirror-toggle" type="button" title="Flip text for camera/mirror setups">Mirror</button>
     </div>
 
     <div class="progress-container">
@@ -77,6 +78,15 @@
                 <span class="value" id="end-wpm">—</span>
                 <span>avg wpm</span>
             </div>
+            <div>
+                <span class="value" id="end-consistency">—</span>
+                <span>pacing</span>
+            </div>
+        </div>
+
+        <div class="analytics-panel" id="analytics-panel">
+            <p class="analytics-line" id="analytics-hesitations">—</p>
+            <p class="analytics-line" id="analytics-slowest">—</p>
         </div>
 
         <div class="end-actions">
@@ -168,7 +178,37 @@
         return SpectorCore.chunk(text, 'hybrid');
     }
 
+    function cuePauseMs(chunkText) {
+        const tagged = (chunkText || '').match(/\[pause:(\d+)s\]/i);
+        if (tagged) return parseInt(tagged[1], 10) * 1000;
+        if (/^\[pause\]$/i.test((chunkText || '').trim())) return 2800;
+        if (/\[pause\]/i.test(chunkText || '')) return 1800;
+        return 0;
+    }
+
+    function formatChunkHtml(chunkText) {
+        const escaped = (chunkText || '')
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return escaped
+            .replace(/\*\*([^*]+)\*\*/g, '<span class="cue-emphasis">$1</span>')
+            .replace(/\[emphasis\]/gi, '')
+            .replace(/\[pause(?::\d+s)?\]/gi, '<span class="cue-pause" aria-hidden="true">⏸</span>');
+    }
+
+    function hybridChunkWithCues(text) {
+        const segments = text.split(/\s*\[pause(?::\d+s)?\]\s*/i);
+        const out = [];
+        segments.forEach((seg, i) => {
+            const trimmed = seg.trim();
+            if (trimmed) out.push(...SpectorCore.chunk(trimmed, 'hybrid'));
+            if (i < segments.length - 1) out.push('[pause]');
+        });
+        return out.length ? out : [''];
+    }
+
     function computeMs(mode, speed, chunkText) {
+        const pauseExtra = cuePauseMs(chunkText);
+        if (/^\[pause\]$/i.test((chunkText || '').trim())) return Math.max(1200, pauseExtra);
         let base = 2400;
         if (mode === 'comfort') base = 2800;
         if (mode === 'presentation') base = 3200;
@@ -176,7 +216,34 @@
         if (speed === 'fast') base *= 0.75;
         if (/[.!?]$/.test(chunkText)) base *= 1.35;
         if (/,/.test(chunkText)) base *= 1.15;
-        return Math.max(1200, base);
+        if (/\*\*[^*]+\*\*/.test(chunkText || '')) base *= 1.12;
+        return Math.max(1200, base + pauseExtra);
+    }
+
+    function buildRehearsalAnalytics(timings) {
+        if (!timings.length) {
+            return { consistency: 0, hesitations: 0, slowestLabel: '—', slowestRatio: 0 };
+        }
+        let hesitations = 0;
+        let slowest = { i: 0, ratio: 0, text: '' };
+        const ratios = timings.map((t) => {
+            const expected = Math.max(1, t.expectedMs);
+            const ratio = t.actualMs / expected;
+            if (t.hesitated) hesitations++;
+            if (ratio > slowest.ratio) {
+                slowest = { i: t.index, ratio, text: (t.text || '').slice(0, 48) };
+            }
+            return ratio;
+        });
+        const mean = ratios.reduce((a, b) => a + b, 0) / ratios.length;
+        const variance = ratios.reduce((a, r) => a + Math.pow(r - mean, 2), 0) / ratios.length;
+        const consistency = Math.max(0, Math.min(100, Math.round(100 - Math.sqrt(variance) * 28)));
+        return {
+            consistency,
+            hesitations,
+            slowestLabel: slowest.text ? `"${slowest.text}"` : '—',
+            slowestRatio: slowest.ratio,
+        };
     }
 
     function computeSpatialDeltas(filteredGamma, filteredBeta, lastGamma, lastBeta, mode) {
@@ -265,6 +332,10 @@
         registerChunker(name, fn) { chunkStrategies[name] = fn; },
         registerPostChunkHook(fn) { postChunkHooks.push(fn); },
         getMs: computeMs,
+        cuePauseMs,
+        formatChunkHtml,
+        hybridChunkWithCues,
+        buildRehearsalAnalytics,
         computeSpatialDeltas,
         estimateWpm,
         decodeScript(encoded) {
@@ -286,6 +357,9 @@
     let currentSpeed = 'normal';
     let startTime = 0;
     let totalWords = 0;
+    let lastChunkAdvanceAt = 0;
+    let rehearsalTimings = [];
+    let mirrorEnabled = false;
 
     const kalmanBeta = new KalmanFilter();
     const kalmanGamma = new KalmanFilter();
@@ -321,9 +395,23 @@
         chunks.forEach((chunk, index) => {
             const div = document.createElement('div');
             div.className = 'chunk';
+            if (/^\[pause\]$/i.test((chunk || '').trim())) div.classList.add('cue-pause-chunk');
             div.dataset.index = index;
-            div.textContent = chunk;
+            div.innerHTML = SpectorCore.formatChunkHtml(chunk);
             container.appendChild(div);
+        });
+    }
+
+    function recordChunkTiming(index, hesitated = false) {
+        if (!lastChunkAdvanceAt || index < 0) return;
+        const actualMs = Date.now() - lastChunkAdvanceAt;
+        const expectedMs = SpectorCore.getMs(currentMode, currentSpeed, chunks[index] || '');
+        rehearsalTimings.push({
+            index,
+            expectedMs,
+            actualMs,
+            hesitated,
+            text: chunks[index] || '',
         });
     }
 
@@ -361,18 +449,25 @@
     function startPlayback() {
         if (isPlaying) return;
         isPlaying = true;
-        if (!startTime) startTime = Date.now();
+        if (!startTime) {
+            startTime = Date.now();
+            rehearsalTimings = [];
+        }
+        lastChunkAdvanceAt = Date.now();
         document.getElementById('play-btn').textContent = '⏸ Pause';
         Haptics.play();
 
         const tick = () => {
             if (!isPlaying) return;
             if (currentIndex < chunks.length - 1) {
+                recordChunkTiming(currentIndex);
                 currentIndex++;
+                lastChunkAdvanceAt = Date.now();
                 updateDisplay();
                 Haptics.tick();
                 interval = setTimeout(tick, getMs());
             } else {
+                recordChunkTiming(currentIndex);
                 showEndScreen();
             }
         };
@@ -380,6 +475,10 @@
     }
 
     function stopPlayback() {
+        if (isPlaying && lastChunkAdvanceAt) {
+            recordChunkTiming(currentIndex, true);
+            lastChunkAdvanceAt = Date.now();
+        }
         isPlaying = false;
         clearTimeout(interval);
         document.getElementById('play-btn').textContent = '▶';
@@ -629,6 +728,13 @@
                 document.getElementById('text-size-val').textContent = '26px';
             }
         });
+        const mirrorToggle = document.getElementById('mirror-toggle');
+        mirrorToggle.addEventListener('click', () => {
+            mirrorEnabled = !mirrorEnabled;
+            mirrorToggle.classList.toggle('active', mirrorEnabled);
+            document.body.classList.toggle('mirror-mode', mirrorEnabled);
+            Haptics.preset();
+        });
     }
 
     function saveToLibrary() {
@@ -649,6 +755,16 @@
         document.getElementById('end-chunks').textContent = chunks.length;
         document.getElementById('end-time').textContent = Math.max(1, Math.round(elapsed / 60000));
         document.getElementById('end-wpm').textContent = SpectorCore.estimateWpm(totalWords, elapsed);
+        const analytics = SpectorCore.buildRehearsalAnalytics(rehearsalTimings);
+        document.getElementById('end-consistency').textContent = `${analytics.consistency}%`;
+        document.getElementById('analytics-hesitations').textContent =
+            analytics.hesitations
+                ? `${analytics.hesitations} hesitation${analytics.hesitations === 1 ? '' : 's'} — natural pauses are fine; aim to reduce forced stops.`
+                : 'Smooth run — no mid-chunk hesitations detected.';
+        document.getElementById('analytics-slowest').textContent =
+            analytics.slowestRatio > 1.35
+                ? `Slowest moment: ${analytics.slowestLabel} (${Math.round(analytics.slowestRatio * 100)}% of target pace)`
+                : 'Pacing stayed even across all chunks.';
         endScreen.classList.remove('hidden');
         endScreen.classList.add('visible');
         Haptics.play();
@@ -660,6 +776,8 @@
                 endScreen.classList.add('hidden');
                 currentIndex = 0;
                 startTime = 0;
+                rehearsalTimings = [];
+                lastChunkAdvanceAt = 0;
                 resetSpatialState();
                 render();
                 updateDisplay();
@@ -690,7 +808,7 @@
 
         rawScript = getScriptFromURL();
         totalWords = rawScript.split(/\s+/).filter(Boolean).length;
-        chunks = hybridChunk(rawScript);
+        chunks = SpectorCore.hybridChunkWithCues(rawScript);
         render();
         setupControls();
         setupModeSwitcher();
@@ -759,6 +877,17 @@
             Math.abs(SpectorCore.computeSpatialDeltas(5, 10, 3, 8, 'focus').deltaX));
 
         assert('estimateWpm reasonable', SpectorCore.estimateWpm(150, 60000) === 150);
+
+        const cueHtml = SpectorCore.formatChunkHtml('Say **hello** [pause]');
+        assert('formatChunkHtml emphasis', cueHtml.includes('cue-emphasis') && cueHtml.includes('hello'));
+        const cueChunks = SpectorCore.hybridChunkWithCues('Line one. [pause] Line two.');
+        assert('hybridChunkWithCues inserts pause chunk', cueChunks.includes('[pause]'));
+        const analytics = SpectorCore.buildRehearsalAnalytics([
+            { index: 0, expectedMs: 2000, actualMs: 2100, hesitated: false, text: 'a' },
+            { index: 1, expectedMs: 2000, actualMs: 2400, hesitated: true, text: 'b' },
+        ]);
+        assert('buildRehearsalAnalytics consistency', analytics.consistency >= 0 && analytics.consistency <= 100);
+        assert('buildRehearsalAnalytics hesitations', analytics.hesitations === 1);
 
         let hookCalled = false;
         SpectorCore.registerPostChunkHook(ch => { hookCalled = true; return ch; });

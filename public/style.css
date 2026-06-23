@@ -78,8 +78,20 @@ body {
     font-size: 12.5px;
     color: var(--accent);
     font-weight: 500;
-    margin-bottom: 28px;
+    margin-bottom: 14px;
     letter-spacing: 0.02em;
+}
+
+.market-note {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin: 0 0 28px;
+    max-width: 520px;
+}
+
+.market-note strong {
+    color: var(--accent);
 }
 
 .input-section label {
@@ -380,6 +392,36 @@ body.focus-mode .chunk.active {
     text-shadow: 0 0 40px rgba(232, 213, 183, 0.08);
 }
 
+.cue-emphasis {
+    color: var(--text-active);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: rgba(232, 213, 183, 0.35);
+    text-underline-offset: 4px;
+}
+
+.cue-pause {
+    display: inline-block;
+    margin: 0 4px;
+    opacity: 0.55;
+    font-size: 0.85em;
+}
+
+.chunk.cue-pause-chunk {
+    opacity: 0.45;
+    font-size: calc(var(--chunk-size) * 0.72);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+body.mirror-mode #script-container {
+    transform: scaleX(-1);
+}
+
+body.mirror-mode #script-container .chunk {
+    transform: scaleX(-1);
+}
+
 /* Customization panel */
 .customize-panel {
     display: flex;
@@ -643,6 +685,27 @@ body.focus-mode .chunk.active {
     font-weight: 600;
     color: var(--accent);
     font-variant-numeric: tabular-nums;
+}
+
+.analytics-panel {
+    max-width: 420px;
+    margin: 0 auto 28px;
+    padding: 16px 18px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    text-align: left;
+}
+
+.analytics-line {
+    margin: 0 0 8px;
+    font-size: 13.5px;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.analytics-line:last-child {
+    margin-bottom: 0;
 }
 
 .end-screen .stats span:last-child {
