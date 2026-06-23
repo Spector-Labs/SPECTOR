@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Static verification for SPECTOR — structural checks on shipped files."""
 import json
-import re
 import sys
 from pathlib import Path
 
@@ -21,7 +20,6 @@ def main():
     print("ROOT:", ROOT)
 
     required = [
-        ROOT / "style.css",
         ROOT / "vercel.json",
         PUBLIC / "index.html",
         PUBLIC / "app.html",
@@ -30,15 +28,11 @@ def main():
         PUBLIC / "sw.js",
     ]
     for p in required:
-        check(f"exists: {p.name}", p.is_file())
+        check(f"exists: {p.relative_to(ROOT)}", p.is_file())
         print(f"  {'OK' if p.is_file() else 'MISSING'}: {p}")
 
-    root_css = ROOT / "style.css"
-    pub_css = PUBLIC / "style.css"
-    if root_css.is_file() and pub_css.is_file():
-        same = root_css.read_text(encoding="utf-8") == pub_css.read_text(encoding="utf-8")
-        check("root style.css matches public (symlink or identical)", same)
-        print(f"  root style.css delivery: {'symlink/identical' if same else 'DIVERGED'}")
+    check("no duplicate root style.css", not (ROOT / "style.css").exists())
+    print(f"  root style.css absent: {not (ROOT / 'style.css').exists()}")
 
     for html in [PUBLIC / "index.html", PUBLIC / "app.html"]:
         text = html.read_text(encoding="utf-8")
@@ -50,6 +44,16 @@ def main():
 
     app = (PUBLIC / "app.html").read_text(encoding="utf-8")
     css = (PUBLIC / "style.css").read_text(encoding="utf-8")
+
+    import re
+    check("single runSpectorCoreTests() invocation", app.count("runSpectorCoreTests();") == 1)
+    call_idx = app.find("runSpectorCoreTests();")
+    init_idx = app.find("function init()")
+    test_guard_idx = app.find("has('test')", init_idx)
+    check("runSpectorCoreTests(); only inside ?test guard",
+          call_idx > test_guard_idx > init_idx)
+    check("app has teardownSpatialAnchoring", "function teardownSpatialAnchoring" in app)
+    check("app removes deviceorientation listener", "removeEventListener('deviceorientation'" in app)
 
     core_units = [
         "class KalmanFilter", "function hybridChunk", "function getMs",

@@ -10,7 +10,7 @@
 </head>
 <body class="glasses">
 
-    <button class="exit-btn" onclick="window.location.href='index.html'">← Exit</button>
+    <button class="exit-btn" id="exit-btn">← Exit</button>
 
     <div id="script-container">
         <div id="script-text"></div>
@@ -349,6 +349,15 @@
         clearTimeout(driftFrame);
     }
 
+    function teardownSpatialAnchoring() {
+        if (spatialHandler) {
+            window.removeEventListener('deviceorientation', spatialHandler);
+            spatialHandler = null;
+        }
+        spatialAnchoringReady = false;
+        resetSpatialState();
+    }
+
     function setupSpatialAnchoring() {
         if (!window.DeviceOrientationEvent || spatialAnchoringReady) return;
         spatialHandler = (event) => {
@@ -615,7 +624,12 @@
         });
 
         if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
-        runSpectorCoreTests();
+
+        document.getElementById('exit-btn').addEventListener('click', () => {
+            teardownSpatialAnchoring();
+            window.location.href = 'index.html';
+        });
+        window.addEventListener('pagehide', teardownSpatialAnchoring);
     }
 
     // ─── Pure-logic exerciser (drives shipped SpectorCore functions) ───
