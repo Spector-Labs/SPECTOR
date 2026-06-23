@@ -32,7 +32,7 @@ This guide explains how to test Spector on real Meta Ray-Ban smart glasses using
 - **Comfort mode**: Subtle breathing + gentle spatial movement when you move your head. Feels more natural and calm.
 - **Focus mode**: Completely static. No breathing, no movement. Best for when you want maximum stability.
 - Tap the screen or press play to start/stop.
-- Use the speed presets (Slow / Medium / Fast) to match your speaking pace.
+- Use the speed presets (Slow / Normal / Fast) to match your speaking pace.
 - Tap anywhere to show/hide controls.
 - When finished, you’ll see a clean end screen with stats (chunks read + total time).
 

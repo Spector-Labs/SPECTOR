@@ -15,11 +15,11 @@
         <header>
             <div class="logo">Spector<span class="tm">™</span></div>
             <p class="tagline">Eyes Forward.</p>
-            <p class="subtitle">The superior teleprompter for smart glasses — auto-paced, comfort-tuned, and ready before the Meta glasses app store opens.</p>
-            <div class="hero-badge">Beyond Meta's basic scroll · Founding-dev ready</div>
-            <p class="market-note">Spector is a teleprompter — rehearse on your phone, perform with confidence. Not affiliated with Meta or Ray-Ban; works with any smart-glasses workflow.</p>
+            <p class="subtitle">Auto-paced, comfort-tuned teleprompter for smart glasses and creators who rehearse seriously.</p>
+            <div class="hero-badge">Better than basic in-app scroll · PWA + ready for glasses SDKs</div>
+            <p class="market-note">Rehearse on your phone today. Perform with confidence on glasses tomorrow. Not affiliated with Meta or Ray-Ban — works with any smart-glasses setup.</p>
 
-            <button id="install-btn" class="btn-install" style="margin: 8px auto 20px;">Install Spector (PWA) — offline &amp; daily rehearsal</button>
+            <button id="install-btn" class="btn-install" style="margin: 8px auto 20px;">Install for offline use</button>
         </header>
 
         <div class="input-section">
@@ -30,7 +30,7 @@
             <textarea id="script-input" placeholder="Paste your speech, presentation, or notes here…"></textarea>
 
             <div class="samples-row" style="margin-bottom:12px;">
-                <span style="font-size:12px;color:#888;margin-right:8px;">Try a sample:</span>
+                <span class="samples-label">Or start with a sample script:</span>
                 <button type="button" class="sample-btn" data-sample="keynote">Keynote Opener</button>
                 <button type="button" class="sample-btn" data-sample="pitch">Investor Pitch</button>
                 <button type="button" class="sample-btn" data-sample="demo">Product Demo</button>
@@ -56,12 +56,12 @@
 
         <section class="demo-section">
             <h3>See it in action</h3>
-            <p class="demo-note">30-second walkthrough of the player, Comfort mode spatial response, and end-of-run analytics. (Best experienced on the live site with your own script.)</p>
+            <p class="demo-note">Watch how the player works — including Comfort mode spatial movement that responds to your head.</p>
             <video id="demo-video" controls preload="metadata" style="width:100%;max-width:620px;border-radius:12px;background:#111;">
                 <source src="spector-demo.mp4" type="video/mp4">
                 Your browser does not support the video tag. <a href="spector-demo.mp4">Download the demo</a>.
             </video>
-            <p class="demo-note" style="margin-top:8px;font-size:12px;">Tip: Switch to Comfort mode in the player to feel the head-tilt + breathing effects.</p>
+            <p class="demo-note" style="margin-top:6px;font-size:12px;">Pro tip: Try Comfort mode and move your head gently for the full experience.</p>
         </section>
 
         <!--
@@ -72,16 +72,14 @@
             comfort spatial effects, script library, and PWA install for daily rehearsal.
         -->
         <section class="glasses-future">
-            <h3>Glasses &amp; Future</h3>
-            <p><strong>Ray-Ban Meta Display (primary):</strong> Use Spector on your phone as a superior rehearsal companion — perfect your pacing, then mirror key lines to Display when Meta's teleprompter is too raw.</p>
+            <h3>For smart glasses (today &amp; tomorrow)</h3>
+            <p>Rehearse on your phone with library, auto-pacing, cues, and real analytics — then perform with more confidence on glasses.</p>
             <ul>
-                <li><strong>Phone rehearsal</strong>: script library, adaptive pacing, and analytics before you step on camera or connect glasses.</li>
-                <li><strong>Gen 1 &amp; Gen 2</strong> (camera + AI, no HUD): rehearse here; haptics + cue markers train delivery without looking down.</li>
-                <li><strong>Display / HUD models</strong>: mirror mode, compact HUD typography, glanceable chunk pacing.</li>
-                <li><strong>In the player today</strong>: mirror mode, cue markers (<code>**emphasis**</code>, <code>[pause]</code>), rehearsal analytics after each run.</li>
-                <li><strong>App store (late 2026–2027)</strong>: modular <code>SpectorCore</code> engine ready for founding-developer port.</li>
+                <li><strong>Phone first</strong>: Perfect delivery before you go live or connect glasses. Works great for Gen 1/2 (no HUD) or Display models.</li>
+                <li><strong>In the player</strong>: Comfort mode (subtle head-responsive movement + breathing), Focus, Presentation. Mirror for camera setups. <code>**emphasis**</code> and <code>[pause]</code> cues. Post-run stats on pacing and hesitations.</li>
+                <li><strong>Future-proof</strong>: Built with a portable core engine for when smart glasses app stores open.</li>
             </ul>
-            <p>Not limited to Ray-Ban Meta — any smart-glasses user benefits from Spector's web + PWA workflow today.</p>
+            <p>Works with Ray-Ban Meta and any other smart-glasses workflow. No affiliation with Meta or Ray-Ban.</p>
         </section>
     </div>
 
@@ -203,7 +201,7 @@
             },
             pitch: {
                 title: "Investor Pitch",
-                text: "We're building the rehearsal layer for the next generation of computing. [pause]\n\nOur users rehearse on phone today. [pause:3s] They perform on glasses tomorrow.\n\n**Traction** is strong. **Retention** even stronger. The market is waking up to smart glasses. [pause]\n\nJoin us."
+                text: "We're building the rehearsal layer for the next generation of computing. [pause]\n\nOur users rehearse on phone today. [pause:3s] They perform on glasses tomorrow.\n\n**Traction** is strong. **Retention** even stronger. The market is waking up to smart glasses. [pause]"
             },
             demo: {
                 title: "Product Demo",
@@ -239,13 +237,13 @@
 
             launchBtn.addEventListener('click', () => {
                 const text = textarea.value.trim();
-                if (!text) { alert('Please enter a script first.'); return; }
+                if (!text) { alert('Please paste or choose a sample script first.'); return; }
                 launchScript(text);
             });
 
             saveBtn.addEventListener('click', () => {
                 const text = textarea.value.trim();
-                if (!text) { alert('Nothing to save — add your script first.'); return; }
+                if (!text) { alert('Add some text to your script before saving.'); return; }
                 saveScript(titleEl.value.trim() || 'Untitled Script', text);
                 saveBtn.textContent = 'Saved ✓';
                 setTimeout(() => { saveBtn.textContent = 'Save'; }, 1500);
@@ -270,7 +268,7 @@
                 deferredInstallPrompt = e;
                 // Enhance label when the smart prompt is available
                 if (!btn.textContent.includes('✓')) {
-                    btn.textContent = 'Install Spector (one-tap PWA)';
+                    btn.textContent = 'Install (one-tap PWA)';
                 }
             });
 
@@ -289,9 +287,9 @@
                 // Cross-platform guidance (iOS Safari, desktop, etc.)
                 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
                 if (isIOS) {
-                    alert('On iPhone/iPad: tap the Share button in Safari → "Add to Home Screen". Spector works great offline as a PWA.');
+                    alert('On iPhone/iPad: tap the Share button → "Add to Home Screen". Works great offline.');
                 } else {
-                    alert('Use your browser menu (⋮ or ⠇) → "Install app" or "Add to Home Screen". Works best in Chrome or Edge.');
+                    alert('Use your browser menu → "Install app" or "Add to Home Screen" for offline rehearsal.');
                 }
             });
         }

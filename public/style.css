@@ -223,6 +223,14 @@ textarea:focus { border-color: #555; }
     gap: 6px;
 }
 
+.samples-label {
+    font-size: 12.5px;
+    color: #888;
+    font-weight: 500;
+    margin-right: 6px;
+    white-space: nowrap;
+}
+
 .sample-btn {
     padding: 6px 12px;
     background: rgba(255, 255, 255, 0.06);

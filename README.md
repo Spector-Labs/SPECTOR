@@ -1,6 +1,6 @@
 # Spector™ • Eyes Forward
 
-**The superior teleprompter for smart glasses — auto-paced, comfort-tuned, and ready before the Meta glasses app store opens.**
+**Auto-paced, comfort-tuned teleprompter for smart glasses and serious rehearsal.**
 
 [![Live Demo](https://img.shields.io/badge/Live-spector--plum.vercel.app-000?style=flat-square)](https://spector-plum.vercel.app)
 [![PWA](https://img.shields.io/badge/PWA-Installable-000?style=flat-square)](https://spector-plum.vercel.app)
@@ -8,7 +8,7 @@
 
 **Rehearse on your phone. Perform with confidence on glasses.**
 
-Spector is a premium digital teleprompter PWA (not hardware). It gives creators, speakers, and presenters a dramatically better rehearsal experience than basic built-in tools today — and a modular engine ready for the coming smart glasses app stores.
+Spector is a premium digital teleprompter PWA (software only). It gives creators, speakers, and presenters a dramatically better rehearsal experience than basic paste-and-scroll tools — plus a modular engine built for the coming smart glasses platforms.
 
 > Not affiliated with Meta, Ray-Ban, or any glasses manufacturer. Works with any smart-glasses workflow.
 
@@ -16,7 +16,7 @@ Spector is a premium digital teleprompter PWA (not hardware). It gives creators,
 
 ## Live Demo & Install
 
-**Try it instantly:** [https://spector-plum.vercel.app](https://spector-plum.vercel.app)
+**Try it instantly:** [https://spector-plum.vercel.app](https://spector-plum.vercel.app) — no account needed.
 
 - Paste or drop a .txt script
 - Open in Glasses Mode
@@ -31,11 +31,11 @@ Spector is a premium digital teleprompter PWA (not hardware). It gives creators,
 
 ## See It In Action
 
-**Demo video** (embedded on the live site):
+**Demo video & visuals** (embedded on the live site and in this repo):
 
-The video shows the core experience: launching a script, Comfort mode spatial effects, pacing, and the clean end-of-run analytics.
+Short walkthrough of launching a script, Comfort mode head-responsive effects, and the end-of-run analytics screen.
 
-(Video file: `public/spector-demo.mp4` — also plays in the site header area after deploy.)
+(Video: `public/spector-demo.mp4`; visuals in `assets/`.)
 
 **Concept visuals** (phone UI + real-world usage):
 
@@ -100,13 +100,13 @@ Cues are processed in `hybridChunkWithCues` and respected by `getMs()` timing.
 ## Quick Start (Phone or Desktop)
 
 1. Open [spector-plum.vercel.app](https://spector-plum.vercel.app)
-2. Paste a script or drop a `.txt` file (or click one of the sample buttons)
-3. (Optional) Give it a title and hit **Save**
+2. Paste text, drop a `.txt`, or click one of the sample scripts
+3. (Optional) Title it and **Save** to your library
 4. Hit **Open in Glasses Mode**
-5. Pick mode (start with Focus), speed, customize text size if needed
-6. Tap the play button (or spacebar / anywhere on screen)
-7. Move your head gently in Comfort mode to feel the spatial response
-8. Finish → review stats → iterate or save
+5. Choose mode (try Comfort), speed, and text size
+6. Tap Play (or press Space / tap the screen)
+7. (In Comfort) Move your head gently — the text responds with subtle spatial movement
+8. When done, review your pacing, hesitations, and slowest chunk on the end screen
 
 **On real glasses (Ray-Ban Meta Display etc.):** See [TESTING.md](TESTING.md) for Developer Mode + "Add a Web App" steps.
 
@@ -129,7 +129,7 @@ See [PROJECT.md](PROJECT.md) for detailed shipped items, verification status, an
 
 - **Phase 1 (now):** Beta test on real glasses, gather feedback, polish mirror + cues.
 - **Phase 2:** Cue editor toolbar, analytics history/trends, section bookmarks, export/share.
-- **Phase 3:** Onboarding flow, preset scripts, landing refresh (social proof + video + table — **this work**), Neural Band gesture mapping when exposed.
+- **Phase 3:** Onboarding flow, preset scripts, landing improvements (samples, install, demo video), Neural Band gesture mapping when exposed.
 - **Phase 4:** App store founding developer (SpectorCore port, one-tap send to glasses, optional sync).
 
 Explicit non-goals for now: native mobile binaries, accounts/backend, proprietary Bluetooth protocols, video recording.
