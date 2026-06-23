@@ -1,5 +1,5 @@
 /* Spector service worker — offline shell for installed PWA rehearsal */
-const CACHE = 'spector-v3';
+const CACHE = 'spector-v4';
 const ORIGIN = self.location.origin;
 
 function assetUrl(path) {
@@ -50,19 +50,34 @@ async function matchCached(path) {
         || (await caches.match('./' + path.replace(/^\//, '')));
 }
 
+/** HTML shells: network-first when online so copy updates (e.g. landing text) propagate. */
+async function networkFirstShell(request, shellPath) {
+    try {
+        const res = await fetch(request);
+        if (res && res.status === 200 && res.type !== 'opaque') {
+            const clone = res.clone();
+            caches.open(CACHE).then((c) => c.put(request, clone));
+        }
+        return res;
+    } catch (err) {
+        const fallback = await matchCached(shellPath);
+        if (fallback) return fallback;
+        return new Response('Offline — open Spector while online first.', { status: 503, statusText: 'Offline' });
+    }
+}
+
 self.addEventListener('fetch', (e) => {
     if (e.request.method !== 'GET') return;
     const url = new URL(e.request.url);
     const shellPath = shellPathFor(url.pathname);
 
     e.respondWith((async () => {
+        if (shellPath) {
+            return networkFirstShell(e.request, shellPath);
+        }
+
         const exact = await caches.match(e.request);
         if (exact) return exact;
-
-        if (shellPath) {
-            const shell = await matchCached(shellPath);
-            if (shell) return shell;
-        }
 
         try {
             const res = await fetch(e.request);
@@ -72,10 +87,6 @@ self.addEventListener('fetch', (e) => {
             }
             return res;
         } catch (err) {
-            if (shellPath) {
-                const fallback = await matchCached(shellPath);
-                if (fallback) return fallback;
-            }
             return new Response('Offline — open Spector while online first.', { status: 503, statusText: 'Offline' });
         }
     })());

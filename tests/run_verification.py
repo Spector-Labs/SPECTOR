@@ -410,7 +410,7 @@ def step3_pwa_tests(server: HttpServer):
 
     sw_src = (PUBLIC / "sw.js").read_text(encoding="utf-8")
     lines += ["", "=== OFFLINE SW (shipped sw.js) ==="]
-    for token in ("spector-v3", "shellPathFor", "addEventListener('fetch'", "/app.html"):
+    for token in ("spector-v4", "networkFirstShell", "shellPathFor", "addEventListener('fetch'", "/app.html"):
         lines.append(f"  sw.js has '{token}': {token in sw_src}")
 
     if browser:
