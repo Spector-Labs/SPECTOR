@@ -18,6 +18,8 @@
             <p class="subtitle">The superior teleprompter for smart glasses — auto-paced, comfort-tuned, and ready before the Meta glasses app store opens.</p>
             <div class="hero-badge">Beyond Meta's basic scroll · Founding-dev ready</div>
             <p class="market-note">Spector is a teleprompter — rehearse on your phone, perform with confidence. Not affiliated with Meta or Ray-Ban; works with any smart-glasses workflow.</p>
+
+            <button id="install-btn" class="btn-install" style="margin: 8px auto 20px;">Install Spector (PWA) — offline &amp; daily rehearsal</button>
         </header>
 
         <div class="input-section">
@@ -26,6 +28,13 @@
 
             <label for="script-input">Your Script</label>
             <textarea id="script-input" placeholder="Paste your speech, presentation, or notes here…"></textarea>
+
+            <div class="samples-row" style="margin-bottom:12px;">
+                <span style="font-size:12px;color:#888;margin-right:8px;">Try a sample:</span>
+                <button type="button" class="sample-btn" data-sample="keynote">Keynote Opener</button>
+                <button type="button" class="sample-btn" data-sample="pitch">Investor Pitch</button>
+                <button type="button" class="sample-btn" data-sample="demo">Product Demo</button>
+            </div>
 
             <div class="file-upload" id="file-area">
                 Drop .txt file here or click to browse
@@ -43,6 +52,16 @@
             <ul class="library-list" id="library-list">
                 <li class="library-empty" id="library-empty">No saved scripts yet — save one to build your library.</li>
             </ul>
+        </section>
+
+        <section class="demo-section">
+            <h3>See it in action</h3>
+            <p class="demo-note">30-second walkthrough of the player, Comfort mode spatial response, and end-of-run analytics. (Best experienced on the live site with your own script.)</p>
+            <video id="demo-video" controls preload="metadata" style="width:100%;max-width:620px;border-radius:12px;background:#111;">
+                <source src="spector-demo.mp4" type="video/mp4">
+                Your browser does not support the video tag. <a href="spector-demo.mp4">Download the demo</a>.
+            </video>
+            <p class="demo-note" style="margin-top:8px;font-size:12px;">Tip: Switch to Comfort mode in the player to feel the head-tilt + breathing effects.</p>
         </section>
 
         <!--
@@ -177,6 +196,41 @@
             });
         }
 
+        const SAMPLE_SCRIPTS = {
+            keynote: {
+                title: "Keynote Opener",
+                text: "Good morning. **Thank you** for being here.\n\nToday we're going to talk about the future of [pause] eyes-forward interfaces.\n\n[pause:2s]\n\nThe problem is simple: most teleprompters still feel like reading from a script. **We can do better.**"
+            },
+            pitch: {
+                title: "Investor Pitch",
+                text: "We're building the rehearsal layer for the next generation of computing. [pause]\n\nOur users rehearse on phone today. [pause:3s] They perform on glasses tomorrow.\n\n**Traction** is strong. **Retention** even stronger. The market is waking up to smart glasses. [pause]\n\nJoin us."
+            },
+            demo: {
+                title: "Product Demo",
+                text: "This is Spector. [pause]\n\nPaste any script. Hit play. The text advances at the right pace for **your** voice.\n\nIn Comfort mode your head movement creates gentle spatial anchoring — it feels alive, not robotic. [pause:2s]\n\nWhen you finish, you get real analytics: pacing consistency, where you hesitated, the slowest chunk.\n\nRehearse here. Nail it on stage — or on your glasses."
+            }
+        };
+
+        function initSampleButtons() {
+            document.querySelectorAll('.sample-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const key = btn.dataset.sample;
+                    const sample = SAMPLE_SCRIPTS[key];
+                    if (!sample) return;
+                    document.getElementById('script-title').value = sample.title;
+                    document.getElementById('script-input').value = sample.text;
+                    // optional: auto-launch hint or just populate
+                    btn.style.transition = 'none';
+                    btn.textContent = 'Loaded ✓';
+                    setTimeout(() => {
+                        btn.textContent = btn.dataset.sample === 'keynote' ? 'Keynote Opener' :
+                                          btn.dataset.sample === 'pitch' ? 'Investor Pitch' : 'Product Demo';
+                        btn.style.transition = '';
+                    }, 900);
+                });
+            });
+        }
+
         function initButtons() {
             const launchBtn = document.getElementById('launch-btn');
             const saveBtn = document.getElementById('save-btn');
@@ -204,11 +258,51 @@
             }
         }
 
+        // PWA install prompt (prominent for visibility/education goal)
+        let deferredInstallPrompt = null;
+
+        function initInstallPrompt() {
+            const btn = document.getElementById('install-btn');
+            if (!btn) return;
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredInstallPrompt = e;
+                // Enhance label when the smart prompt is available
+                if (!btn.textContent.includes('✓')) {
+                    btn.textContent = 'Install Spector (one-tap PWA)';
+                }
+            });
+
+            btn.addEventListener('click', async () => {
+                if (deferredInstallPrompt) {
+                    deferredInstallPrompt.prompt();
+                    const { outcome } = await deferredInstallPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        btn.textContent = 'Thanks! Check your home screen ✓';
+                        btn.style.opacity = '0.7';
+                        btn.disabled = true;
+                    }
+                    deferredInstallPrompt = null;
+                    return;
+                }
+                // Cross-platform guidance (iOS Safari, desktop, etc.)
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                if (isIOS) {
+                    alert('On iPhone/iPad: tap the Share button in Safari → "Add to Home Screen". Spector works great offline as a PWA.');
+                } else {
+                    alert('Use your browser menu (⋮ or ⠇) → "Install app" or "Add to Home Screen". Works best in Chrome or Edge.');
+                }
+            });
+        }
+
         function init() {
             initFileUpload();
             initButtons();
+            initSampleButtons();
             renderLibrary();
             registerServiceWorker();
+            initInstallPrompt();
 
             const draft = localStorage.getItem('spector_draft');
             if (draft) {
