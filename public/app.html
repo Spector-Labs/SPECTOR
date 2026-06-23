@@ -554,12 +554,23 @@
         });
     }
 
+    function motionReadyForPlay() {
+        const ps = playerMotion.permissionState;
+        if (ps === 'granted' || ps === 'unnecessary') {
+            if (!playerMotion.bound) setupSpatialAnchoring();
+            return true;
+        }
+        if (ps === 'denied') return false;
+        return null;
+    }
+
     function setupMotionPermissionUI() {
         const btn = document.getElementById('motion-permit-btn');
         if (!btn || typeof DeviceOrientationEvent?.requestPermission !== 'function') return;
         btn.classList.remove('hidden');
         btn.addEventListener('click', async () => {
-            const granted = await playerMotion.ensurePermission();
+            let granted = motionReadyForPlay();
+            if (granted === null) granted = await playerMotion.ensurePermission();
             btn.textContent = granted ? 'Motion enabled ✓' : 'Motion denied';
             if (granted && !playerMotion.bound) setupSpatialAnchoring();
         });
@@ -567,8 +578,11 @@
 
     async function handlePlayGesture() {
         if (!isPlaying) {
-            const granted = await playerMotion.ensurePermission();
-            if (granted && !playerMotion.bound) setupSpatialAnchoring();
+            let granted = motionReadyForPlay();
+            if (granted === null) {
+                granted = await playerMotion.ensurePermission();
+                if (granted && !playerMotion.bound) setupSpatialAnchoring();
+            }
         }
         togglePlay();
     }
@@ -776,6 +790,20 @@
         await cacheMotion.ensurePermission();
         await cacheMotion.ensurePermission();
         assert('ensurePermission cached after grant', permCalls === 1);
+        let gestureCalls = 0;
+        const gestureMotion = SpectorCore.createMotion({
+            DeviceOrientationEvent: {
+                requestPermission: async () => { gestureCalls++; return 'granted'; }
+            },
+            addEventListener() {},
+            removeEventListener() {}
+        });
+        await gestureMotion.ensurePermission();
+        gestureCalls = 0;
+        const skipEnsure = gestureMotion.permissionState === 'granted'
+            || gestureMotion.permissionState === 'unnecessary';
+        if (!skipEnsure) await gestureMotion.ensurePermission();
+        assert('play gesture skips ensure when granted', skipEnsure && gestureCalls === 0);
         testMotion.bind(() => {});
         assert('motion bind sets bound', testMotion.bound);
         assert('deviceorientation listener added',

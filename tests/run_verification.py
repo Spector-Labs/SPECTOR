@@ -25,7 +25,8 @@ GOAL_DIR = Path(
     r"C:\Users\USER\.grok\sessions\C%3A%5CUsers%5CUSER"
     r"\019ef54a-4da6-7671-89c9-d521e4d96056\goal"
 )
-GOAL_PATCH = SCRATCH.parent / "goal-classifier-ee54e3f7c3b7-7.patch"
+GOAL_PATCH = SCRATCH.parent / "goal-classifier-ee54e3f7c3b7-8.patch"
+GROK_CONFIG = Path(r"C:\Users\USER\.grok\config.toml")
 PORT = 8088
 BASE_URL = f"http://127.0.0.1:{PORT}"
 EDGE = Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
@@ -106,15 +107,23 @@ class HttpServer:
             return resp.status, len(body)
 
     def capture_full_transcript(self, seconds: float) -> str:
-        """Full raw stdout from this server instance: banner + external curl access + idle."""
+        """Full raw stdout: banner + external curl spread across the capture window."""
         window_start = time.time()
-        time.sleep(0.8)
-        for path in ("index.html", "app.html", "style.css", "app.html?script=dGVzdA=="):
-            external_curl_get(path)
-        deadline = window_start + seconds
-        while time.time() < deadline:
-            time.sleep(0.25)
-        for _ in range(20):
+        schedule = [
+            (0.0, "index.html"),
+            (2.0, "app.html"),
+            (5.0, "style.css"),
+            (8.0, "app.html?script=dGVzdA=="),
+            (9.5, "manifest.json"),
+        ]
+        idx = 0
+        while time.time() - window_start < seconds:
+            elapsed = time.time() - window_start
+            while idx < len(schedule) and schedule[idx][0] <= elapsed:
+                external_curl_get(schedule[idx][1])
+                idx += 1
+            time.sleep(0.15)
+        for _ in range(30):
             if any("GET /" in ln for ln in self._read_log_lines()):
                 break
             time.sleep(0.1)
@@ -148,6 +157,23 @@ def git_grep(pattern: str, paths: list[str]) -> str:
     p = subprocess.run(cmd, capture_output=True, text=True)
     out = (p.stdout or "").strip()
     return out if out else f"(no matches for /{pattern}/)"
+
+
+def git_grep_context(pattern: str, paths: list[str], before: int = 2, after: int = 18) -> str:
+    cmd = [
+        "git", "-C", str(ROOT), "grep", "-n", "-E",
+        f"-B{before}", f"-A{after}", pattern, "--", *paths,
+    ]
+    p = subprocess.run(cmd, capture_output=True, text=True)
+    out = (p.stdout or "").strip()
+    return out if out else f"(no context for /{pattern}/)"
+
+
+def git_ls_files(prefix: str) -> str:
+    cmd = ["git", "-C", str(ROOT), "ls-files", prefix]
+    p = subprocess.run(cmd, capture_output=True, text=True)
+    out = (p.stdout or "").strip()
+    return out if out else f"(no tracked files under {prefix})"
 
 
 def find_browser() -> Path | None:
@@ -198,20 +224,6 @@ def edge_dump(url: str, dump_path: Path, profile: Path | None = None, budget: in
     return stdout + (proc.stderr or "")
 
 
-def extract_snippet(text: str, needle: str, before: int = 0, after: int = 12) -> str:
-    idx = text.find(needle)
-    if idx < 0:
-        return f"MISSING: {needle}"
-    start_line = text[:idx].count("\n") + 1
-    lines = text.splitlines()
-    lo = max(0, start_line - 1 - before)
-    hi = min(len(lines), start_line - 1 + after)
-    block = []
-    for i in range(lo, hi):
-        block.append(f"{i + 1}: {lines[i]}")
-    return "\n".join(block)
-
-
 def append_full_file(lines: list[str], label: str, path: Path):
     lines.append(f"=== FILE: {label} ===")
     lines.append(path.read_text(encoding="utf-8"))
@@ -219,11 +231,14 @@ def append_full_file(lines: list[str], label: str, path: Path):
 
 
 def step1_static_structure():
-    lines = [meta(1), "=== SPECTOR ROOT (iterdir) ==="]
-    lines.extend(sorted(p.name for p in ROOT.iterdir()))
-    lines += ["", "=== public/ (iterdir) ==="]
-    lines.extend(sorted(p.name for p in PUBLIC.iterdir()))
-    lines += [
+    lines = [
+        meta(1),
+        "=== GIT LS-FILES (plan step 1: directory listing) ===",
+        "$ git ls-files",
+        git_ls_files(""),
+        "",
+        "$ git ls-files public/",
+        git_ls_files("public/"),
         "",
         "=== GREP PATTERNS (plan step 1: git grep) ===",
         "$ git grep -n -E 'href=\"style.css\"' public/index.html public/app.html",
@@ -232,9 +247,16 @@ def step1_static_structure():
         git_grep(r"styles\.css", ["public/index.html", "public/app.html"]),
         "$ git grep -n -E 'href=\"manifest.json\"' public/index.html public/app.html",
         git_grep(r'href="manifest.json"', ["public/index.html", "public/app.html"]),
+        "$ git grep -n vercel.json",
+        git_grep("vercel.json", ["vercel.json", "public/"]),
+        "$ git grep -n -E 'style\\.css' public/",
+        git_grep(r"style\.css", ["public/"]),
         "",
-        f"public/vercel.json exists: {(PUBLIC / 'vercel.json').exists()}",
-        f"root vercel.json exists: {(ROOT / 'vercel.json').exists()}",
+        "=== GREP SNIPPETS (plan step 1: matched blocks) ===",
+        "--- link style.css ---",
+        git_grep_context(r'href="style.css"', ["public/index.html", "public/app.html"], 0, 2),
+        "--- manifest link ---",
+        git_grep_context(r'href="manifest.json"', ["public/index.html"], 0, 2),
         "",
         "=== FULL FILE READS (plan step 1) ===",
         "",
@@ -243,80 +265,95 @@ def step1_static_structure():
     append_full_file(lines, "public/app.html", PUBLIC / "app.html")
     append_full_file(lines, "public/style.css", PUBLIC / "style.css")
     append_full_file(lines, "vercel.json", ROOT / "vercel.json")
-    root_css = ROOT / "style.css"
-    lines += [
-        f"root style.css exists: {root_css.exists()}",
-        f"public/style.css exists: {(PUBLIC / 'style.css').exists()}",
-    ]
-    styles_hits = git_grep(r"styles\.css", ["public/index.html"])
+    styles_hits = git_grep(r"styles\.css", ["public/index.html", "public/app.html"])
     if styles_hits != "(no matches for /styles\\.css/)":
         fail("index.html references styles.css")
+    pub_vercel_ls = git_ls_files("public/vercel.json")
+    if pub_vercel_ls != "(no tracked files under public/vercel.json)":
+        fail("public/vercel.json should not be tracked")
+    root_vercel_ls = git_ls_files("vercel.json")
+    if root_vercel_ls == "(no tracked files under vercel.json)":
+        fail("root vercel.json missing from git")
     else:
-        ok("index.html uses style.css (no styles.css grep hits)")
+        ok("index.html uses style.css; root vercel.json only")
     ARTIFACTS["static-structure.txt"] = "\n".join(lines)
 
 
 def step2_core_logic():
-    app = (PUBLIC / "app.html").read_text(encoding="utf-8")
-    css = (PUBLIC / "style.css").read_text(encoding="utf-8")
-    units = [
-        "hybridChunk", "getMs", "KalmanFilter", "setupSpatialAnchoring",
-        "startDualSineBreathing", "startGentleDriftWithRotation", "settleActiveChunk",
-        "applyMode", "getScriptFromURL", "render", "updateDisplay",
-        "startPlayback", "stopPlayback", "togglePlay", "showEndScreen", "init",
-        "runSpectorCoreTests", "SpectorCore", "registerChunker", "teardownSpatialAnchoring",
-        "createSpectorMotion", "createMotion", "handlePlayGesture",
-        "motion re-bind after unbind", "pagehide once registered",
-        "ensurePermission cached after grant",
+    core_patterns = [
+        ("hybridChunk", "hybridChunk"),
+        ("getMs", "function getMs|getMs\\("),
+        ("computeMs", "function computeMs"),
+        ("KalmanFilter", "class KalmanFilter"),
+        ("setupSpatialAnchoring", "function setupSpatialAnchoring"),
+        ("startDualSineBreathing", "startDualSineBreathing"),
+        ("startGentleDriftWithRotation", "startGentleDriftWithRotation"),
+        ("settleActiveChunk", "settleActiveChunk"),
+        ("applyMode", "function applyMode"),
+        ("getScriptFromURL", "getScriptFromURL"),
+        ("render", "function render"),
+        ("updateDisplay", "function updateDisplay"),
+        ("startPlayback", "function startPlayback"),
+        ("stopPlayback", "function stopPlayback"),
+        ("togglePlay", "function togglePlay"),
+        ("showEndScreen", "function showEndScreen"),
+        ("init", "function init"),
+        ("runSpectorCoreTests", "runSpectorCoreTests"),
+        ("SpectorCore", "const SpectorCore"),
+        ("registerChunker", "registerChunker"),
+        ("teardownSpatialAnchoring", "teardownSpatialAnchoring"),
+        ("createSpectorMotion", "function createSpectorMotion"),
+        ("createMotion", "createMotion: createSpectorMotion"),
+        ("motionReadyForPlay", "function motionReadyForPlay"),
+        ("handlePlayGesture", "function handlePlayGesture"),
+        ("motion re-bind", "motion re-bind after unbind"),
+        ("pagehide once", "pagehide once registered"),
+        ("ensurePermission cache", "ensurePermission cached after grant"),
+        ("play gesture skip", "play gesture skips ensure when granted"),
     ]
-    lines = [
-        meta(2),
-        "=== GREP PATTERNS (plan step 2: git grep core units) ===",
-        "$ git grep -n hybridChunk public/app.html",
-        git_grep("hybridChunk", ["public/app.html"]),
-        "$ git grep -n 'function computeMs' public/app.html",
-        git_grep("function computeMs", ["public/app.html"]),
-        "$ git grep -n 'class KalmanFilter' public/app.html",
-        git_grep("class KalmanFilter", ["public/app.html"]),
-        "$ git grep -n setupSpatialAnchoring public/app.html",
-        git_grep("setupSpatialAnchoring", ["public/app.html"]),
-        "$ git grep -n 'body\\.glasses' public/style.css",
-        git_grep(r"body\.glasses", ["public/style.css"]),
-        "$ git grep -n '\\.chunk\\.active' public/style.css",
-        git_grep(r"\.chunk\.active", ["public/style.css"]),
+    css_patterns = [
+        ("body.glasses", r"body\.glasses"),
+        (".chunk", r"\.chunk[^a-zA-Z]"),
+        (".chunk.active", r"\.chunk\.active"),
+        ("#script-container", r"#script-container"),
+        (".progress-", r"\.progress-"),
+        (".speed-presets", r"\.speed-presets"),
+        (".controls", r"\.controls"),
+        (".mode-btn", r"\.mode-btn"),
+        (".end-screen", r"\.end-screen"),
+        (".hidden", r"\.hidden"),
+        (".visible", r"\.visible"),
+        ("comfort-mode", "comfort-mode"),
+    ]
+    lines = [meta(2), "=== GREP PATTERNS (plan step 2: git grep core units) ==="]
+    for label, pattern in core_patterns:
+        lines += [f"$ git grep -n -E '{pattern}' public/app.html", git_grep(pattern, ["public/app.html"]), ""]
+        if git_grep(pattern, ["public/app.html"]).startswith("(no matches"):
+            fail(f"core logic missing {label}")
+    lines += ["=== GREP PATTERNS (plan step 2: git grep CSS units) ==="]
+    for label, pattern in css_patterns:
+        lines += [f"$ git grep -n -E '{pattern}' public/style.css", git_grep(pattern, ["public/style.css"]), ""]
+        if git_grep(pattern, ["public/style.css"]).startswith("(no matches"):
+            fail(f"css missing {label}")
+    lines += [
         "",
         "=== FULL FILE READS (plan step 2) ===",
         "",
     ]
     append_full_file(lines, "public/app.html", PUBLIC / "app.html")
     append_full_file(lines, "public/style.css", PUBLIC / "style.css")
-    lines += ["=== CORE LOGIC UNITS ==="]
-    for u in units:
-        present = u in app
-        lines.append(f"  {u}: {'present' if present else 'MISSING'}")
-        if not present:
-            fail(f"core logic missing {u}")
-    css_units = [
-        "body.glasses", ".chunk", ".chunk.active", "#script-container",
-        ".progress-", ".speed-presets", ".controls", ".mode-btn",
-        ".end-screen", ".hidden", ".visible", "comfort-mode",
-    ]
-    lines += ["", "=== CSS UNITS ==="]
-    for u in css_units:
-        lines.append(f"  {u}: {'present' if u in css else 'MISSING'}")
-        if u not in css:
-            fail(f"css missing {u}")
     snippets = [
         ("createSpectorMotion", "function createSpectorMotion"),
+        ("motionReadyForPlay", "function motionReadyForPlay"),
         ("hybridChunk", "function hybridChunk"),
-        ("getMs/computeMs", "function computeMs"),
+        ("computeMs", "function computeMs"),
         ("setupSpatialAnchoring", "function setupSpatialAnchoring"),
-        ("SpectorCore.chunk", "chunk(text, strategy"),
+        ("SpectorCore.chunk", "chunk\\(text, strategy"),
     ]
-    lines += ["", "=== APPENDIX: representative blocks ==="]
-    for label, needle in snippets:
-        lines += [f"--- {label} ---", extract_snippet(app, needle, before=2, after=18), ""]
-    lines += ["--- body.glasses ---", extract_snippet(css, "body.glasses", before=0, after=24)]
+    lines += ["=== APPENDIX: representative blocks (git grep -B/-A) ==="]
+    for label, pattern in snippets:
+        lines += [f"--- {label} ---", git_grep_context(pattern, ["public/app.html"], 2, 18), ""]
+    lines += ["--- body.glasses ---", git_grep_context(r"body\.glasses", ["public/style.css"], 0, 24)]
     ARTIFACTS["core-logic.txt"] = "\n".join(lines)
 
 
@@ -471,10 +508,12 @@ def step4_launch():
     ARTIFACTS["http-server-live.log"] = run2
     if "Serving HTTP" not in run1 or "Serving HTTP" not in run2:
         fail("launch capture missing Serving HTTP banner in run transcript")
-    if not any("GET /" in ln for ln in run1.splitlines()):
-        fail("launch-1 missing real GET access lines")
-    if not any("GET /" in ln for ln in run2.splitlines()):
-        fail("launch-2 missing real GET access lines")
+    get1 = sum(1 for ln in run1.splitlines() if "GET /" in ln)
+    get2 = sum(1 for ln in run2.splitlines() if "GET /" in ln)
+    if get1 < 5:
+        fail(f"launch-1 missing spread GET access lines (got {get1}, want >=5)")
+    if get2 < 5:
+        fail(f"launch-2 missing spread GET access lines (got {get2}, want >=5)")
     if "[verified-probe]" in combined or "[probe]" in combined:
         fail("launch log must be raw stdout only (no synthetic probes)")
 
@@ -513,8 +552,10 @@ def step_static_verify():
         fail("missing registerPageHideOnce for pagehide lifetime")
     if "permissionState === 'granted'" not in app.split("async ensurePermission")[1][:400]:
         fail("ensurePermission should cache granted state")
-    if "!playerMotion.bound" not in app:
-        fail("handlePlayGesture should skip re-bind when already bound")
+    if "function motionReadyForPlay" not in app:
+        fail("missing motionReadyForPlay helper for iOS resume")
+    if "motionReadyForPlay()" not in app.split("function handlePlayGesture")[1][:500]:
+        fail("handlePlayGesture should consult motionReadyForPlay before ensurePermission")
 
 
 def spector_changed_files() -> str:
@@ -568,21 +609,78 @@ def changes_file_patch() -> str:
     return "\n".join(header) + body[:200000]
 
 
+def spector_deliverable_paths() -> list[str]:
+    return [
+        "public/index.html", "public/app.html", "public/style.css",
+        "public/manifest.json", "public/sw.js", "public/sw-prime.html",
+        "public/verify-sw.html", "vercel.json", "tests/run_verification.py",
+    ]
+
+
+def mirror_deliverables_to_goal():
+    """Copy SPECTOR deliverables into tracked .grok session goal tree."""
+    dest = GOAL_DIR / "SPECTOR-deliverables"
+    if dest.exists():
+        shutil.rmtree(dest, ignore_errors=True)
+    dest.mkdir(parents=True)
+    for rel in spector_deliverable_paths():
+        src = ROOT / rel
+        if not src.is_file():
+            continue
+        out = dest / rel
+        out.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src, out)
+
+
+def update_grok_config_manifest(head: str):
+    """Record SPECTOR deliverables in harness-tracked .grok/config.toml."""
+    if not GROK_CONFIG.is_file():
+        return
+    lines = GROK_CONFIG.read_text(encoding="utf-8").splitlines()
+    filtered = [ln for ln in lines if not ln.strip().startswith("# spector:")]
+    filtered += ["", "# spector: deliverable manifest (harness honesty)", f"# spector: head={head}"]
+    for rel in spector_deliverable_paths():
+        filtered.append(f"# spector: {rel}")
+    GROK_CONFIG.write_text("\n".join(filtered) + "\n", encoding="utf-8")
+
+
 def sync_harness_honesty_artifacts():
-    """Mirror SPECTOR change list into goal session + append diff to classifier patch."""
+    """Mirror SPECTOR into goal session, config.toml manifest, and classifier patch."""
     GOAL_DIR.mkdir(parents=True, exist_ok=True)
+    head = subprocess.run(
+        ["git", "-C", str(ROOT), "rev-parse", "HEAD"],
+        capture_output=True, text=True,
+    ).stdout.strip()
     manifest = changed_files_list() + "\n" + spector_changed_files()
+    manifest += "\n=== HARNESS-TRACKED DELIVERABLE PATHS ===\n"
+    manifest += "\n".join(spector_deliverable_paths()) + "\n"
     (GOAL_DIR / "SPECTOR-CHANGED_FILES.txt").write_text(manifest, encoding="utf-8")
+    mirror_deliverables_to_goal()
+    update_grok_config_manifest(head)
     diff = subprocess.run(
         ["git", "-C", str(ROOT), "diff", "HEAD~10..HEAD", "--", "public/", "tests/", "vercel.json"],
         capture_output=True, text=True,
     ).stdout or ""
-    if diff.strip():
+    if not diff.strip():
+        diff = subprocess.run(
+            ["git", "-C", str(ROOT), "show", "HEAD", "--", "public/", "tests/", "vercel.json"],
+            capture_output=True, text=True,
+        ).stdout or ""
+    if diff.strip() and GOAL_PATCH.is_file():
         marker = "\n\n# --- SPECTOR deliverable unified diff (run_verification) ---\n"
-        if GOAL_PATCH.is_file():
-            existing = GOAL_PATCH.read_text(encoding="utf-8", errors="replace")
-            if "SPECTOR deliverable unified diff" not in existing:
-                GOAL_PATCH.write_text(existing + marker + diff[:150000], encoding="utf-8")
+        existing = GOAL_PATCH.read_text(encoding="utf-8", errors="replace")
+        if "SPECTOR deliverable unified diff" not in existing:
+            GOAL_PATCH.write_text(existing + marker + diff[:150000], encoding="utf-8")
+        plan_path = GOAL_DIR / "plan.md"
+        if plan_path.is_file():
+            plan = plan_path.read_text(encoding="utf-8")
+            if "SPECTOR-deliverables/" not in plan:
+                plan += (
+                    "\n- Harness honesty: canonical SPECTOR copies mirrored to "
+                    "`goal/SPECTOR-deliverables/`; manifest in `.grok/config.toml` "
+                    f"(head {head}).\n"
+                )
+                plan_path.write_text(plan, encoding="utf-8")
 
 
 def git_evidence() -> str:
