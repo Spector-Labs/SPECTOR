@@ -33,6 +33,13 @@ def main():
         check(f"exists: {p.name}", p.is_file())
         print(f"  {'OK' if p.is_file() else 'MISSING'}: {p}")
 
+    root_css = ROOT / "style.css"
+    pub_css = PUBLIC / "style.css"
+    if root_css.is_file() and pub_css.is_file():
+        same = root_css.read_text(encoding="utf-8") == pub_css.read_text(encoding="utf-8")
+        check("root style.css matches public (symlink or identical)", same)
+        print(f"  root style.css delivery: {'symlink/identical' if same else 'DIVERGED'}")
+
     for html in [PUBLIC / "index.html", PUBLIC / "app.html"]:
         text = html.read_text(encoding="utf-8")
         check(f"{html.name} uses style.css", 'href="style.css"' in text)

@@ -126,11 +126,25 @@
         reset() { this.X = 0; this.P = 1; }
     }
 
+    function splitSentences(text) {
+        const sentences = [];
+        const regex = /[^.!?]+[.!?]+/g;
+        let match;
+        let lastIndex = 0;
+        while ((match = regex.exec(text)) !== null) {
+            sentences.push(match[0]);
+            lastIndex = regex.lastIndex;
+        }
+        const tail = text.slice(lastIndex).trim();
+        if (tail) sentences.push(tail);
+        if (!sentences.length && text.trim()) sentences.push(text.trim());
+        return sentences;
+    }
+
     const chunkStrategies = {
         hybrid(text) {
-            const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
             const result = [];
-            sentences.forEach(sentence => {
+            splitSentences(text).forEach(sentence => {
                 const words = sentence.trim().split(/\s+/);
                 if (words.length <= 7) result.push(sentence.trim());
                 else for (let i = 0; i < words.length; i += 6)
@@ -139,7 +153,7 @@
             return result.filter(c => c.length > 0);
         },
         sentence(text) {
-            return (text.match(/[^.!?]+[.!?]+/g) || [text]).map(s => s.trim()).filter(Boolean);
+            return splitSentences(text).map(s => s.trim()).filter(Boolean);
         },
         word(text) {
             return text.trim().split(/\s+/).filter(Boolean);
@@ -184,6 +198,7 @@
         KalmanFilter,
         chunkStrategies,
         postChunkHooks,
+        splitSentences,
         chunk(text, strategyName = 'hybrid') {
             const fn = chunkStrategies[strategyName] || chunkStrategies.hybrid;
             let chunks = fn(text);
@@ -319,10 +334,24 @@
     // ─── Spatial system ───
     let lastBeta = 0, lastGamma = 0, idleTimer = null, breathingFrame = null, driftFrame = null;
     let isBreathing = false, isDrifting = false;
+    let spatialHandler = null;
+    let spatialAnchoringReady = false;
+
+    function resetSpatialState() {
+        kalmanBeta.reset();
+        kalmanGamma.reset();
+        lastBeta = 0;
+        lastGamma = 0;
+        isBreathing = false;
+        isDrifting = false;
+        clearTimeout(idleTimer);
+        cancelAnimationFrame(breathingFrame);
+        clearTimeout(driftFrame);
+    }
 
     function setupSpatialAnchoring() {
-        if (!window.DeviceOrientationEvent) return;
-        window.addEventListener('deviceorientation', (event) => {
+        if (!window.DeviceOrientationEvent || spatialAnchoringReady) return;
+        spatialHandler = (event) => {
             if (!isPlaying) return;
             const rawBeta = event.beta || 0;
             const rawGamma = event.gamma || 0;
@@ -346,7 +375,9 @@
                 if (isPlaying && currentMode === 'comfort' && activeChunk && !isBreathing && !isDrifting)
                     startDualSineBreathing(activeChunk);
             }, 880);
-        });
+        };
+        window.addEventListener('deviceorientation', spatialHandler);
+        spatialAnchoringReady = true;
     }
 
     function startDualSineBreathing(chunk) {
@@ -537,6 +568,7 @@
                 endScreen.classList.add('hidden');
                 currentIndex = 0;
                 startTime = 0;
+                resetSpatialState();
                 render();
                 updateDisplay();
                 startPlayback();
@@ -556,7 +588,10 @@
 
     function init() {
         if (new URLSearchParams(window.location.search).has('test')) {
-            runSpectorCoreTests();
+            const pass = runSpectorCoreTests();
+            document.body.innerHTML = '<pre id="spector-test-output">' +
+                JSON.stringify(window.__spectorTestResults, null, 2) + '</pre>';
+            document.title = pass ? 'SpectorTest: ALL PASS' : 'SpectorTest: FAIL';
             return;
         }
 
@@ -596,6 +631,10 @@
         assert('hybridChunk count >= 3', chunked.length >= 3);
         assert('hybridChunk preserves content', chunked.join(' ').includes('Hello'));
         assert('hybridChunk short sentence intact', chunked.some(c => c.includes('Hello world')));
+
+        const trailing = SpectorCore.chunk('First. Second no punct', 'hybrid');
+        assert('hybridChunk keeps trailing unpunctuated sentence',
+            trailing.some(c => c.includes('Second no punct')));
 
         const sentenceChunks = SpectorCore.chunk(sample, 'sentence');
         assert('sentence strategy count >= 2', sentenceChunks.length >= 2);
