@@ -16,6 +16,8 @@
         <div id="script-text"></div>
     </div>
 
+    <button class="toggle-chip motion-chip hidden" id="motion-permit-btn" type="button" aria-label="Enable device motion for spatial anchoring">Enable motion</button>
+
     <div class="customize-panel" id="customize-panel">
         <div class="customize-group">
             <label for="text-size">Text</label>
@@ -336,6 +338,32 @@
     let isBreathing = false, isDrifting = false;
     let spatialHandler = null;
     let spatialAnchoringReady = false;
+    let motionPermissionState = 'unknown';
+    let pageHideHandler = null;
+    let pageHideBound = false;
+
+    async function ensureMotionPermission() {
+        if (!window.DeviceOrientationEvent) return false;
+        if (typeof DeviceOrientationEvent.requestPermission !== 'function') {
+            motionPermissionState = 'unnecessary';
+            return true;
+        }
+        try {
+            const result = await DeviceOrientationEvent.requestPermission();
+            motionPermissionState = result;
+            return result === 'granted';
+        } catch (err) {
+            motionPermissionState = 'denied';
+            return false;
+        }
+    }
+
+    function bindPageHideTeardown() {
+        if (pageHideBound) return;
+        pageHideHandler = teardownSpatialAnchoring;
+        window.addEventListener('pagehide', pageHideHandler);
+        pageHideBound = true;
+    }
 
     function resetSpatialState() {
         kalmanBeta.reset();
@@ -505,8 +533,27 @@
         });
     }
 
+    function setupMotionPermissionUI() {
+        const btn = document.getElementById('motion-permit-btn');
+        if (!btn || typeof DeviceOrientationEvent?.requestPermission !== 'function') return;
+        btn.classList.remove('hidden');
+        btn.addEventListener('click', async () => {
+            const granted = await ensureMotionPermission();
+            btn.textContent = granted ? 'Motion enabled ✓' : 'Motion denied';
+            if (granted) setupSpatialAnchoring();
+        });
+    }
+
+    async function handlePlayGesture() {
+        if (!isPlaying) {
+            const granted = await ensureMotionPermission();
+            if (granted) setupSpatialAnchoring();
+        }
+        togglePlay();
+    }
+
     function setupControls() {
-        document.getElementById('play-btn').addEventListener('click', togglePlay);
+        document.getElementById('play-btn').addEventListener('click', () => { handlePlayGesture(); });
         document.getElementById('rewind-btn').addEventListener('click', () => {
             Haptics.rewind();
             if (currentIndex > 0) { currentIndex = Math.max(0, currentIndex - 3); updateDisplay(); }
@@ -521,7 +568,7 @@
         document.addEventListener('click', (e) => {
             if (!e.target.closest('button') && !e.target.closest('.mode-switcher') &&
                 !e.target.closest('.speed-presets') && !e.target.closest('.customize-panel'))
-                togglePlay();
+                handlePlayGesture();
         });
     }
 
@@ -612,7 +659,7 @@
         setupControls();
         setupModeSwitcher();
         setupSpeedPresets();
-        setupSpatialAnchoring();
+        setupMotionPermissionUI();
         setupCustomization();
         applyMode('focus');
         updateDisplay();
@@ -630,7 +677,7 @@
             teardownSpatialAnchoring();
             window.location.href = 'index.html';
         });
-        window.addEventListener('pagehide', teardownSpatialAnchoring);
+        bindPageHideTeardown();
     }
 
     // ─── Pure-logic exerciser (drives shipped SpectorCore functions) ───

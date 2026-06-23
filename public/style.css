@@ -440,6 +440,17 @@ body.focus-mode .chunk.active {
     color: var(--accent);
 }
 
+.motion-chip {
+    position: fixed;
+    top: 14px;
+    right: 72px;
+    z-index: 20;
+}
+
+.motion-chip.hidden {
+    display: none;
+}
+
 /* Progress + Timer */
 .progress-container {
     max-width: 620px;
