@@ -997,6 +997,7 @@
         setupControlsFade();
         setupBookmarks();
         setupGlassesButtonSim();
+        wireGlassButtons();
 
         // First-run in-product coach: highlight Comfort + hardware button story on very first visit
         let firstRun = false;
@@ -1052,6 +1053,52 @@
             window.location.href = 'index.html';
         });
         playerMotion.registerPageHideOnce(() => teardownSpatialAnchoring());
+    }
+
+    let audioContext;
+    function getAudioContext() {
+        if (!audioContext) {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            } catch(e) { return null; }
+        }
+        return audioContext;
+    }
+
+    function buttonFeedback() {
+        // Haptics for liquid glass feel
+        if (navigator.vibrate) {
+            navigator.vibrate(8);
+        }
+        // Short click sound
+        const ctx = getAudioContext();
+        if (ctx) {
+            try {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                const filter = ctx.createBiquadFilter();
+                osc.type = 'sine';
+                osc.frequency.value = 1400;
+                filter.type = 'lowpass';
+                filter.frequency.value = 2200;
+                gain.gain.value = 0.08;
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                setTimeout(() => {
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+                    setTimeout(() => osc.stop(), 150);
+                }, 25);
+            } catch(e) {}
+        }
+    }
+
+    function wireGlassButtons() {
+        const glassButtons = document.querySelectorAll('button');
+        glassButtons.forEach(btn => {
+            btn.addEventListener('click', () => buttonFeedback());
+        });
     }
 
     // ─── Pure-logic exerciser (drives shipped SpectorCore functions) ───
