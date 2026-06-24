@@ -4,7 +4,7 @@
 
 [![Live Demo](https://img.shields.io/badge/Live-spectorlabs.io-000?style=flat-square)](https://spectorlabs.io)
 [![PWA](https://img.shields.io/badge/PWA-Installable-000?style=flat-square)](https://spectorlabs.io)
-[![GitHub](https://img.shields.io/badge/GitHub-hydrogenbondss/SPECTOR-000?style=flat-square)](https://github.com/hydrogenbondss/SPECTOR)
+[![GitHub](https://img.shields.io/badge/GitHub-Spector-Labs/SPECTOR-000?style=flat-square)](https://github.com/Spector-Labs/SPECTOR)
 
 **Current live:** https://spectorlabs.io
 
@@ -135,7 +135,7 @@ Join via the form on the landing (powered by Formspree for static sites; see the
 
 ## Source Code & Repository
 
-The source is available on GitHub under the `spectorlabs` organization: https://github.com/spectorlabs/SPECTOR
+The source is available on GitHub under the Spector-Labs organization: https://github.com/Spector-Labs/SPECTOR
 
 **Repo status:** Transferred to the org. Make it public for credibility and contributions. Your personal profile stays clean. Update portfolio links to the org URL.
 
@@ -207,6 +207,6 @@ Spector sells **teleprompter software only**. Not smart glasses, not Meta hardwa
 Live: https://spectorlabs.io
 Status: [PROJECT.md](PROJECT.md)  
 Testing on glasses: [TESTING.md](TESTING.md)  
-Source: [github.com/hydrogenbondss/SPECTOR](https://github.com/hydrogenbondss/SPECTOR)
+Source: [github.com/Spector-Labs/SPECTOR](https://github.com/Spector-Labs/SPECTOR)
 
 *Last updated: June 2026 (README refresh for visibility + education).*

@@ -8,7 +8,7 @@ Be respectful, inclusive, and focused on building a great tool for people who re
 
 ## How to Contribute
 
-1. **Fork the repo** under the spectorlabs organization (or your own fork if you don't have access).
+1. **Fork the repo** under the Spector-Labs organization (or your own fork if you don't have access).
 2. **Create a branch** for your changes: `git checkout -b feature/your-feature-name`
 3. **Make your changes**:
    - Follow the existing code style (vanilla JS, minimal dependencies, clean HTML/CSS).
@@ -19,7 +19,7 @@ Be respectful, inclusive, and focused on building a great tool for people who re
    - Test the landing, player launch, samples, cues, Comfort mode, button simulator ('b' key), PWA install, and offline mode.
    - Run `?test` in the player to verify core logic still passes.
 5. **Commit** with clear messages.
-6. **Open a Pull Request** against the main branch in the spectorlabs org.
+6. **Open a Pull Request** against the main branch in the Spector-Labs org.
 
 ## Reporting Issues
 

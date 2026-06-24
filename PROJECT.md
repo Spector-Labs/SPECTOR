@@ -174,11 +174,11 @@ https://spectorlabs.io/app.html?test
 
 ## Contact & links
 
-- **GitHub:** https://github.com/spectorlabs/SPECTOR (under org; public recommended)
+- **GitHub:** https://github.com/Spector-Labs/SPECTOR (under org; public recommended)
 - **Live:** https://www.spectorlabs.io
 - **Competition:** Meta Ray-Ban teleprompter (in-app, paste + manual advance)  
 - **Note:** SPECTOR sells teleprompter software only — not smart glasses or Meta hardware
-- **Domain status:** spectorlabs.io purchased (Namecheap) and live. Repo in org `spectorlabs`. Migration complete. Ready for public + beta.
+- **Domain status:** spectorlabs.io purchased (Namecheap) and live at https://www.spectorlabs.io/. Repo transferred to org `Spector-Labs`. Ready to make public.
 
 ---
 
