@@ -14,6 +14,12 @@ Spector is a premium digital teleprompter PWA (software only). It gives creators
 
 > Not affiliated with Meta, Ray-Ban, or any glasses manufacturer. Works with any smart-glasses workflow.
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for how to contribute, testing instructions, and development notes.
+
+License: [MIT](LICENSE)
+
 ---
 
 ## Live Demo & Install
@@ -129,20 +135,15 @@ Join via the form on the landing (powered by Formspree for static sites; see the
 
 ## Source Code & Repository
 
-The source is available on GitHub. 
+The source is available on GitHub under the `spectorlabs` organization: https://github.com/spectorlabs/SPECTOR
 
-**Note on visibility:** To keep your personal GitHub profile clean (so other private repos don't appear alongside SPECTOR) while making this repo public for credibility and contributions, we strongly recommend transferring this repo to a GitHub Organization called "spectorlabs". 
+**Repo status:** Transferred to the org. Make it public for credibility and contributions. Your personal profile stays clean. Update portfolio links to the org URL.
 
-- Create the org at github.com/organizations/new (free).
-- Transfer the repo to the org (in the repo: Settings → Options → "Transfer ownership").
-- Make the repo public under the org.
-- Update any links in your portfolio to github.com/spectorlabs/SPECTOR.
-- Your personal profile will no longer list this repo, and your other private repos stay private.
-- Your portfolio site can continue to work (it only needs to link to the now-public SPECTOR repo under the org; it doesn't depend on your personal repos being public).
+- Your personal profile is clean (other repos can stay private).
+- Update your portfolio links to point to the org repo.
+- The live product at spectorlabs.io is the main thing users see.
 
-This is the cleanest way to have an open product repo without affecting your personal account or portfolio.
-
-If you prefer to keep it private for now, that's also fine — the live product at spectorlabs.io is what matters most. You can share the private repo link with beta testers individually.
+If you want to keep the repo private a bit longer, that's fine too. The product site works either way.
 
 ---
 
