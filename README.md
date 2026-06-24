@@ -2,9 +2,11 @@
 
 **Auto-paced, comfort-tuned teleprompter for smart glasses and serious rehearsal.**
 
-[![Live Demo](https://img.shields.io/badge/Live-spector--plum.vercel.app-000?style=flat-square)](https://spector-plum.vercel.app) (migrating to spector.com)
-[![PWA](https://img.shields.io/badge/PWA-Installable-000?style=flat-square)](https://spector-plum.vercel.app)
+[![Live Demo](https://img.shields.io/badge/Live-spector--plum.vercel.app-000?style=flat-square)](https://spector-plum.vercel.app)
+[![PWA](https://img.shields.io/badge/PWA-Installable-000?style=flat-square)](https://spector-plum.vercel.app) (spector.com soon)
 [![GitHub](https://img.shields.io/badge/GitHub-hydrogenbondss/SPECTOR-000?style=flat-square)](https://github.com/hydrogenbondss/SPECTOR)
+
+**Current live:** spector-plum.vercel.app (spector.com launching soon)
 
 **Rehearse on your phone. Perform with confidence on glasses.**
 
@@ -16,7 +18,7 @@ Spector is a premium digital teleprompter PWA (software only). It gives creators
 
 ## Live Demo & Install
 
-**Try it instantly:** [https://spector-plum.vercel.app](https://spector-plum.vercel.app) (spector.com coming soon) — no account needed.
+**Try it instantly:** [https://spector-plum.vercel.app](https://spector-plum.vercel.app) (spector.com launching soon) — no account needed.
 
 - Paste or drop a .txt script
 - Hit **Launch Teleprompter**
@@ -94,7 +96,7 @@ Cues are processed in `hybridChunkWithCues` and respected by `getMs()` timing.
 
 ## Quick Start (Phone or Desktop)
 
-1. Open the current live site (spector-plum.vercel.app — migrating to spector.com soon)
+1. Open the current live site: https://spector-plum.vercel.app (spector.com launching soon)
 2. Paste text, drop a `.txt`, or click one of the sample scripts
 3. (Optional) Title it and **Save** to your library
 4. Hit **Launch Teleprompter**
@@ -121,9 +123,9 @@ We're recruiting testers on real hardware (Ray-Ban Meta Display, Gen 1/2, XREAL,
 - Early access to on-glasses testing
 - Priority when spector.com launches
 
-Join via the form on the landing or email beta@spector.com.
+Join via the form on the landing or email beta@spector.com (form will point to the new domain after launch).
 
-Beta is currently gated until the domain launch for a cleaner experience.
+Beta recruitment is open now; the experience will feel final once we flip to spector.com.
 
 ---
 
@@ -184,7 +186,7 @@ Spector sells **teleprompter software only**. Not smart glasses, not Meta hardwa
 
 **Built for the moment before built-in HUD teleprompters become truly great.**
 
-Live: [spector-plum.vercel.app](https://spector-plum.vercel.app)  
+Live: https://spector-plum.vercel.app (spector.com launching soon)  
 Status: [PROJECT.md](PROJECT.md)  
 Testing on glasses: [TESTING.md](TESTING.md)  
 Source: [github.com/hydrogenbondss/SPECTOR](https://github.com/hydrogenbondss/SPECTOR)

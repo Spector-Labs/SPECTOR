@@ -19,7 +19,7 @@ This guide explains how to test Spector on real Meta Ray-Ban smart glasses using
 3. Go to **Settings → App connections → Add a Web App**.
 4. Paste this URL:
 
-   **https://spector-plum.vercel.app** (will be spector.com soon)
+   **https://spector-plum.vercel.app** (spector.com launching soon)
 
 5. Spector should open directly on your glasses.
 

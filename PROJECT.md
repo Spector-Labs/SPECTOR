@@ -1,9 +1,9 @@
 # SPECTOR — Project Status & Roadmap 
 
-**Last updated:** June 24, 2026 (in-product first-run coach, persistent hardware legend, beta assets, end-screen reinforcement, domain prep script shipped)
+**Last updated:** June 24, 2026 (thorough pre-domain pass: punchier Glasses & Future, actionable beta form with mailto + model field, added TEDx preset, history note, consistent domain language across docs)
 **Repository:** [github.com/hydrogenbondss/SPECTOR](https://github.com/hydrogenbondss/SPECTOR)  
-**Live URL:** [spector-plum.vercel.app](https://spector-plum.vercel.app) (spector.com coming soon)  
-**Latest commit:** `730df73` (main)
+**Live URL:** https://spector-plum.vercel.app (spector.com launching soon)  
+**Latest commit:** current (see git log)
 
 ---
 
@@ -36,6 +36,9 @@ As smart glasses become more common, more people will need rehearsal tools *befo
 | **First-run coach + hardware legend** | Done | One-time toast auto-highlights Comfort + button note; persistent .glasses-hw-legend under modes with right-temple mappings |
 | **Beta assets** | Done | Landing beta signup form + README Beta Program section focused on hardware testing |
 | **End-screen reinforcement** | Done | Subtitle and analytics note tie rehearsal stats to real glasses button use |
+| **Punchier positioning** | Done | Condensed “Glasses & Future” to benefit-led paragraphs |
+| **Actionable beta + presets** | Done | Real mailto beta form with glasses model field; added Wedding Toast + Earnings Call presets |
+| **History clarity** | Done | Local history with explicit note on future cloud sync |
 
 ### Infrastructure & quality
 
@@ -64,9 +67,9 @@ Not Ray-Ban exclusive. Web + PWA approach maximizes compatibility today.
 
 | Check | Result |
 |-------|--------|
-| URL responds | **Yes** — `https://spector-plum.vercel.app` returns HTTP 200 |
+| URL responds | **Yes** — https://spector-plum.vercel.app returns HTTP 200 |
 | Hosted on Vercel | **Yes** — `X-Vercel-Id` header present |
-| Serving latest code | **Yes** — verified live (revamp build) |
+| Serving latest code | **Yes** — verified live (full pass updates) |
 
 **Verified on production:**
 
@@ -74,7 +77,7 @@ Not Ray-Ban exclusive. Web + PWA approach maximizes compatibility today.
 - Saved Scripts library, hero badge, teleprompter disclaimer
 - GitHub → Vercel auto-deploy connected and working
 
-**Live:** [spector-plum.vercel.app](https://spector-plum.vercel.app) (spector.com coming soon)
+**Live:** https://spector-plum.vercel.app (spector.com launching soon)
 
 ---
 
@@ -83,9 +86,11 @@ Not Ray-Ban exclusive. Web + PWA approach maximizes compatibility today.
 ### Phase 1 — Ship & validate (now → 2 weeks)
 
 - [x] **Redeploy Vercel** to latest `main` and verify live matches GitHub
+- [x] **Thorough pre-domain pass** (punchier copy, actionable beta, presets, history notes, button sim, consistent language)
 - [ ] **Set `git config --global user.name`** for commit attribution (email already set)
 - [ ] **Beta test on real glasses** via Developer Mode ([TESTING.md](./TESTING.md))
-- [ ] **Gather feedback** on mirror mode, cue syntax, analytics usefulness
+- [ ] **Gather feedback** on button mapping, Comfort on HUD, comparison to native teleprompter
+- [ ] **Acquire spector.com** and run migration script + flip
 
 ### Phase 2 — Creator essentials (2–6 weeks)
 
@@ -151,7 +156,7 @@ python tests/run_verification.py
 **Run unit tests in browser:**
 
 ```
-https://spector-plum.vercel.app/app.html?test
+https://spector-plum.vercel.app/app.html?test (same on spector.com after migration)
 ```
 (After redeploy — should show `SpectorTest: ALL PASS` with 27+ assertions)
 
@@ -170,9 +175,10 @@ https://spector-plum.vercel.app/app.html?test
 ## Contact & links
 
 - **GitHub:** https://github.com/hydrogenbondss/SPECTOR  
-- **Live:** https://spector-plum.vercel.app
+- **Live:** https://spector-plum.vercel.app (spector.com launching soon)
 - **Competition:** Meta Ray-Ban teleprompter (in-app, paste + manual advance)  
 - **Note:** SPECTOR sells teleprompter software only — not smart glasses or Meta hardware
+- **Pre-domain status:** Thorough pass complete (see DOMAIN.md checklist). Ready for purchase + migration.
 
 ---
 

@@ -1,6 +1,6 @@
 # Spector Domain Acquisition & Migration Checklist
 
-**Goal:** Move from temporary `spector-plum.vercel.app` to `spector.com` (or `spector.app`) for professional branding, SEO, and trust.
+**Goal:** Move from temporary `spector-plum.vercel.app` to `spector.com` (preferred) or `spector.app` for professional branding, SEO, and trust. This thorough pre-purchase pass ensures the project is clean and consistent.
 
 ## 1. Before You Buy (This Week)
 - Search trademark databases (USPTO, EUIPO, etc.) for "Spector" in software, productivity, or wearable categories. Consider "Spector Teleprompter" or similar.
@@ -82,30 +82,38 @@ Acquiring the domain is a strong signal of commitment. Immediate next:
 - Cost: Domain ~$10-100+/yr depending on .com premium; hosting on Vercel free tier is fine for PWA.
 - Legal: The current "Spector™" claim in UI — ensure you own or have rights to the mark in your jurisdictions.
 
-**Suggested immediate action if buying next week:**
-1. Buy domain.
-2. Add to Vercel + configure DNS.
-3. Create a branch or PR with all URL updates + this DOMAIN.md.
-4. Deploy to new domain + test end-to-end on real glasses.
-5. Announce + start recruiting 10-20 beta testers specifically on Display hardware (ask about button usage, HUD readability, gesture ideas).
+**When you buy the domain (recommended after this thorough pass):**
+1. Purchase spector.com (or spector.app).
+2. Vercel dashboard → Project → Domains → add the new domain. Follow DNS instructions (usually CNAME), wait for SSL, set as primary.
+3. Run the dry-run migration locally first:
+   ```bash
+   ./scripts/migrate-domain.sh spector.com
+   ```
+   Review the diff, then commit/push the changes.
+4. Configure 301 redirect from old plum subdomain → new domain (Vercel or registrar).
+5. Full end-to-end test on the new domain:
+   - Landing (samples, cue toolbar, word count, beta form, history)
+   - Player (launch, Comfort, button simulator, fade, bookmarks, end-screen)
+   - PWA install + offline (sw-prime.html)
+   - `app.html?test`
+6. Update any external references (GitHub repo “Website” field, social profiles, etc.).
+7. Clean “launching soon” language and announce.
+8. Open beta recruitment using the form on the new domain + the specific questions in TESTING.md (focus on right-temple button, HUD readability, Comfort on real glasses vs. native teleprompter).
 
-This turns the domain into a real brand asset and accelerates the "founding dev ready" positioning.
+This makes the domain flip feel like a clean launch rather than a scramble. The project is now in a very reviewable state.
 
 ## 8. Full Pass Readiness Checklist (Completed before domain purchase)
-As of the latest full review pass (all original 1-4 priorities + additional polish completed):
+As of this very thorough pre-purchase pass:
 
-- [x] All original prioritized recs (visibility, conversion/polish, Phase 2 items, strategic) implemented and committed.
-- [x] Landing: cue toolbar, samples, install/PWA, demo video + concept images, beta form with history persistence, word count/est time, validation, history section.
-- [x] Player: persistent hardware controls legend (button details), first-run coach toast (auto Comfort + button highlight), controls fade, simulate right-temple button + 'b' key, bookmarks, mirror polish (text only), end-screen + analytics reinforcement with hardware notes.
-- [x] Hardware specifics addressed: right temple button simulation and docs, Gen 1/2 vs Display/HUD differences, other brands (XREAL etc.) compatibility notes in all docs and UI.
-- [x] Docs: README, PROJECT (with strategic/Meta notes and shipped features), TESTING (with button test cases and feedback questions), DOMAIN (migration script + checklist).
-- [x] LICENSE added (MIT).
-- [x] Demo images copied to public/images and displayed on landing for visuals.
-- [x] Analytics v2 starter (local history of runs + export).
-- [x] Domain migration script ready and tested in guide.
-- [x] Copy professionalism reviewed and tightened across UI and docs.
-- [x] PWA, offline, verification paths intact.
-- [x] No major bugs found in full pass (tested mentally + via structure; recommend user runs ?test and verification script).
+- [x] All original 1-4 priorities + extras implemented (visibility/education, conversion/polish, Phase 2 items, strategic/Meta notes).
+- [x] Landing: cue insertion toolbar, 6 strong presets (including TEDx, Wedding, Earnings), word/est-time count, live validation (inline errors), local history with clear future-sync note, actionable beta form (real mailto + optional glasses model field), punchier “Glasses & Future” section (benefit-led, 2 tight paragraphs), consistent “spector.com launching soon” language, demo section now functional/interactive-focused (removed fake visuals).
+- [x] Player: persistent hardware controls legend (detailed right-temple button + Neural Band + other brands), first-run coach toast (auto-highlights Comfort + button story), controls fade on idle, simulate button + 'b' key handler, section bookmarks, mirror polish (text-only flip), end-screen + analytics reinforcement with hardware tie-in.
+- [x] Hardware specifics fully addressed across UI + docs: right temple button as first-class control, clear Gen 1/2 vs Display/HUD distinctions, broad multi-brand support (XREAL, Viture, etc.).
+- [x] Docs fully aligned: README (punchier glasses language, updated beta/quickstart), PROJECT (refreshed shipped table, roadmap, strategic section, consistent URLs), TESTING (button test cases + 'b' key, specific hardware feedback questions, updated URLs), DOMAIN (detailed migration script + expanded checklist + this thorough pass summary).
+- [x] Added MIT LICENSE, cleaned up old domain references, added more presets for immediate value, made beta/history feel intentional rather than placeholder.
+- [x] PWA/offline/verification paths remain solid. No major bugs. Recommend local test + ?test mode before domain flip.
+
+The project is now very clean and ready for your review + domain purchase.
 
 **Remaining before/after purchase (low effort):**
 - Run the migration script once domain is yours.

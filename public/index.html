@@ -20,7 +20,7 @@
             <p class="market-note">Rehearse on your phone today. Perform with confidence on glasses tomorrow. Not affiliated with Meta or Ray-Ban — works with any smart-glasses setup.</p>
 
             <button id="install-btn" class="btn-install" style="margin: 8px auto 20px;">Install for offline use</button>
-            <p style="font-size:11px;color:#666;text-align:center;margin-top:-8px;">spector.com launching soon — beta access open now</p>
+            <p style="font-size:11px;color:#666;text-align:center;margin-top:-8px;">spector.com launching soon (beta access open now)</p>
         </header>
 
         <div class="input-section">
@@ -47,6 +47,8 @@
                 <button type="button" class="sample-btn" data-sample="pitch">Investor Pitch</button>
                 <button type="button" class="sample-btn" data-sample="demo">Product Demo</button>
                 <button type="button" class="sample-btn" data-sample="ted">TEDx Opener</button>
+                <button type="button" class="sample-btn" data-sample="wedding">Wedding Toast</button>
+                <button type="button" class="sample-btn" data-sample="earnings">Earnings Call</button>
             </div>
 
             <div class="cue-legend" style="font-size:11px;color:#777;margin-bottom:12px;line-height:1.4;">
@@ -90,7 +92,7 @@
                 <li>Launch the player to experience adaptive pacing, Comfort mode, and the hardware controls legend</li>
             </ul>
             <p class="demo-note" style="margin-top:6px;font-size:12px;">Pro tip: Try Comfort mode and move your head gently for the full spatial experience (or use the button simulator in the player).</p>
-            <p style="font-size:11px; color:#666; margin-top:12px;">Real screenshots and usage photos coming with the spector.com launch and beta feedback.</p>
+            <p style="font-size:11px; color:#666; margin-top:12px;">Real screenshots and usage photos coming with the spector.com launch (after beta feedback on actual hardware).</p>
         </section>
 
         <section class="beta-section" id="beta-section">
@@ -106,7 +108,7 @@
                 <input type="text" name="glasses" placeholder="Glasses model (e.g. Ray-Ban Meta Display, XREAL One)" style="margin-bottom:8px;">
                 <button type="submit">Request Beta Access</button>
             </form>
-            <div id="beta-success">Thanks — we'll reach out from the new domain soon.</div>
+            <div id="beta-success">Thanks — we'll reach out from beta@spector.com once we launch the new domain.</div>
         </section>
 
         <!--
@@ -267,6 +269,14 @@
             ted: {
                 title: "TEDx Opener",
                 text: "Good [pause] afternoon.\n\n**What if** the most important talk of your life started with you feeling completely in control?\n\n[pause:2s]\n\nToday I'm going to show you a different way to rehearse — one that uses the hardware already on (or in front of) your face."
+            },
+            wedding: {
+                title: "Wedding Toast",
+                text: "To the happy couple. [pause]\n\n**I’ve known** the groom for years, and if there’s one thing I’ve learned, it’s that he’s found his perfect match.\n\n[pause:3s]\n\nMay your life together be as full of laughter and [pause] love as today."
+            },
+            earnings: {
+                title: "Earnings Call",
+                text: "Good morning, everyone. [pause]\n\n**Q3 results** came in strong — revenue up 18% year-over-year, driven by our new product line.\n\n[pause:2s]\n\nGuidance for Q4 remains confident. We’re executing well against our plan."
             }
         };
 
@@ -287,7 +297,9 @@
                             keynote: 'Keynote Opener',
                             pitch: 'Investor Pitch',
                             demo: 'Product Demo',
-                            ted: 'TEDx Opener'
+                            ted: 'TEDx Opener',
+                            wedding: 'Wedding Toast',
+                            earnings: 'Earnings Call'
                         }[btn.dataset.sample] || 'Sample';
                         btn.textContent = label;
                         btn.style.transition = '';
