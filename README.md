@@ -31,19 +31,14 @@ Spector is a premium digital teleprompter PWA (software only). It gives creators
 
 ## See It In Action
 
-**Demo video & visuals** (embedded on the live site and in this repo):
+The best way to experience Spector is directly on the site:
 
-Short walkthrough of launching a script, Comfort mode head-responsive effects, and the end-of-run analytics screen.
+- Load one of the sample scripts (they include real cue syntax)
+- Use the cue toolbar buttons to insert **emphasis** or pauses
+- Watch the live word count and estimated duration
+- Launch the player for adaptive pacing, Comfort spatial mode, and the hardware controls info (including right-temple button guidance for Ray-Ban Meta Display)
 
-(Video: `public/spector-demo.mp4`; visuals in `assets/`.)
-
-**Concept visuals** (phone UI + real-world usage):
-
-![Phone UI mockup](assets/demo-phone-ui.jpg)
-
-![Usage scenario with smart glasses](assets/demo-usage.jpg)
-
-These illustrate the glanceable typography, active chunk treatment, and "phone as rehearsal companion for glasses" story.
+Real screenshots, usage photos, and a screen-recorded demo will be added for the spector.com launch once we have beta feedback from actual hardware. The assets/ folder currently contains early concept renders.
 
 ---
 
