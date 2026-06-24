@@ -1,7 +1,7 @@
 # SPECTOR — Project Status & Roadmap 
 
 **Last updated:** June 24, 2026 (thorough pre-domain pass: punchier Glasses & Future, actionable beta form with mailto + model field, added TEDx preset, history note, consistent domain language across docs)
-**Repository:** [github.com/hydrogenbondss/SPECTOR](https://github.com/hydrogenbondss/SPECTOR)  
+**Repository:** [github.com/Spector-Labs/SPECTOR](https://github.com/Spector-Labs/SPECTOR)  
 **Live URL:** https://spectorlabs.io
 **Latest commit:** current (see git log)
 

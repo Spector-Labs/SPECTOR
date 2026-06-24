@@ -94,28 +94,18 @@
             <p class="demo-note" style="margin-top:6px;font-size:12px;">Pro tip: Try Comfort mode and move your head gently for the full spatial experience (or use the button simulator in the player).</p>
 
             <!-- 
-              SCREENSHOTS SECTION - ready for real images
-              1. Take screenshots from the live site (www.spectorlabs.io):
-                 - Phone player in Comfort mode (show the legend)
-                 - Player with button simulator visible
-                 - Someone using with actual glasses if possible
-              2. Put images in public/images/ with good names (e.g. player-phone.jpg, usage-glasses.jpg)
-              3. Replace the placeholders below.
-              Keep captions short and benefit-focused.
+              Real demo screenshots (from live site + product shots).
+              Images live in public/images/. Update captions or swap files as needed.
             -->
             <div class="screenshots" style="margin-top:16px;">
               <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px; max-width:620px; margin:0 auto;">
                 <figure style="margin:0; text-align:center;">
-                  <div style="background:#222; border-radius:8px; height:160px; display:flex; align-items:center; justify-content:center; color:#666; font-size:12px; border:1px dashed #444;">
-                    [Player screenshot on phone]
-                  </div>
-                  <figcaption style="font-size:10px; color:#666; margin-top:6px;">Player UI on phone (try the samples above)</figcaption>
+                  <img src="images/demo-phone-ui.jpg" alt="Spector teleprompter running on iPhone: large script text, Comfort mode active, pause and speed controls visible" style="width:100%; height:auto; border-radius:8px; border:1px solid rgba(255,255,255,0.08); box-shadow:0 4px 12px rgba(0,0,0,0.3);">
+                  <figcaption style="font-size:10px; color:#666; margin-top:6px;">Player on phone — Comfort mode, cues, adaptive speed</figcaption>
                 </figure>
                 <figure style="margin:0; text-align:center;">
-                  <div style="background:#222; border-radius:8px; height:160px; display:flex; align-items:center; justify-content:center; color:#666; font-size:12px; border:1px dashed #444;">
-                    [Usage with smart glasses]
-                  </div>
-                  <figcaption style="font-size:10px; color:#666; margin-top:6px;">Real-world use with glasses (right-temple button + HUD)</figcaption>
+                  <img src="images/demo-usage.jpg" alt="Presenter wearing smart glasses on stage, holding phone running Spector teleprompter" style="width:100%; height:auto; border-radius:8px; border:1px solid rgba(255,255,255,0.08); box-shadow:0 4px 12px rgba(0,0,0,0.3);">
+                  <figcaption style="font-size:10px; color:#666; margin-top:6px;">Rehearse on phone, perform on glasses (PWA + future HUD/button support)</figcaption>
                 </figure>
               </div>
             </div>
@@ -130,14 +120,15 @@
                 <li>Priority access (beta open now)</li>
             </ul>
             <!-- 
-              BETA FORM SETUP (Formspree):
-              1. Sign up at https://formspree.io (free is fine).
-              2. Create form "Beta Requests".
-              3. In settings, set notification email to hello@spectorlabs.io.
-              4. Copy the endpoint (https://formspree.io/f/xxxxxx) and replace below.
-              Form collects email + glasses model (important for hardware testing) + optional notes.
+              BETA FORM (Formspree - configured):
+              Endpoint: https://formspree.io/f/mzdlddkp
+              Notifications go to hello@spectorlabs.io.
+              Form name in dashboard: Spector Beta Requests (or similar).
+              From name in email template recommended: "Spector" or "Spector Labs".
+              Collects: email (required) + glasses model (key for hardware testing) + optional notes.
+              AJAX submit + mailto fallback in JS.
             -->
-            <form id="beta-form" action="https://formspree.io/f/REPLACE_WITH_YOUR_FORM_ID" method="POST">
+            <form id="beta-form" action="https://formspree.io/f/mzdlddkp" method="POST">
                 <input type="email" name="email" placeholder="your@email.com" required style="margin-bottom:6px;">
                 <input type="text" name="glasses" placeholder="Glasses model (e.g. Ray-Ban Meta Display, XREAL One)" style="margin-bottom:8px;">
                 <textarea name="message" placeholder="Any notes or hardware details (optional)" rows="2" style="margin-bottom:8px;"></textarea>
@@ -520,7 +511,7 @@
             const form = e.target;
             const success = document.getElementById('beta-success');
 
-            // IMPORTANT: Sign up at https://formspree.io (free), create a form, and replace the action URL below with your real endpoint (e.g. https://formspree.io/f/abc123). Set the notification email to hello@spectorlabs.io.
+            // Formspree endpoint configured: https://formspree.io/f/mzdlddkp (notifications to hello@spectorlabs.io). From name in dashboard should be "Spector" / "Spector Labs". AJAX + mailto fallback.
             const formData = new FormData(form);
 
             try {
