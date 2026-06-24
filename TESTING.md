@@ -37,6 +37,7 @@ This guide explains how to test Spector on real Meta Ray-Ban smart glasses using
 - Tap the screen or press play to start/stop.
 - Use the speed presets (Slow / Normal / Fast) to match your speaking pace.
 - Tap anywhere to show/hide controls.
+- **Test the right-temple button flow**: Use the "Simulate right temple button (advance)" button in the player or press 'b' key (easy for desktop testing). This mimics the physical button on Ray-Ban Meta for advancing chunks.
 - When finished, you’ll see a clean end screen with stats (chunks read + total time).
 
 ---

@@ -911,6 +911,22 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify(library));
     }
 
+    function saveRunToHistory() {
+        const key = 'spector_runs_v1';
+        let runs = [];
+        try { runs = JSON.parse(localStorage.getItem(key)) || []; } catch {}
+        runs.unshift({
+            ts: Date.now(),
+            chunks: document.getElementById('end-chunks').textContent,
+            time: document.getElementById('end-time').textContent,
+            wpm: document.getElementById('end-wpm').textContent,
+            pacing: document.getElementById('end-consistency').textContent,
+            scriptPreview: (rawScript || '').slice(0, 60).replace(/\n/g, ' ') + '...'
+        });
+        if (runs.length > 5) runs.length = 5;
+        localStorage.setItem(key, JSON.stringify(runs));
+    }
+
     function showEndScreen() {
         stopPlayback();
         const endScreen = document.getElementById('end-screen');
@@ -931,6 +947,8 @@
         endScreen.classList.remove('hidden');
         endScreen.classList.add('visible');
         Haptics.play();
+
+        saveRunToHistory();
 
         document.getElementById('restart-btn').onclick = () => {
             Haptics.tick();

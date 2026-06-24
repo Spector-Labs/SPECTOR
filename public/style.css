@@ -986,6 +986,15 @@ body.mirror-mode .bookmarks {
     font-weight: 700;
 }
 
+/* History section (recent rehearsals) */
+.history-item {
+    padding: 6px 8px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 6px;
+    margin-bottom: 4px;
+    font-size: 11px;
+}
+
 /* Beta / launch assets section (on landing) */
 .beta-section {
     margin-top: 28px;

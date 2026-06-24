@@ -73,6 +73,12 @@
             </ul>
         </section>
 
+        <section class="history-section" id="history-section" style="margin-top:16px;">
+            <h3 style="font-size:14px;font-weight:600;color:#999;margin:0 0 8px;letter-spacing:0.04em;text-transform:uppercase;">Recent rehearsals (local)</h3>
+            <div id="history-list" style="font-size:12px;color:#888;"></div>
+            <div style="font-size:10px;color:#666;margin-top:4px;">(Stored locally; will sync when cloud added later)</div>
+        </section>
+
         <section class="demo-section">
             <h3>See it in action</h3>
             <p class="demo-note">Watch how the player works — including Comfort mode spatial movement that responds to your head.</p>
@@ -187,6 +193,21 @@
                 li.addEventListener('dblclick', () => launchScript(script.text));
                 list.appendChild(li);
             });
+        }
+
+        function renderHistory() {
+            const container = document.getElementById('history-list');
+            if (!container) return;
+            let runs = [];
+            try { runs = JSON.parse(localStorage.getItem('spector_runs_v1')) || []; } catch {}
+            if (!runs.length) {
+                container.innerHTML = '<div style="font-size:11px;color:#666;">No runs yet — finish a rehearsal in the player to see history here.</div>';
+                return;
+            }
+            container.innerHTML = runs.map(r => {
+                const d = new Date(r.ts).toLocaleDateString();
+                return `<div class="history-item">${d} · ${r.chunks} chunks · ${r.time} min · ${r.wpm} wpm · ${r.pacing} pacing<br><span style="font-size:10px;opacity:0.7;">${escapeHtml(r.scriptPreview)}</span></div>`;
+            }).join('');
         }
 
         function escapeHtml(str) {
@@ -419,6 +440,7 @@
             initSampleButtons();
             initCueToolbar();
             renderLibrary();
+            renderHistory();
             registerServiceWorker();
             initInstallPrompt();
 
