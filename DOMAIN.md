@@ -24,29 +24,29 @@
 6. (Optional) Set up redirect: old `spector-plum.vercel.app` → new domain (301) in Vercel or registrar.
 
 ## 4. Update All References in Code & Docs (Critical — Do Before or Immediately After DNS)
-Search the entire repo for the old domain and update:
+Use the provided migration helper for speed and safety:
 
-**Must update:**
-- `public/index.html`: meta description, any links, title if needed.
-- `public/app.html`: any references.
-- `public/manifest.json`: `start_url` if absolute.
-- `README.md`: all badges, links, "Try it instantly", Quick Start, etc.
-- `TESTING.md`: all URLs and "Current Live Version".
-- `PROJECT.md`: Live URL, deployment checks, contact links.
-- Any other mentions (e.g., in tests, sw files if absolute).
+```bash
+# From repo root
+./scripts/migrate-domain.sh spector.com
+# or
+NEW_DOMAIN=spector.app ./scripts/migrate-domain.sh
+```
 
-**Example search:**
+The script handles the bulk replacements across README, TESTING, PROJECT, DOMAIN, etc.
+
+**Manual review still required** after running:
+- `git diff`
+- Check for any other hard-coded references (e.g. in future added files).
+- Update GitHub repo settings (Website URL, description).
+- Update external links.
+
+See the script header for the full list of post-migration steps (Vercel DNS, redirects, re-deploy, testing matrix, etc.).
+
+**Example manual search if needed:**
 ```bash
 grep -r "spector-plum.vercel.app" . --include="*.md" --include="*.html" --include="*.json"
 ```
-
-After updates:
-- `git commit && git push`
-- Trigger redeploy on Vercel (or it auto-deploys from main).
-
-Also update:
-- GitHub repo description, website URL in settings.
-- Any external links (LinkedIn, personal site, future press).
 
 ## 5. Post-Migration
 - Test thoroughly: landing, player launch, PWA install, offline (via sw-prime/verify).
