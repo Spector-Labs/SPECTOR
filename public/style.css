@@ -1024,6 +1024,15 @@ body.mirror-mode .bookmarks {
     font-size: 11px;
 }
 
+/* Screenshots placeholders in demo section */
+.screenshots figure div {
+    transition: all 0.2s ease;
+}
+.screenshots figure div:hover {
+    background: #2a2a2a;
+    border-color: #555;
+}
+
 /* Beta / launch assets section (on landing) */
 .beta-section {
     margin-top: 28px;

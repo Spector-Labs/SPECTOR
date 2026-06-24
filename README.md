@@ -129,7 +129,7 @@ We're recruiting testers on real hardware (Ray-Ban Meta Display, Gen 1/2, XREAL,
 - Early access to on-glasses testing
 - Priority access after launch
 
-Join via the form on the landing (powered by Formspree for static sites; see the comment in public/index.html for setup using hello@spectorlabs.io) or email hello@spectorlabs.io.
+Join via the form on the landing (powered by Formspree — see the detailed setup comment in public/index.html; uses hello@spectorlabs.io) or email hello@spectorlabs.io directly.
 
 ---
 
