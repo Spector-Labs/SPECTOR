@@ -122,14 +122,14 @@ See [TESTING.md](TESTING.md) for Developer Mode + "Add a Web App" on Ray-Ban Met
 
 ## Beta Program
 
-We're recruiting testers on real hardware (Ray-Ban Meta Display, Gen 1/2, XREAL, Viture, Brilliant Labs, etc.) to validate right-temple button/gesture controls, Comfort mode on HUD, and the full rehearsal experience.
+The web player + PWA is fully live and usable today for phone rehearsal (install it, use the samples, try Comfort mode, etc.). We're recruiting testers with real smart glasses (Ray-Ban Meta Display, Gen 1/2, XREAL, Viture, Brilliant Labs, etc.) to validate the right-temple button, touch/gestures, Comfort spatial effects on actual HUD, and the complete flow.
 
-**Testers get:**
+**Hardware beta testers get:**
 - Direct input on button and Neural Band mappings
-- Early access to on-glasses testing
-- Priority access after launch
+- Early feedback loops on real-device experience
+- Influence on glasses-specific features
 
-Join via the form on the landing (powered by Formspree, endpoint configured, notifications to hello@spectorlabs.io) or email hello@spectorlabs.io directly.
+Sign up via the form on the landing (powered by Formspree, endpoint configured, notifications to hello@spectorlabs.io) or email hello@spectorlabs.io directly.
 
 ---
 

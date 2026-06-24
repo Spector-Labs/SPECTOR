@@ -1,6 +1,6 @@
 # Spector Testing Guide
 
-This guide explains how to test Spector on real Meta Ray-Ban smart glasses using Developer Mode.
+This guide explains how to test Spector on real Meta Ray-Ban smart glasses using Developer Mode. (The web/PWA player is fully usable today for phone rehearsal — no signup required. This doc focuses on real hardware validation for beta testers.)
 
 ---
 
@@ -48,7 +48,7 @@ Please test and report on:
 - **Comparison**: How does Spector feel vs Meta's built-in teleprompter?
 - **Simulator utility**: The on-screen "Simulate right temple button" + 'b' key in the player — useful for desktop practice?
 
-Sign up at https://www.spectorlabs.io (Join the beta section) and mention your exact hardware. Source code: https://github.com/Spector-Labs/SPECTOR. We'll send a short structured feedback form.
+Sign up at https://www.spectorlabs.io (Hardware beta section) and mention your exact hardware. Source code: https://github.com/Spector-Labs/SPECTOR. We'll send a short structured feedback form.
 
 ---
 
