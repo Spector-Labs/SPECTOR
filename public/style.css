@@ -902,6 +902,35 @@ body.mirror-mode #script-container .chunk {
     margin-top: 2px;
 }
 
+/* One-time first-run coach / toast for in-product onboarding */
+.first-run-toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 90%;
+    background: rgba(232, 213, 183, 0.95);
+    color: #111;
+    padding: 12px 20px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 200;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none;
+}
+
+.first-run-toast.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-5px);
+}
+
+.first-run-toast strong {
+    font-weight: 700;
+}
+
 /* Beta / launch assets section (on landing) */
 .beta-section {
     margin-top: 28px;

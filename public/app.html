@@ -862,8 +862,37 @@
         setupSpeedPresets();
         setupMotionPermissionUI();
         setupCustomization();
+
+        // First-run in-product coach: highlight Comfort + hardware button story on very first visit
+        let firstRun = false;
+        try {
+            firstRun = !localStorage.getItem('spector_player_first_run');
+            if (firstRun) localStorage.setItem('spector_player_first_run', '1');
+        } catch (e) {}
+
         applyMode('focus');
         updateDisplay();
+
+        if (firstRun) {
+            setTimeout(() => {
+                const toast = document.createElement('div');
+                toast.className = 'first-run-toast';
+                toast.innerHTML = `Welcome! Try <strong>Comfort</strong> mode — on Ray-Ban Meta Display the right temple <strong>button</strong> advances chunks.`;
+                document.body.appendChild(toast);
+
+                // brief auto-switch to Comfort to demonstrate
+                setTimeout(() => {
+                    applyMode('comfort');
+                    toast.classList.add('visible');
+
+                    setTimeout(() => {
+                        toast.style.transition = 'opacity 0.6s ease';
+                        toast.style.opacity = '0';
+                        setTimeout(() => toast.remove(), 600);
+                    }, 6500);
+                }, 800);
+            }, 1200);
+        }
 
         document.addEventListener('keydown', (e) => {
             if (e.key === ' ' || e.key === 'k') { e.preventDefault(); togglePlay(); }
