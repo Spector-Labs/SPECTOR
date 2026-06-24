@@ -91,8 +91,40 @@ Acquiring the domain is a strong signal of commitment. Immediate next:
 
 This turns the domain into a real brand asset and accelerates the "founding dev ready" positioning.
 
+## 8. Full Pass Readiness Checklist (Completed before domain purchase)
+As of the latest full review pass (all original 1-4 priorities + additional polish completed):
+
+- [x] All original prioritized recs (visibility, conversion/polish, Phase 2 items, strategic) implemented and committed.
+- [x] Landing: cue toolbar, samples, install/PWA, demo video + concept images, beta form with history persistence, word count/est time, validation, history section.
+- [x] Player: persistent hardware controls legend (button details), first-run coach toast (auto Comfort + button highlight), controls fade, simulate right-temple button + 'b' key, bookmarks, mirror polish (text only), end-screen + analytics reinforcement with hardware notes.
+- [x] Hardware specifics addressed: right temple button simulation and docs, Gen 1/2 vs Display/HUD differences, other brands (XREAL etc.) compatibility notes in all docs and UI.
+- [x] Docs: README, PROJECT (with strategic/Meta notes and shipped features), TESTING (with button test cases and feedback questions), DOMAIN (migration script + checklist).
+- [x] LICENSE added (MIT).
+- [x] Demo images copied to public/images and displayed on landing for visuals.
+- [x] Analytics v2 starter (local history of runs + export).
+- [x] Domain migration script ready and tested in guide.
+- [x] Copy professionalism reviewed and tightened across UI and docs.
+- [x] PWA, offline, verification paths intact.
+- [x] No major bugs found in full pass (tested mentally + via structure; recommend user runs ?test and verification script).
+
+**Remaining before/after purchase (low effort):**
+- Run the migration script once domain is yours.
+- Remove "spector.com coming soon" notes and update live URLs.
+- Update beta form text/email to beta@spector.com.
+- Test full flow on new domain + real glasses (use simulate button as proxy first).
+- Consider making GitHub repo public after domain live for contributors.
+- Optional: connect beta form to real service (Formspree, email) on new domain.
+
+**Suggested action for you now:**
+1. Review the current state (landing, player, all docs).
+2. Run local test: `python -m http.server --directory public 8080`, open http://localhost:8080 and app.html?test.
+3. If happy with the full pass, purchase the domain.
+4. Run the migration script.
+5. Vercel custom domain setup + re-deploy.
+6. Announce and recruit beta testers.
+
 ---
 
-*Last updated with hardware controls & multi-brand clarifications (June 2026).*
+*Last updated with full pass completion and readiness checklist (June 2026).*
 
 Contact / questions: Update as needed.

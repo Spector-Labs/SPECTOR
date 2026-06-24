@@ -775,38 +775,26 @@
         ].filter(Boolean);
         let hideTimer = null;
 
-        function show() {
+        function showControls() {
             els.forEach(el => el.style.opacity = '1');
             clearTimeout(hideTimer);
             if (isPlaying) {
-                hideTimer = setTimeout(hide, 4000);
+                hideTimer = setTimeout(hideControls, 4000);
             }
         }
 
-        function hide() {
+        function hideControls() {
             if (!isPlaying) return;
             els.forEach(el => el.style.opacity = '0.1');
         }
 
-        // interactions show
+        // interactions show controls
         ['mousemove', 'touchstart', 'keydown'].forEach(evt =>
-            document.addEventListener(evt, show, { passive: true })
+            document.addEventListener(evt, showControls, { passive: true })
         );
 
-        // hook into playback to start hide timer
-        const origStart = startPlayback;
-        startPlayback = function() {
-            origStart.apply(this, arguments);
-            show();
-        };
-        const origStop = stopPlayback;
-        stopPlayback = function() {
-            origStop.apply(this, arguments);
-            show(); // keep visible when paused
-        };
-
         // initial show
-        setTimeout(show, 1000);
+        setTimeout(showControls, 1000);
     }
 
     function setupGlassesButtonSim() {
