@@ -889,6 +889,13 @@ body.mirror-mode .bookmarks {
     .glasses-hw-legend { font-size: 10px; padding: 5px 10px; }
 }
 
+/* Landing demo visuals responsive */
+@media (max-width: 600px) {
+    .demo-visuals {
+        grid-template-columns: 1fr !important;
+    }
+}
+
 /* First-time / Comfort discovery tip in player */
 .comfort-tip {
     max-width: 620px;
