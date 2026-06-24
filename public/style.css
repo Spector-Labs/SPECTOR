@@ -825,6 +825,7 @@ body.mirror-mode #script-container .chunk {
     .controls { gap: 10px; }
     .control-btn { padding: 16px 12px; }
     .customize-panel { gap: 12px; }
+    .glasses-hw-legend { font-size: 10px; padding: 5px 10px; }
 }
 
 /* First-time / Comfort discovery tip in player */
