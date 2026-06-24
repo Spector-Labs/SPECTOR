@@ -85,13 +85,13 @@ Acquiring the domain is a strong signal of commitment. Immediate next:
 **Current status (spectorlabs.io live):**
 - Domain purchased via Namecheap and connected to Vercel (site live at https://www.spectorlabs.io/).
 - Migration script executed and all references updated in this pass.
-- Beta form ready for Formspree (instructions in the HTML).
+- [x] Beta form ready for Formspree (done, see public/index.html).
 - All "launching soon" language cleaned or updated to current status.
 - Project is production-ready for beta recruitment and real hardware testing.
 
 **Next immediate steps:**
 1. Trigger a fresh deploy in Vercel for the spectorlabs.io custom domain to pick up the latest code.
-2. Set up Formspree (see comment in public/index.html) and replace the placeholder action URL. Use hello@spectorlabs.io for notifications.
+2. [x] Set up Formspree (endpoint mzdlddkp, see public/index.html) and notifications to hello@spectorlabs.io.
 3. Update your GitHub repo "Website" setting to https://www.spectorlabs.io (repo is now under github.com/Spector-Labs/SPECTOR after org transfer).
 4. Start beta recruitment (post the live link + form, emphasize hardware testing).
 5. Capture real screenshots from the live site and update the demo section (remove the placeholder note).
@@ -114,10 +114,10 @@ The project is now very clean and ready for your review + domain purchase.
 **Remaining before/after purchase (low effort):**
 - Run the migration script once domain is yours.
 - Remove "launching soon" notes and update live URLs.
-- The beta form is now set up for Formspree (easy static forms). Update the action URL in public/index.html with your real Formspree endpoint after signing up at formspree.io. Emails go to hello@spectorlabs.io.
+- [x] The beta form is configured with Formspree (endpoint https://formspree.io/f/mzdlddkp, notifications to hello@spectorlabs.io).
 - Test full flow on new domain + real glasses (use simulate button as proxy first).
 - Consider making GitHub repo public after domain live for contributors.
-- Optional: connect beta form to real service (Formspree, email) on new domain.
+- [x] Beta form connected to real Formspree service.
 
 **Suggested action for you now:**
 1. Review the current state (landing, player, all docs).
