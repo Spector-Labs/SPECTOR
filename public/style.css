@@ -860,3 +860,43 @@ body.mirror-mode #script-container .chunk {
 .comfort-tip button:hover {
     background: rgba(232, 213, 183, 0.1);
 }
+
+/* Persistent glasses hardware controls legend (prominent for button/touch awareness) */
+.glasses-hw-legend {
+    max-width: 620px;
+    margin: 6px auto 4px;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    font-size: 11px;
+    color: #999;
+    line-height: 1.35;
+    text-align: left;
+}
+
+.glasses-hw-legend .hw-title {
+    font-weight: 600;
+    color: #bbb;
+    margin-right: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 10px;
+}
+
+.glasses-hw-legend .hw-detail {
+    display: block;
+    margin: 2px 0;
+}
+
+.glasses-hw-legend .future {
+    color: #777;
+    font-style: italic;
+}
+
+.glasses-hw-legend .hw-other {
+    display: block;
+    font-size: 10px;
+    color: #777;
+    margin-top: 2px;
+}
