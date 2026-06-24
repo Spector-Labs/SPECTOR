@@ -20,7 +20,7 @@
             <p class="market-note">Rehearse on your phone today. Perform with confidence on glasses tomorrow. Not affiliated with Meta or Ray-Ban — works with any smart-glasses setup.</p>
 
             <button id="install-btn" class="btn-install" style="margin: 8px auto 20px;">Install for offline use</button>
-            <p style="font-size:11px;color:#666;text-align:center;margin-top:-8px;">spector.com coming soon — follow updates on GitHub</p>
+            <p style="font-size:11px;color:#666;text-align:center;margin-top:-8px;">spector.com launching soon — beta access open now</p>
         </header>
 
         <div class="input-section">
@@ -46,6 +46,7 @@
                 <button type="button" class="sample-btn" data-sample="keynote">Keynote Opener</button>
                 <button type="button" class="sample-btn" data-sample="pitch">Investor Pitch</button>
                 <button type="button" class="sample-btn" data-sample="demo">Product Demo</button>
+                <button type="button" class="sample-btn" data-sample="ted">TEDx Opener</button>
             </div>
 
             <div class="cue-legend" style="font-size:11px;color:#777;margin-bottom:12px;line-height:1.4;">
@@ -262,6 +263,10 @@
             demo: {
                 title: "Product Demo",
                 text: "This is Spector. [pause]\n\nPaste any script. Hit play. The text advances at the right pace for **your** voice.\n\nIn Comfort mode your head movement creates gentle spatial anchoring — it feels alive, not robotic. [pause:2s]\n\nWhen you finish, you get real analytics: pacing consistency, where you hesitated, the slowest chunk.\n\nRehearse here. Nail it on stage — or on your glasses."
+            },
+            ted: {
+                title: "TEDx Opener",
+                text: "Good [pause] afternoon.\n\n**What if** the most important talk of your life started with you feeling completely in control?\n\n[pause:2s]\n\nToday I'm going to show you a different way to rehearse — one that uses the hardware already on (or in front of) your face."
             }
         };
 
@@ -278,8 +283,13 @@
                     btn.style.transition = 'none';
                     btn.textContent = 'Loaded ✓';
                     setTimeout(() => {
-                        btn.textContent = btn.dataset.sample === 'keynote' ? 'Keynote Opener' :
-                                          btn.dataset.sample === 'pitch' ? 'Investor Pitch' : 'Product Demo';
+                        const label = {
+                            keynote: 'Keynote Opener',
+                            pitch: 'Investor Pitch',
+                            demo: 'Product Demo',
+                            ted: 'TEDx Opener'
+                        }[btn.dataset.sample] || 'Sample';
+                        btn.textContent = label;
                         btn.style.transition = '';
                     }, 900);
                 });

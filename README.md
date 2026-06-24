@@ -2,7 +2,7 @@
 
 **Auto-paced, comfort-tuned teleprompter for smart glasses and serious rehearsal.**
 
-[![Live Demo](https://img.shields.io/badge/Live-spector--plum.vercel.app-000?style=flat-square)](https://spector-plum.vercel.app)
+[![Live Demo](https://img.shields.io/badge/Live-spector--plum.vercel.app-000?style=flat-square)](https://spector-plum.vercel.app) (migrating to spector.com)
 [![PWA](https://img.shields.io/badge/PWA-Installable-000?style=flat-square)](https://spector-plum.vercel.app)
 [![GitHub](https://img.shields.io/badge/GitHub-hydrogenbondss/SPECTOR-000?style=flat-square)](https://github.com/hydrogenbondss/SPECTOR)
 
@@ -94,7 +94,7 @@ Cues are processed in `hybridChunkWithCues` and respected by `getMs()` timing.
 
 ## Quick Start (Phone or Desktop)
 
-1. Open [spector-plum.vercel.app](https://spector-plum.vercel.app)
+1. Open the current live site (spector-plum.vercel.app — migrating to spector.com soon)
 2. Paste text, drop a `.txt`, or click one of the sample scripts
 3. (Optional) Title it and **Save** to your library
 4. Hit **Launch Teleprompter**
