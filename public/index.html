@@ -76,6 +76,22 @@
             <p class="demo-note" style="margin-top:6px;font-size:12px;">Pro tip: Try Comfort mode and move your head gently for the full experience.</p>
         </section>
 
+        <section class="beta-section" id="beta-section">
+            <h3>Join the beta</h3>
+            <p>Help shape the future of hardware-aware teleprompting. Test on real Ray-Ban Meta Display + other glasses, influence right-temple button / Neural Band mappings, and get early access when spector.com launches.</p>
+            <ul class="beta-benefits">
+                <li>Early access to on-glasses HUD testing (Display models)</li>
+                <li>Direct input on button/touch/gesture controls</li>
+                <li>Feedback loop for Comfort spatial on real hardware</li>
+                <li>Priority invitation to spector.com beta + launch</li>
+            </ul>
+            <form id="beta-form" onsubmit="handleBetaSubmit(event)">
+                <input type="email" name="email" placeholder="your@email.com" required>
+                <button type="submit">Request Beta Access</button>
+            </form>
+            <div id="beta-success">Thanks — we'll reach out from the new domain soon.</div>
+        </section>
+
         <!--
             CUSTOMER JOURNEY: paste/upload → save to library → configure in player →
             rehearse with spatial comfort → review stats → iterate.
@@ -321,6 +337,32 @@
                     alert('Use your browser menu → "Install app" or "Add to Home Screen" for offline rehearsal.');
                 }
             });
+        }
+
+        function handleBetaSubmit(e) {
+            e.preventDefault();
+            const form = e.target;
+            const emailInput = form.querySelector('input[type="email"]');
+            const success = document.getElementById('beta-success');
+
+            if (!emailInput || !success) return;
+
+            // For now: simple client-side "submission" (will be replaced with real backend on spector.com)
+            // In production this would POST to a service like Formspree or custom endpoint.
+            console.log('[Beta] Signup:', emailInput.value);
+
+            form.style.display = 'none';
+            success.style.display = 'block';
+
+            // Optional: persist email locally for future domain launch
+            try {
+                localStorage.setItem('spector_beta_email', emailInput.value);
+            } catch {}
+
+            // Reset for demo purposes if user refreshes
+            setTimeout(() => {
+                // form remains hidden; success stays
+            }, 100);
         }
 
         function init() {

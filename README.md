@@ -117,6 +117,22 @@ See [TESTING.md](TESTING.md) for Developer Mode + "Add a Web App" steps on Ray-B
 
 ---
 
+## Beta Program
+
+We're actively recruiting beta testers — especially people with real Ray-Ban Meta Display (HUD) hardware, Gen 1/2, and other smart glasses (XREAL, Viture, etc.).
+
+**What testers get:**
+- Early access to on-glasses testing
+- Direct influence on right-temple button / touch / Neural Band gesture mappings
+- Feedback on Comfort spatial, HUD typography, and multi-brand controls
+- Priority invitation when spector.com launches
+
+**Join from the landing page** (scroll to "Join the beta") or email beta@spector.com (will be live on the new domain).
+
+Beta will be gated behind the domain flip for a cleaner experience.
+
+---
+
 ## For Developers & Future Smart Glasses
 
 - `SpectorCore` is the pure logic layer: `chunk()`, `getMs()`, `buildRehearsalAnalytics()`, `createMotion()`, KalmanFilter, cue handling, etc.
