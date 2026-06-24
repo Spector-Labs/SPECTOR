@@ -13,7 +13,9 @@
     <button class="exit-btn" id="exit-btn">← Exit</button>
 
     <div id="script-container">
-        <div id="script-text"></div>
+        <div id="script-text-wrapper">
+            <div id="script-text"></div>
+        </div>
     </div>
 
     <button class="toggle-chip motion-chip hidden" id="motion-permit-btn" type="button" aria-label="Enable head tracking for Comfort mode spatial effects. On glasses, use right temple button for script control.">Enable head tracking</button>
@@ -74,6 +76,11 @@
 
     <!-- Hardware legend moved to prominent .glasses-hw-legend under modes for better visibility of button/touch controls -->
 
+    <div id="bookmarks" class="bookmarks" style="max-width:620px;margin:4px auto 8px;font-size:11px;color:#888;display:none;">
+        <span style="margin-right:8px;">Sections:</span>
+        <span id="bookmarks-list"></span>
+    </div>
+
     <div id="end-screen" class="end-screen hidden">
         <h2>Well done.</h2>
         <p class="subtitle">Rehearsal complete. Review your pacing — on Ray-Ban Meta Display the right temple button advances the script in the real performance.</p>
@@ -107,6 +114,7 @@
             <button id="restart-btn" class="btn-primary">Read Again</button>
             <button id="edit-script-btn" class="btn-secondary">Edit Script</button>
             <button id="save-end-btn" class="btn-secondary">Save to Library</button>
+            <button id="export-btn" class="btn-secondary">Copy Script + Stats</button>
             <button id="new-script-btn" class="btn-secondary">New Script</button>
             <button id="exit-end-btn" class="btn-secondary">Exit</button>
         </div>
@@ -753,6 +761,79 @@
         });
     }
 
+    function setupControlsFade() {
+        const els = [
+            document.querySelector('.customize-panel'),
+            document.querySelector('.speed-presets'),
+            document.querySelector('.controls'),
+            document.querySelector('.mode-switcher')
+        ].filter(Boolean);
+        let hideTimer = null;
+
+        function show() {
+            els.forEach(el => el.style.opacity = '1');
+            clearTimeout(hideTimer);
+            if (isPlaying) {
+                hideTimer = setTimeout(hide, 4000);
+            }
+        }
+
+        function hide() {
+            if (!isPlaying) return;
+            els.forEach(el => el.style.opacity = '0.1');
+        }
+
+        // interactions show
+        ['mousemove', 'touchstart', 'keydown'].forEach(evt =>
+            document.addEventListener(evt, show, { passive: true })
+        );
+
+        // hook into playback to start hide timer
+        const origStart = startPlayback;
+        startPlayback = function() {
+            origStart.apply(this, arguments);
+            show();
+        };
+        const origStop = stopPlayback;
+        stopPlayback = function() {
+            origStop.apply(this, arguments);
+            show(); // keep visible when paused
+        };
+
+        // initial show
+        setTimeout(show, 1000);
+    }
+
+    function setupBookmarks() {
+        const container = document.getElementById('bookmarks');
+        const list = document.getElementById('bookmarks-list');
+        if (!container || !list) return;
+        const lines = rawScript.split(/\n/);
+        const sections = [];
+        lines.forEach((line, i) => {
+            const m = line.match(/^##\s+(.+)$/);
+            if (m) sections.push({title: m[1].trim(), lineIndex: i});
+        });
+        if (!sections.length) {
+            container.style.display = 'none';
+            return;
+        }
+        container.style.display = 'block';
+        list.innerHTML = '';
+        sections.forEach(sec => {
+            const span = document.createElement('span');
+            span.textContent = sec.title;
+            span.addEventListener('click', () => {
+                // find closest chunk
+                // simple: jump to first chunk after this line (approximate by word count or just go to 0 for demo)
+                // For real, could store line to chunk map, but simple: scroll to top or first
+                currentIndex = Math.max(0, Math.floor((sec.lineIndex / lines.length) * chunks.length));
+                updateDisplay();
+            });
+            list.appendChild(span);
+        });
+    }
+
     function setupCustomization() {
         const root = document.documentElement;
         const textSize = document.getElementById('text-size');
@@ -839,6 +920,15 @@
             saveToLibrary();
             document.getElementById('save-end-btn').textContent = 'Saved ✓';
         };
+        document.getElementById('export-btn').onclick = () => {
+            const summary = `Script: ${rawScript.slice(0,100)}...\n\nChunks: ${document.getElementById('end-chunks').textContent}\nTime: ${document.getElementById('end-time').textContent} min\nWPM: ${document.getElementById('end-wpm').textContent}\nPacing: ${document.getElementById('end-consistency').textContent}\n\n${document.getElementById('analytics-hesitations').textContent}\n${document.getElementById('analytics-slowest').textContent}`;
+            navigator.clipboard.writeText(summary).then(() => {
+                const btn = document.getElementById('export-btn');
+                const orig = btn.textContent;
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = orig, 1500);
+            });
+        };
         document.getElementById('new-script-btn').onclick = () => window.location.href = 'index.html';
         document.getElementById('exit-end-btn').onclick = () => window.location.href = 'index.html';
     }
@@ -863,6 +953,8 @@
         setupSpeedPresets();
         setupMotionPermissionUI();
         setupCustomization();
+        setupControlsFade();
+        setupBookmarks();
 
         // First-run in-product coach: highlight Comfort + hardware button story on very first visit
         let firstRun = false;

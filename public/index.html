@@ -28,6 +28,11 @@
             <input type="text" id="script-title" class="script-title-input" placeholder="e.g. Keynote opener, investor pitch…" maxlength="80">
 
             <label for="script-input">Your Script</label>
+            <div class="cue-toolbar" style="margin-bottom:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                <button type="button" class="cue-btn" data-insert="**">**Bold**</button>
+                <button type="button" class="cue-btn" data-insert="[pause]">[Pause]</button>
+                <button type="button" class="cue-btn" data-insert="[pause:3s]">[Pause 3s]</button>
+            </div>
             <textarea id="script-input" placeholder="Paste your speech, presentation, or notes here…"></textarea>
 
             <div id="script-meta" style="font-size:12px;color:#888;margin-bottom:8px;display:flex;gap:8px;align-items:center;">
@@ -46,6 +51,8 @@
             <div class="cue-legend" style="font-size:11px;color:#777;margin-bottom:12px;line-height:1.4;">
                 Supports <code>**emphasis**</code> (stronger hold) and <code>[pause]</code> / <code>[pause:3s]</code> markers.
             </div>
+
+            <div id="input-error" style="color:#e88; font-size:12px; margin-bottom:8px; display:none;"></div>
 
             <div class="file-upload" id="file-area">
                 Drop .txt file here or click to browse
@@ -262,6 +269,47 @@
             });
         }
 
+        function insertAtCursor(textarea, text) {
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            textarea.value = textarea.value.substring(0, start) + text + textarea.value.substring(end);
+            textarea.selectionStart = textarea.selectionEnd = start + text.length;
+            textarea.focus();
+        }
+
+        function initCueToolbar() {
+            const toolbar = document.querySelector('.cue-toolbar');
+            if (!toolbar) return;
+            const ta = document.getElementById('script-input');
+            document.querySelectorAll('.cue-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const insert = btn.dataset.insert;
+                    if (insert === '**') {
+                        insertAtCursor(ta, '**text**');
+                        // select the inner text for easy replacement
+                        const pos = ta.selectionStart - 4;
+                        ta.selectionStart = pos;
+                        ta.selectionEnd = pos + 4;
+                    } else {
+                        insertAtCursor(ta, insert);
+                    }
+                });
+            });
+            // hide error on typing
+            ta.addEventListener('input', () => {
+                const err = document.getElementById('input-error');
+                if (err) err.style.display = 'none';
+            });
+        }
+
+        function showInputError(msg) {
+            const err = document.getElementById('input-error');
+            if (!err) { alert(msg); return; }
+            err.textContent = msg;
+            err.style.display = 'block';
+            setTimeout(() => { if (err) err.style.display = 'none'; }, 3000);
+        }
+
         function updateScriptMeta() {
             const textarea = document.getElementById('script-input');
             const text = textarea.value.trim();
@@ -282,13 +330,13 @@
 
             launchBtn.addEventListener('click', () => {
                 const text = textarea.value.trim();
-                if (!text) { alert('Please paste or choose a sample script first.'); return; }
+                if (!text) { showInputError('Please paste or choose a sample script first.'); return; }
                 launchScript(text);
             });
 
             saveBtn.addEventListener('click', () => {
                 const text = textarea.value.trim();
-                if (!text) { alert('Add some text to your script before saving.'); return; }
+                if (!text) { showInputError('Add some text to your script before saving.'); return; }
                 saveScript(titleEl.value.trim() || 'Untitled Script', text);
                 saveBtn.textContent = 'Saved ✓';
                 setTimeout(() => { saveBtn.textContent = 'Save'; }, 1500);
@@ -369,6 +417,7 @@
             initFileUpload();
             initButtons();
             initSampleButtons();
+            initCueToolbar();
             renderLibrary();
             registerServiceWorker();
             initInstallPrompt();

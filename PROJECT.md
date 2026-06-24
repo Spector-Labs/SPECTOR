@@ -116,6 +116,12 @@ Not Ray-Ban exclusive. Web + PWA approach maximizes compatibility today.
 - Direct Bluetooth / Neural Band proprietary protocols (unavailable today)  
 - Video recording / multi-device director mode  
 
+### Strategic / Meta angle (4)
+
+- **Real glasses testing:** Use TESTING.md to recruit Display + non-Display + other brand users. Focus feedback on button usability, HUD readability, Comfort spatial on glasses vs phone, comparison to Meta's built-in teleprompter (now available on Display models).
+- **Meta decision:** This validates demand for pro rehearsal tooling. Options: 1) Rapidly enhance native Meta AI / glasses teleprompter with library, auto-pace, cues, analytics, button mapping, Comfort-like presence. 2) Open primitives (button events, HUD rendering, Neural Band) earlier to enable third-party like SPECTOR as complements. 3) Feature high-quality apps in the ecosystem.
+- **Adoption:** Track via future anonymous events or manual (samples used, Comfort tried, end reached, beta signups). Use to decide native vs platform investment. SPECTOR can serve as reference implementation or acquisition target if traction on real hardware.
+
 ---
 
 ## Technical reference
