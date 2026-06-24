@@ -393,6 +393,20 @@
                 // initial count
                 updateScriptMeta();
             }
+
+            // Beta form: if already signed up, show success state
+            try {
+                const betaEmail = localStorage.getItem('spector_beta_email');
+                if (betaEmail) {
+                    const form = document.getElementById('beta-form');
+                    const success = document.getElementById('beta-success');
+                    if (form && success) {
+                        form.style.display = 'none';
+                        success.style.display = 'block';
+                        success.textContent = `Already joined as ${betaEmail}. We'll reach out from spector.com.`;
+                    }
+                }
+            } catch {}
         }
 
         window.onload = init;

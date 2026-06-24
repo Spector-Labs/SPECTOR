@@ -886,10 +886,19 @@
                     applyMode('comfort');
                     toast.classList.add('visible');
 
-                    setTimeout(() => {
-                        toast.style.transition = 'opacity 0.6s ease';
+                    // Allow early dismiss by click/tap
+                    toast.addEventListener('click', () => {
+                        toast.style.transition = 'opacity 0.3s ease';
                         toast.style.opacity = '0';
-                        setTimeout(() => toast.remove(), 600);
+                        setTimeout(() => toast.remove(), 300);
+                    }, { once: true });
+
+                    setTimeout(() => {
+                        if (toast.parentNode) {
+                            toast.style.transition = 'opacity 0.6s ease';
+                            toast.style.opacity = '0';
+                            setTimeout(() => toast.remove(), 600);
+                        }
                     }, 6500);
                 }, 800);
             }, 1200);

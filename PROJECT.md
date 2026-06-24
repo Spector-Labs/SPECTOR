@@ -1,6 +1,6 @@
 # SPECTOR — Project Status & Roadmap 
 
-**Last updated:** June 24, 2026 (deployment confirmed live; landing visibility+education pass landed in main)
+**Last updated:** June 24, 2026 (in-product first-run coach, persistent hardware legend, beta assets, end-screen reinforcement, domain prep script shipped)
 **Repository:** [github.com/hydrogenbondss/SPECTOR](https://github.com/hydrogenbondss/SPECTOR)  
 **Live URL:** [spector-plum.vercel.app](https://spector-plum.vercel.app) (spector.com coming soon)  
 **Latest commit:** `730df73` (main)
@@ -33,6 +33,9 @@ As smart glasses become more common, more people will need rehearsal tools *befo
 | **iOS motion fix** | Done | `ensureMotionForPlayback()` skips motion setup when already bound |
 | **Meta positioning** | Done | Landing “Glasses & Future” section; compatibility notes, not hardware sales |
 | **Modular core** | Done | `window.SpectorCore` — chunk registry, hooks, `createMotion()` |
+| **First-run coach + hardware legend** | Done | One-time toast auto-highlights Comfort + button note; persistent .glasses-hw-legend under modes with right-temple mappings |
+| **Beta assets** | Done | Landing beta signup form + README Beta Program section focused on hardware testing |
+| **End-screen reinforcement** | Done | Subtitle and analytics note tie rehearsal stats to real glasses button use |
 
 ### Infrastructure & quality
 

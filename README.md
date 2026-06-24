@@ -19,7 +19,7 @@ Spector is a premium digital teleprompter PWA (software only). It gives creators
 **Try it instantly:** [https://spector-plum.vercel.app](https://spector-plum.vercel.app) (spector.com coming soon) — no account needed.
 
 - Paste or drop a .txt script
-- Open in Glasses Mode
+- Hit **Launch Teleprompter**
 - Choose Comfort / Focus / Presentation + Slow/Normal/Fast
 - Use cue syntax for emphasis and pauses
 - Get rehearsal analytics (pacing %, hesitations, slowest chunk) at the end
