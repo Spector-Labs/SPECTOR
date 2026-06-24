@@ -137,13 +137,9 @@ Join via the form on the landing (powered by Formspree, endpoint configured, not
 
 The source is available on GitHub under the Spector-Labs organization: https://github.com/Spector-Labs/SPECTOR
 
-**Repo status:** Transferred to the org. Make it public for credibility and contributions. Your personal profile stays clean. Update portfolio links to the org URL.
+**Repo status:** Public under the Spector-Labs org (https://github.com/Spector-Labs/SPECTOR). 
 
-- Your personal profile is clean (other repos can stay private).
-- Update your portfolio links to point to the org repo.
-- The live product at spectorlabs.io is the main thing users see.
-
-If you want to keep the repo private a bit longer, that's fine too. The product site works either way.
+This makes the work visible to creators, hardware devs, and potential partners while keeping your personal profile clean. The live site (spectorlabs.io) + beta process + real hardware validation are the defensible "product" layer on top of the open code.
 
 ---
 

@@ -65,12 +65,12 @@
 
     <div class="glasses-hw-legend">
         <span class="hw-title">Hardware controls</span>
-        <span class="hw-detail">Ray-Ban Meta Display: right temple <strong>button</strong> = next chunk • touch = pause/scroll • <span class="future">Neural Band coming</span></span>
-        <span class="hw-other">Other glasses: use your native controls (touch/voice/controller)</span>
+        <span class="hw-detail">Ray-Ban Meta Display: right temple <strong>button</strong> (single press) = advance chunk • touch = pause/scroll • <span class="future">Neural Band coming</span></span>
+        <span class="hw-other">Desktop test: Press <strong>B</strong> key or use the simulator button below. On phone/glasses: use real device orientation sensors for Comfort spatial effects.</span>
     </div>
 
     <div id="comfort-tip" class="comfort-tip hidden">
-        <span>In Comfort: move your head for spatial effects. On Ray-Ban Meta Display, use right temple button/touch to advance (future Neural Band support).</span>
+        <span>In Comfort: gently move your head (or simulate tilt) for breathing + drift spatial effects. Use right-temple button (or <strong>B</strong> key) to advance.</span>
         <button id="dismiss-comfort-tip" type="button">Got it</button>
     </div>
 
@@ -83,12 +83,12 @@
 
     <div class="glasses-button-test" style="max-width:620px;margin:4px auto 12px;text-align:center;">
         <button id="glasses-button-sim" class="btn-secondary" style="padding:6px 12px;font-size:12px;">Simulate right temple button (advance)</button>
-        <span style="font-size:10px;color:#666;margin-left:8px;">On real Ray-Ban Meta Display, the physical right-temple button advances the script (single press). Test the flow here, then try on actual glasses via the web app.</span>
+        <span style="font-size:10px;color:#666;margin-left:8px;">Press <strong>B</strong> key or click above to simulate. On real Ray-Ban Meta Display: single right-temple button press = next chunk. Test desktop here, then validate on glasses.</span>
     </div>
 
     <div id="end-screen" class="end-screen hidden">
         <h2>Well done.</h2>
-        <p class="subtitle">Rehearsal complete. Review your pacing — on Ray-Ban Meta Display the right temple button advances the script in the real performance.</p>
+        <p class="subtitle">Rehearsal complete. Review your pacing. On real Ray-Ban Meta Display, the right temple button will advance chunks live during performance.</p>
 
         <div class="stats">
             <div>
@@ -816,13 +816,23 @@
             }
         };
 
-        btn.addEventListener('click', advance);
+        btn.addEventListener('click', () => {
+            advance();
+            // visual press feedback
+            btn.classList.add('sim-pressed');
+            setTimeout(() => btn.classList.remove('sim-pressed'), 120);
+        });
 
         // Also bind 'b' key for easy testing (simulates button press)
         document.addEventListener('keydown', (e) => {
             if (e.key.toLowerCase() === 'b' && !e.target.closest('input,textarea')) {
                 e.preventDefault();
                 advance();
+                // visual press feedback on sim button if present
+                if (btn) {
+                    btn.classList.add('sim-pressed');
+                    setTimeout(() => btn.classList.remove('sim-pressed'), 120);
+                }
             }
         });
     }
@@ -1013,30 +1023,23 @@
             setTimeout(() => {
                 const toast = document.createElement('div');
                 toast.className = 'first-run-toast';
-                toast.innerHTML = `Welcome! Try <strong>Comfort</strong> mode — on Ray-Ban Meta Display the right temple <strong>button</strong> advances chunks.`;
+                toast.innerHTML = `Welcome! Try <strong>Comfort</strong> mode for spatial head-tracking effects.<br>Simulate the right-temple button with the <strong>B</strong> key or the button below.`;
                 document.body.appendChild(toast);
 
-                // brief auto-switch to Comfort to demonstrate
-                setTimeout(() => {
-                    applyMode('comfort');
-                    toast.classList.add('visible');
+                toast.classList.add('visible');
 
-                    // Allow early dismiss by click/tap
-                    toast.addEventListener('click', () => {
-                        toast.style.transition = 'opacity 0.3s ease';
+                // Dismiss on click or after longer time
+                const dismiss = () => {
+                    if (toast.parentNode) {
+                        toast.style.transition = 'opacity 0.4s ease';
                         toast.style.opacity = '0';
                         setTimeout(() => toast.remove(), 300);
-                    }, { once: true });
+                    }
+                };
+                toast.addEventListener('click', dismiss, { once: true });
 
-                    setTimeout(() => {
-                        if (toast.parentNode) {
-                            toast.style.transition = 'opacity 0.6s ease';
-                            toast.style.opacity = '0';
-                            setTimeout(() => toast.remove(), 600);
-                        }
-                    }, 6500);
-                }, 800);
-            }, 1200);
+                setTimeout(dismiss, 8500);
+            }, 1400);
         }
 
         document.addEventListener('keydown', (e) => {
