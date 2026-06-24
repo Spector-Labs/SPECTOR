@@ -86,6 +86,14 @@
         <span style="font-size:10px;color:#666;margin-left:8px;">Press <strong>B</strong> key or click above to simulate. On real Ray-Ban Meta Display: single right-temple button press = next chunk. Test desktop here, then validate on glasses.</span>
     </div>
 
+    <!-- Desktop Comfort tilt simulator (for testing spatial effects without real device sensors) -->
+    <div id="desktop-tilt-sim" style="max-width:620px;margin:4px auto 8px;text-align:center;display:none;font-size:11px;color:#777;">
+        <div>Desktop tilt sim (Comfort only):</div>
+        <label style="margin:0 6px;">Gamma <input type="range" id="tilt-gamma" min="-90" max="90" value="0" step="1" style="width:140px;vertical-align:middle;"></label>
+        <label>Beta <input type="range" id="tilt-beta" min="-90" max="90" value="0" step="1" style="width:140px;vertical-align:middle;"></label>
+        <button id="tilt-reset" type="button" style="font-size:10px;padding:1px 6px;margin-left:4px;">Reset</button>
+    </div>
+
     <div id="end-screen" class="end-screen hidden">
         <h2>Well done.</h2>
         <p class="subtitle">Rehearsal complete. Review your pacing. On real Ray-Ban Meta Display, the right temple button will advance chunks live during performance.</p>
@@ -499,6 +507,7 @@
             }
         };
         interval = setTimeout(tick, getMs());
+        if (window.__refreshTiltPanel) window.__refreshTiltPanel();
     }
 
     function stopPlayback() {
@@ -511,6 +520,7 @@
         isPlaying = false;
         clearTimeout(interval);
         document.getElementById('play-btn').textContent = '▶';
+        if (window.__refreshTiltPanel) window.__refreshTiltPanel();
     }
 
     function togglePlay() {
@@ -670,6 +680,7 @@
         } else {
             hideComfortTip();
         }
+        if (window.__refreshTiltPanel) window.__refreshTiltPanel();
     }
 
     function showComfortTipOnce() {
@@ -835,6 +846,56 @@
                 }
             }
         });
+    }
+
+    function setupDesktopTiltSim() {
+        const panel = document.getElementById('desktop-tilt-sim');
+        const gammaSlider = document.getElementById('tilt-gamma');
+        const betaSlider = document.getElementById('tilt-beta');
+        const resetBtn = document.getElementById('tilt-reset');
+        if (!panel || !gammaSlider || !betaSlider) return;
+
+        function updateFromSliders() {
+            const activeChunk = document.querySelector('.chunk.active');
+            if (!activeChunk || currentMode !== 'comfort' || !isPlaying) return;
+            const g = parseFloat(gammaSlider.value) || 0;
+            const b = parseFloat(betaSlider.value) || 0;
+            // Apply similar deltas as real motion (simplified, no Kalman for sim)
+            const sensitivity = 0.19;
+            const rotAmt = 0.11;
+            const scaleAmt = 0.00042;
+            const dx = g * sensitivity;
+            const dy = b * sensitivity;
+            const dr = g * rotAmt;
+            const ds = 1 + (g * scaleAmt);
+            activeChunk.style.transition = 'transform 0.1s linear';
+            activeChunk.style.transform = `translate(${dx}px, ${dy}px) rotate(${dr}deg) scale(${ds})`;
+        }
+
+        function refreshTiltPanel() {
+            const shouldShow = currentMode === 'comfort' && isPlaying;
+            panel.style.display = shouldShow ? 'block' : 'none';
+            if (!shouldShow) {
+                const active = document.querySelector('.chunk.active');
+                if (active) active.style.transform = '';
+            }
+        }
+
+        gammaSlider.addEventListener('input', updateFromSliders);
+        betaSlider.addEventListener('input', updateFromSliders);
+
+        resetBtn.addEventListener('click', () => {
+            gammaSlider.value = 0;
+            betaSlider.value = 0;
+            const active = document.querySelector('.chunk.active');
+            if (active) active.style.transform = '';
+        });
+
+        // Expose for the real playback/mode functions to call
+        window.__refreshTiltPanel = refreshTiltPanel;
+
+        // Poll to catch play/stop/mode (lightweight)
+        setInterval(refreshTiltPanel, 900);
     }
 
     function setupBookmarks() {
@@ -1007,6 +1068,7 @@
         setupControlsFade();
         setupBookmarks();
         setupGlassesButtonSim();
+        setupDesktopTiltSim();
         wireGlassButtons();
 
         // First-run in-product coach: highlight Comfort + hardware button story on very first visit
