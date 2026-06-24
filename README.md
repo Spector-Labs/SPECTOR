@@ -123,7 +123,26 @@ We're recruiting testers on real hardware (Ray-Ban Meta Display, Gen 1/2, XREAL,
 - Early access to on-glasses testing
 - Priority access after launch
 
-Join via the form on the landing (powered by Formspree — easy for static sites; see public/index.html for setup instructions) or email hello@spectorlabs.io.
+Join via the form on the landing (powered by Formspree for static sites; see the comment in public/index.html for setup using hello@spectorlabs.io) or email hello@spectorlabs.io.
+
+---
+
+## Source Code & Repository
+
+The source is available on GitHub. 
+
+**Note on visibility:** To keep your personal GitHub profile clean (so other private repos don't appear alongside SPECTOR) while making this repo public for credibility and contributions, we strongly recommend transferring this repo to a GitHub Organization called "spectorlabs". 
+
+- Create the org at github.com/organizations/new (free).
+- Transfer the repo to the org (in the repo: Settings → Options → "Transfer ownership").
+- Make the repo public under the org.
+- Update any links in your portfolio to github.com/spectorlabs/SPECTOR.
+- Your personal profile will no longer list this repo, and your other private repos stay private.
+- Your portfolio site can continue to work (it only needs to link to the now-public SPECTOR repo under the org; it doesn't depend on your personal repos being public).
+
+This is the cleanest way to have an open product repo without affecting your personal account or portfolio.
+
+If you prefer to keep it private for now, that's also fine — the live product at spectorlabs.io is what matters most. You can share the private repo link with beta testers individually.
 
 ---
 

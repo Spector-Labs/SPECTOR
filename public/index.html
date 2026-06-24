@@ -20,7 +20,7 @@
             <p class="market-note">Rehearse on your phone today. Perform with confidence on glasses tomorrow. Not affiliated with Meta or Ray-Ban — works with any smart-glasses setup.</p>
 
             <button id="install-btn" class="btn-install" style="margin: 8px auto 20px;">Install for offline use</button>
-            <p style="font-size:11px;color:#666;text-align:center;margin-top:-8px;">Live at spectorlabs.io</p>
+            <p style="font-size:11px;color:#666;text-align:center;margin-top:-8px;">Live at www.spectorlabs.io</p>
         </header>
 
         <div class="input-section">
@@ -79,7 +79,7 @@
         <section class="history-section" id="history-section" style="margin-top:16px;">
             <h3 style="font-size:14px;font-weight:600;color:#999;margin:0 0 8px;letter-spacing:0.04em;text-transform:uppercase;">Recent rehearsals</h3>
             <div id="history-list" style="font-size:12px;color:#888;"></div>
-            <div style="font-size:10px;color:#666;margin-top:4px;">Local only for now. Cloud history, trends, and sync planned.</div>
+            <div style="font-size:10px;color:#666;margin-top:4px;">Local demo of the feature. Full cloud sync coming soon.</div>
         </section>
 
         <section class="demo-section">
@@ -92,7 +92,7 @@
                 <li>Launch the player to experience adaptive pacing, Comfort mode, and the hardware controls legend</li>
             </ul>
             <p class="demo-note" style="margin-top:6px;font-size:12px;">Pro tip: Try Comfort mode and move your head gently for the full spatial experience (or use the button simulator in the player).</p>
-            <p style="font-size:11px; color:#666; margin-top:12px;">Real screenshots and usage photos coming after beta feedback on actual hardware.</p>
+            <p style="font-size:11px; color:#666; margin-top:12px;">Real screenshots and usage photos from hardware testers coming soon.</p>
         </section>
 
         <section class="beta-section" id="beta-section">
@@ -104,11 +104,12 @@
                 <li>Priority access after launch</li>
             </ul>
             <!-- 
-              BETA FORM: Using Formspree for easy static form handling.
-              1. Go to https://formspree.io and sign up (free tier is fine).
-              2. Create a new form for "Beta Requests".
-              3. Copy the endpoint (looks like https://formspree.io/f/xxxxxx) and replace below.
-              4. You can add hello@spectorlabs.io as the notification email in Formspree settings.
+              BETA FORM SETUP (Formspree - free for this use case):
+              1. Go to https://formspree.io , sign up (free).
+              2. Create a form named "Beta Requests".
+              3. In Formspree settings, set the "Email notifications" to hello@spectorlabs.io .
+              4. Copy your form endpoint (https://formspree.io/f/xxxxxxxx) and paste it in the action below.
+              The form will send submissions to your email and show a nice success message.
             -->
             <form id="beta-form" action="https://formspree.io/f/REPLACE_WITH_YOUR_FORM_ID" method="POST">
                 <input type="email" name="email" placeholder="your@email.com" required style="margin-bottom:6px;">
@@ -485,7 +486,7 @@
             const form = e.target;
             const success = document.getElementById('beta-success');
 
-            // IMPORTANT: Sign up at https://formspree.io (free), create a form, and replace the action URL below with your real endpoint (e.g. https://formspree.io/f/abc123)
+            // IMPORTANT: Sign up at https://formspree.io (free), create a form, and replace the action URL below with your real endpoint (e.g. https://formspree.io/f/abc123). Set the notification email to hello@spectorlabs.io.
             const formData = new FormData(form);
 
             try {

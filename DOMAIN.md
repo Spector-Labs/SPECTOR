@@ -82,22 +82,23 @@ Acquiring the domain is a strong signal of commitment. Immediate next:
 - Cost: Domain ~$10-100+/yr depending on .com premium; hosting on Vercel free tier is fine for PWA.
 - Legal: The current "Spector™" claim in UI — ensure you own or have rights to the mark in your jurisdictions.
 
-**Migration for spectorlabs.io (purchased via Namecheap):**
-1. Vercel dashboard → Project → Domains → add spectorlabs.io. Follow DNS instructions (CNAME), wait for SSL, set as primary.
-2. Run the migration (script already executed in this pass for spectorlabs.io):
-   ```bash
-   ./scripts/migrate-domain.sh spectorlabs.io
-   ```
-   Commit and push.
-3. Set up redirect from old plum URL if desired.
-4. Full test on https://spectorlabs.io.
-5. Update external links.
-6. Clean “launching soon” language.
-7. Announce and recruit beta testers (focus on button/HUD testing per TESTING.md).
+**Current status (spectorlabs.io live):**
+- Domain purchased via Namecheap and connected to Vercel (site live at https://www.spectorlabs.io/).
+- Migration script executed and all references updated in this pass.
+- Beta form ready for Formspree (instructions in the HTML).
+- All "launching soon" language cleaned or updated to current status.
+- Project is production-ready for beta recruitment and real hardware testing.
 
-The flip is now clean.
+**Next immediate steps:**
+1. Trigger a fresh deploy in Vercel for the spectorlabs.io custom domain to pick up the latest code.
+2. Set up Formspree (see comment in public/index.html) and replace the placeholder action URL. Use hello@spectorlabs.io for notifications.
+3. Update your GitHub repo "Website" setting to https://www.spectorlabs.io .
+4. Start beta recruitment (post the live link + form, emphasize hardware testing).
+5. Capture real screenshots from the live site and update the demo section (remove the placeholder note).
 
-## 8. Full Pass Readiness Checklist (Completed before domain purchase)
+See the full checklist below for details.
+
+## 8. Full Pass Readiness Checklist (Domain live at spectorlabs.io)
 As of this very thorough pre-purchase pass:
 
 - [x] All original 1-4 priorities + extras implemented (visibility/education, conversion/polish, Phase 2 items, strategic/Meta notes).
