@@ -104,27 +104,26 @@ Cues are processed in `hybridChunkWithCues` and respected by `getMs()` timing.
 8. When done, review your pacing, hesitations, and slowest chunk on the end screen
 
 **On real glasses:**
-- Ray-Ban Meta Display / HUD models: Run via web app on the glasses lens. Right temple button + touchpad (and future Neural Band) for script control where the platform forwards events.
-- Non-Display (Gen 1/2 etc.): Phone rehearsal companion.
-- Other brands (XREAL, Viture, etc.): Broad PWA support via phone or browser.
+Rehearse on phone with pro tools (library, auto-pacing, cues, analytics). Perform on glasses with the right-temple button (and future Neural Band gestures) for advance/pause.
 
-See [TESTING.md](TESTING.md) for Developer Mode + "Add a Web App" steps on Ray-Ban Meta.
+Works on Ray-Ban Meta Display/HUD + Gen 1/2, and other brands (XREAL, Viture, etc.) via PWA.
+
+See [TESTING.md](TESTING.md) for Developer Mode + "Add a Web App" on Ray-Ban Meta.
 
 ---
 
 ## Beta Program
 
-We're actively recruiting beta testers — especially people with real Ray-Ban Meta Display (HUD) hardware, Gen 1/2, and other smart glasses (XREAL, Viture, etc.).
+We're recruiting testers on real hardware (Ray-Ban Meta Display, Gen 1/2, XREAL, Viture, Brilliant Labs, etc.) to validate right-temple button/gesture controls, Comfort mode on HUD, and the full rehearsal experience.
 
-**What testers get:**
+**Testers get:**
+- Direct input on button and Neural Band mappings
 - Early access to on-glasses testing
-- Direct influence on right-temple button / touch / Neural Band gesture mappings
-- Feedback on Comfort spatial, HUD typography, and multi-brand controls
-- Priority invitation when spector.com launches
+- Priority when spector.com launches
 
-**Join from the landing page** (scroll to "Join the beta") or email beta@spector.com (will be live on the new domain).
+Join via the form on the landing or email beta@spector.com.
 
-Beta will be gated behind the domain flip for a cleaner experience.
+Beta is currently gated until the domain launch for a cleaner experience.
 
 ---
 
@@ -165,7 +164,7 @@ Explicit non-goals for now: native mobile binaries, accounts/backend, proprietar
 
 - Logo / wordmark: text "Spector™" (premium minimal).
 - PWA icons: inline SVG "S" (192/512) in `manifest.json`.
-- Demo visuals live in `assets/` (for README) and `public/spector-demo.mp4` (embedded on site).
+- Early concept renders live in `assets/`. Real device screenshots and usage photos will replace generated assets for the spector.com launch (after beta feedback).
 
 ---
 

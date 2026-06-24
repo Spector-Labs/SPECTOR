@@ -74,9 +74,9 @@
         </section>
 
         <section class="history-section" id="history-section" style="margin-top:16px;">
-            <h3 style="font-size:14px;font-weight:600;color:#999;margin:0 0 8px;letter-spacing:0.04em;text-transform:uppercase;">Recent rehearsals (local)</h3>
+            <h3 style="font-size:14px;font-weight:600;color:#999;margin:0 0 8px;letter-spacing:0.04em;text-transform:uppercase;">Recent rehearsals</h3>
             <div id="history-list" style="font-size:12px;color:#888;"></div>
-            <div style="font-size:10px;color:#666;margin-top:4px;">(Stored locally; will sync when cloud added later)</div>
+            <div style="font-size:10px;color:#666;margin-top:4px;">Local for now — full cloud history, trends, and cross-device sync coming after spector.com launch.</div>
         </section>
 
         <section class="demo-section">
@@ -94,15 +94,15 @@
 
         <section class="beta-section" id="beta-section">
             <h3>Join the beta</h3>
-            <p>Help shape the future of hardware-aware teleprompting. Test on real Ray-Ban Meta Display + other glasses, influence right-temple button / Neural Band mappings, and get early access when spector.com launches.</p>
+            <p>Help shape hardware-aware teleprompting. We're recruiting testers on real Ray-Ban Meta Display, Gen 1/2, XREAL, Viture, and other glasses to validate button/gesture controls, Comfort on HUD, and the full rehearsal flow.</p>
             <ul class="beta-benefits">
-                <li>Early access to on-glasses HUD testing (Display models)</li>
-                <li>Direct input on button/touch/gesture controls</li>
-                <li>Feedback loop for Comfort spatial on real hardware</li>
-                <li>Priority invitation to spector.com beta + launch</li>
+                <li>Early access to on-glasses testing</li>
+                <li>Direct input on right-temple button and Neural Band mappings</li>
+                <li>Priority access when spector.com launches</li>
             </ul>
             <form id="beta-form" onsubmit="handleBetaSubmit(event)">
-                <input type="email" name="email" placeholder="your@email.com" required>
+                <input type="email" name="email" placeholder="your@email.com" required style="margin-bottom:6px;">
+                <input type="text" name="glasses" placeholder="Glasses model (e.g. Ray-Ban Meta Display, XREAL One)" style="margin-bottom:8px;">
                 <button type="submit">Request Beta Access</button>
             </form>
             <div id="beta-success">Thanks — we'll reach out from the new domain soon.</div>
@@ -116,16 +116,9 @@
             comfort spatial effects, script library, and PWA install for daily rehearsal.
         -->
         <section class="glasses-future">
-            <h3>For smart glasses (today &amp; tomorrow)</h3>
-            <p>Rehearse on your phone with library, auto-pacing, cues, and real analytics — then perform with more confidence on glasses. The right-temple button and touchpad on Ray-Ban Meta can control script advance/pause on supported HUD models.</p>
-            <ul>
-                <li><strong>Non-Display models (Gen 1/2 and equivalents)</strong>: Phone companion rehearsal. Use haptics + audio feedback. Glasses handle camera/AI; SPECTOR runs on your phone for eyes-free practice.</li>
-                <li><strong>Display / HUD models (Ray-Ban Meta Display and similar)</strong>: Run the player directly via web app on the glasses' lens display for true heads-up teleprompting. Right temple button + touch controls (and future Neural Band gestures) for hands-free advance, pause, rewind.</li>
-                <li><strong>Other brands</strong> (XREAL, Viture, Brilliant Labs, Even Realities, etc.): Broad compatibility via PWA on phone companion or any glasses that support web/browser apps. Different input surfaces (controllers, touch, voice) — SPECTOR focuses on the rehearsal engine.</li>
-                <li><strong>In the player today</strong>: Comfort mode (subtle head-responsive movement + breathing), Focus, Presentation. Mirror for camera setups. <code>**emphasis**</code> and <code>[pause]</code> cues. Post-run stats on pacing and hesitations.</li>
-                <li><strong>Future</strong>: Modular SpectorCore ready for native SDK ports and direct gesture mapping when platforms expose APIs.</li>
-            </ul>
-            <p>Works with Ray-Ban Meta and any other smart-glasses workflow. No affiliation with Meta or Ray-Ban.</p>
+            <h3>Built for smart glasses — today and tomorrow</h3>
+            <p>Rehearse on your phone with the tools pros actually need: script library, adaptive auto-pacing, inline cues, and real post-run analytics. Then step onto glasses with the right-temple button (and future Neural Band gestures) handling advance, pause, and rewind.</p>
+            <p>Works on Ray-Ban Meta (Display HUD and Gen 1/2), plus other brands like XREAL, Viture, and Brilliant Labs via PWA. No affiliation with Meta or Ray-Ban. Modular SpectorCore is ready for native SDKs when the app stores open.</p>
         </section>
     </div>
 
@@ -465,22 +458,26 @@
 
             if (!emailInput || !success) return;
 
-            // For now: simple client-side "submission" (will be replaced with real backend on spector.com)
-            // In production this would POST to a service like Formspree or custom endpoint.
-            console.log('[Beta] Signup:', emailInput.value);
+            const email = emailInput.value;
+            const glassesInput = form.querySelector('input[name="glasses"]');
+            const glasses = glassesInput ? glassesInput.value : '';
+
+            // Make it real today: open pre-filled mailto to beta@spector.com
+            // Real waitlist backend will replace this on spector.com
+            const subject = encodeURIComponent('SPECTOR Beta Request');
+            const body = encodeURIComponent(`Email: ${email}
+Glasses model: ${glasses || '(please specify e.g. Ray-Ban Meta Display)'}
+
+Feedback / notes: `);
+            window.location.href = `mailto:beta@spector.com?subject=${subject}&body=${body}`;
 
             form.style.display = 'none';
             success.style.display = 'block';
+            success.textContent = 'Thanks! Check your email client — a pre-filled request should have opened.';
 
-            // Optional: persist email locally for future domain launch
             try {
-                localStorage.setItem('spector_beta_email', emailInput.value);
+                localStorage.setItem('spector_beta_email', email);
             } catch {}
-
-            // Reset for demo purposes if user refreshes
-            setTimeout(() => {
-                // form remains hidden; success stays
-            }, 100);
         }
 
         function init() {
