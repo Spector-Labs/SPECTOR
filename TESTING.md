@@ -54,12 +54,14 @@ This guide explains how to test Spector on real Meta Ray-Ban smart glasses using
 
 If you're testing Spector, feedback on these areas would be very helpful:
 - How natural does Comfort mode feel compared to Focus mode?
-- Is the drag / head movement sensitivity comfortable?
-- Does the breathing feel calming or distracting?
-- Would you use this for real speeches or presentations?
+- On Ray-Ban Meta Display: Does the right temple button / touchpad work well for advancing the script or pausing? Any issues with gesture mapping?
+- Is the head movement sensitivity in Comfort comfortable on glasses vs phone?
+- How does the HUD text readability compare for different script lengths / chunk sizes?
+- Would you use this for real speeches or presentations? How does it compare to Meta's built-in teleprompter?
+- For non-Ray-Ban glasses (XREAL, Viture etc.): What controls work best for you?
 
 ---
 
-**Current Live Version**: https://spector-plum.vercel.app
+**Current Live Version**: https://spector-plum.vercel.app (spector.com coming soon)
 
 Thank you for testing Spector!

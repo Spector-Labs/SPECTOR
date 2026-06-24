@@ -16,7 +16,7 @@
         <div id="script-text"></div>
     </div>
 
-    <button class="toggle-chip motion-chip hidden" id="motion-permit-btn" type="button" aria-label="Enable head tracking for Comfort mode spatial effects">Enable head tracking</button>
+    <button class="toggle-chip motion-chip hidden" id="motion-permit-btn" type="button" aria-label="Enable head tracking for Comfort mode spatial effects. On glasses, use right temple button for script control.">Enable head tracking</button>
 
     <div class="customize-panel" id="customize-panel">
         <div class="customize-group">
@@ -62,12 +62,12 @@
     </div>
 
     <div id="comfort-tip" class="comfort-tip hidden">
-        <span>In Comfort mode: gently move your head to feel the spatial breathing &amp; drift.</span>
+        <span>In Comfort: move your head for spatial effects. On Ray-Ban Meta Display, use right temple button/touch to advance (future Neural Band support).</span>
         <button id="dismiss-comfort-tip" type="button">Got it</button>
     </div>
 
-    <div class="hardware-note" style="font-size:10px;color:#666;text-align:center;margin-top:4px;max-width:620px;margin-left:auto;margin-right:auto;opacity:0.8;">
-        On Ray-Ban Meta Display: right temple button &amp; touchpad can advance/pause (where events forward). Neural Band coming.
+    <div class="hardware-note" style="font-size:10px;color:#666;text-align:center;margin-top:4px;max-width:620px;margin-left:auto;margin-right:auto;opacity:0.7;">
+        Works with Ray-Ban Meta (button/touch on right temple) + other smart glasses. See docs for controls.
     </div>
 
     <div id="end-screen" class="end-screen hidden">
@@ -714,7 +714,7 @@
         btn.classList.remove('hidden');
         btn.addEventListener('click', async () => {
             const granted = await ensureMotionForPlayback();
-            btn.textContent = granted ? 'Motion enabled ✓' : 'Motion denied';
+            btn.textContent = granted ? 'Head tracking enabled ✓' : 'Motion denied';
         });
     }
 

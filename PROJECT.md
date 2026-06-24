@@ -2,7 +2,7 @@
 
 **Last updated:** June 24, 2026 (deployment confirmed live; landing visibility+education pass landed in main)
 **Repository:** [github.com/hydrogenbondss/SPECTOR](https://github.com/hydrogenbondss/SPECTOR)  
-**Live URL:** [spector-plum.vercel.app](https://spector-plum.vercel.app)  
+**Live URL:** [spector-plum.vercel.app](https://spector-plum.vercel.app) (spector.com coming soon)  
 **Latest commit:** `730df73` (main)
 
 ---
@@ -71,7 +71,7 @@ Not Ray-Ban exclusive. Web + PWA approach maximizes compatibility today.
 - Saved Scripts library, hero badge, teleprompter disclaimer
 - GitHub → Vercel auto-deploy connected and working
 
-**Live:** [spector-plum.vercel.app](https://spector-plum.vercel.app)
+**Live:** [spector-plum.vercel.app](https://spector-plum.vercel.app) (spector.com coming soon)
 
 ---
 

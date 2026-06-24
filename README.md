@@ -16,7 +16,7 @@ Spector is a premium digital teleprompter PWA (software only). It gives creators
 
 ## Live Demo & Install
 
-**Try it instantly:** [https://spector-plum.vercel.app](https://spector-plum.vercel.app) — no account needed.
+**Try it instantly:** [https://spector-plum.vercel.app](https://spector-plum.vercel.app) (spector.com coming soon) — no account needed.
 
 - Paste or drop a .txt script
 - Open in Glasses Mode
