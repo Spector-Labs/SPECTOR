@@ -1,4 +1,4 @@
-# Contributing to SPECTOR
+# Contributing to SPECTOR 
 
 Thank you for your interest in contributing to SPECTOR!
 
