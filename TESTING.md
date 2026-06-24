@@ -19,7 +19,7 @@ This guide explains how to test Spector on real Meta Ray-Ban smart glasses using
 3. Go to **Settings → App connections → Add a Web App**.
 4. Paste this URL:
 
-   **https://spectorlabs.io**
+   **https://www.spectorlabs.io**
 
 5. Spector should open directly on your glasses.
 
@@ -39,6 +39,16 @@ This guide explains how to test Spector on real Meta Ray-Ban smart glasses using
 - Tap anywhere to show/hide controls.
 - **Test the right-temple button flow**: Use the "Simulate right temple button (advance)" button in the player or press 'b' key (easy for desktop testing). This mimics the physical button on Ray-Ban Meta for advancing chunks.
 - When finished, you’ll see a clean end screen with stats (chunks read + total time).
+
+## Hardware Testing Focus (especially for beta testers)
+
+Please test and report on:
+- **Right-temple physical button** on Ray-Ban Meta: Single press to advance? Double-tap pause? Does it feel natural while speaking?
+- **HUD readability & Comfort**: How does the text size/leading look in the actual lens? Does the spatial breathing help presence or cause distraction?
+- **Comparison**: How does Spector feel vs Meta's built-in teleprompter?
+- **Simulator utility**: The on-screen "Simulate right temple button" + 'b' key in the player — useful for desktop practice?
+
+Sign up at https://www.spectorlabs.io (Join the beta section) and mention your exact hardware. We'll send a short structured feedback form.
 
 ---
 

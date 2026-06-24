@@ -121,9 +121,9 @@ We're recruiting testers on real hardware (Ray-Ban Meta Display, Gen 1/2, XREAL,
 **Testers get:**
 - Direct input on button and Neural Band mappings
 - Early access to on-glasses testing
-- Priority when spectorlabs.io launches
+- Priority access after launch
 
-Join via the form on the landing or email beta@spectorlabs.io.
+Join via the form on the landing (powered by Formspree — easy for static sites; see public/index.html for setup instructions) or email hello@spectorlabs.io.
 
 ---
 

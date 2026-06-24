@@ -103,12 +103,20 @@
                 <li>Direct input on right-temple button and Neural Band mappings</li>
                 <li>Priority access after launch</li>
             </ul>
-            <form id="beta-form" onsubmit="handleBetaSubmit(event)">
+            <!-- 
+              BETA FORM: Using Formspree for easy static form handling.
+              1. Go to https://formspree.io and sign up (free tier is fine).
+              2. Create a new form for "Beta Requests".
+              3. Copy the endpoint (looks like https://formspree.io/f/xxxxxx) and replace below.
+              4. You can add hello@spectorlabs.io as the notification email in Formspree settings.
+            -->
+            <form id="beta-form" action="https://formspree.io/f/REPLACE_WITH_YOUR_FORM_ID" method="POST">
                 <input type="email" name="email" placeholder="your@email.com" required style="margin-bottom:6px;">
                 <input type="text" name="glasses" placeholder="Glasses model (e.g. Ray-Ban Meta Display, XREAL One)" style="margin-bottom:8px;">
+                <textarea name="message" placeholder="Any notes or hardware details (optional)" rows="2" style="margin-bottom:8px;"></textarea>
                 <button type="submit">Request Beta Access</button>
             </form>
-            <div id="beta-success">Thanks — we'll reach out from beta@spectorlabs.io soon.</div>
+            <div id="beta-success" style="display:none;">Thanks! We'll reach out from hello@spectorlabs.io soon.</div>
         </section>
 
         <!--
@@ -472,34 +480,53 @@
             });
         }
 
-        function handleBetaSubmit(e) {
+        async function handleBetaSubmit(e) {
             e.preventDefault();
             const form = e.target;
-            const emailInput = form.querySelector('input[type="email"]');
             const success = document.getElementById('beta-success');
 
-            if (!emailInput || !success) return;
-
-            const email = emailInput.value;
-            const glassesInput = form.querySelector('input[name="glasses"]');
-            const glasses = glassesInput ? glassesInput.value : '';
-
-            // Open pre-filled mailto to beta@spectorlabs.io
-            // Real waitlist backend can be added later
-            const subject = encodeURIComponent('SPECTOR Beta Request');
-            const body = encodeURIComponent(`Email: ${email}
-Glasses model: ${glasses || '(please specify e.g. Ray-Ban Meta Display)'}
-
-Feedback / notes: `);
-            window.location.href = `mailto:beta@spectorlabs.io?subject=${subject}&body=${body}`;
-
-            form.style.display = 'none';
-            success.style.display = 'block';
-            success.textContent = 'Thanks! Check your email client — a pre-filled request should have opened.';
+            // IMPORTANT: Sign up at https://formspree.io (free), create a form, and replace the action URL below with your real endpoint (e.g. https://formspree.io/f/abc123)
+            const formData = new FormData(form);
 
             try {
-                localStorage.setItem('spector_beta_email', email);
-            } catch {}
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    form.style.display = 'none';
+                    success.style.display = 'block';
+                    success.textContent = "Thanks! We'll reach out from hello@spectorlabs.io soon.";
+
+                    const email = formData.get('email');
+                    try {
+                        localStorage.setItem('spector_beta_email', email);
+                    } catch {}
+
+                    form.reset();
+                } else {
+                    // Fallback
+                    submitFallback(formData);
+                }
+            } catch (error) {
+                submitFallback(formData);
+            }
+        }
+
+        function submitFallback(formData) {
+            const email = formData.get('email');
+            const glasses = formData.get('glasses') || '';
+            const message = formData.get('message') || '';
+            const subject = encodeURIComponent('SPECTOR Beta Request');
+            const body = encodeURIComponent(`Email: ${email}
+Glasses model: ${glasses}
+
+Notes: ${message}`);
+            window.location.href = `mailto:hello@spectorlabs.io?subject=${subject}&body=${body}`;
         }
 
         function init() {
@@ -543,7 +570,7 @@ Feedback / notes: `);
                     if (form && success) {
                         form.style.display = 'none';
                         success.style.display = 'block';
-                        success.textContent = `Already joined as ${betaEmail}. We'll reach out from beta@spectorlabs.io.`;
+                        success.textContent = `Already joined as ${betaEmail}. We'll reach out from hello@spectorlabs.io.`;
                     }
                 }
             } catch {}

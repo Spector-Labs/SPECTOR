@@ -113,7 +113,7 @@ The project is now very clean and ready for your review + domain purchase.
 **Remaining before/after purchase (low effort):**
 - Run the migration script once domain is yours.
 - Remove "launching soon" notes and update live URLs.
-- Update beta form text/email to beta@spectorlabs.io.
+- The beta form is now set up for Formspree (easy static forms). Update the action URL in public/index.html with your real Formspree endpoint after signing up at formspree.io. Emails go to hello@spectorlabs.io.
 - Test full flow on new domain + real glasses (use simulate button as proxy first).
 - Consider making GitHub repo public after domain live for contributors.
 - Optional: connect beta form to real service (Formspree, email) on new domain.
