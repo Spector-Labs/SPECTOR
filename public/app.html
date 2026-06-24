@@ -81,6 +81,11 @@
         <span id="bookmarks-list"></span>
     </div>
 
+    <div class="glasses-button-test" style="max-width:620px;margin:4px auto 12px;text-align:center;">
+        <button id="glasses-button-sim" class="btn-secondary" style="padding:6px 12px;font-size:12px;">Simulate right temple button (advance)</button>
+        <span style="font-size:10px;color:#666;margin-left:8px;">(On real Ray-Ban Meta Display, the physical button will do this)</span>
+    </div>
+
     <div id="end-screen" class="end-screen hidden">
         <h2>Well done.</h2>
         <p class="subtitle">Rehearsal complete. Review your pacing — on Ray-Ban Meta Display the right temple button advances the script in the real performance.</p>
@@ -804,6 +809,36 @@
         setTimeout(show, 1000);
     }
 
+    function setupGlassesButtonSim() {
+        const btn = document.getElementById('glasses-button-sim');
+        if (!btn) return;
+
+        const advance = () => {
+            if (currentIndex < chunks.length - 1) {
+                if (isPlaying && lastChunkAdvanceAt) {
+                    recordChunkTiming(currentIndex);
+                }
+                currentIndex++;
+                lastChunkAdvanceAt = Date.now();
+                updateDisplay();
+                Haptics.tick();
+            } else if (isPlaying) {
+                recordChunkTiming(currentIndex);
+                showEndScreen();
+            }
+        };
+
+        btn.addEventListener('click', advance);
+
+        // Also bind 'b' key for easy testing (simulates button press)
+        document.addEventListener('keydown', (e) => {
+            if (e.key.toLowerCase() === 'b' && !e.target.closest('input,textarea')) {
+                e.preventDefault();
+                advance();
+            }
+        });
+    }
+
     function setupBookmarks() {
         const container = document.getElementById('bookmarks');
         const list = document.getElementById('bookmarks-list');
@@ -955,6 +990,7 @@
         setupCustomization();
         setupControlsFade();
         setupBookmarks();
+        setupGlassesButtonSim();
 
         // First-run in-product coach: highlight Comfort + hardware button story on very first visit
         let firstRun = false;
