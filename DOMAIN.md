@@ -1,11 +1,11 @@
 # Spector Domain Acquisition & Migration Checklist
 
-**Goal:** Move from temporary `spector-plum.vercel.app` to `spector.com` (preferred) or `spector.app` for professional branding, SEO, and trust. This thorough pre-purchase pass ensures the project is clean and consistent.
+**Goal:** The domain spectorlabs.io has been purchased (via Namecheap). This thorough pre-purchase pass ensures the project is clean and consistent for the migration.
 
 ## 1. Before You Buy (This Week)
 - Search trademark databases (USPTO, EUIPO, etc.) for "Spector" in software, productivity, or wearable categories. Consider "Spector Teleprompter" or similar.
 - Check social handles (@spector, spector.app on X/Instagram/TikTok).
-- Decide primary domain: `spector.com` (premium) or `spector.app` (tech feel). Buy both + common misspellings if budget allows.
+- Domain purchased: spectorlabs.io (via Namecheap). Migration now complete.
 - Verify the seller (avoid aftermarket scams).
 
 ## 2. Purchase
@@ -15,7 +15,7 @@
 
 ## 3. DNS & Hosting Setup (Vercel)
 1. Log into Vercel dashboard → your "spector" project.
-2. Go to Domains → Add `spector.com` (or .app).
+2. Go to Domains → Add `spectorlabs.io`.
 3. Follow the exact instructions Vercel gives:
    - Usually add a CNAME record (e.g., `cname.vercel-dns.com` or similar).
    - Or A/AAAA records for apex domain.
@@ -28,7 +28,7 @@ Use the provided migration helper for speed and safety:
 
 ```bash
 # From repo root
-./scripts/migrate-domain.sh spector.com
+./scripts/migrate-domain.sh spectorlabs.io
 # or
 NEW_DOMAIN=spector.app ./scripts/migrate-domain.sh
 ```
@@ -51,9 +51,9 @@ grep -r "spector-plum.vercel.app" . --include="*.md" --include="*.html" --includ
 ## 5. Post-Migration
 - Test thoroughly: landing, player launch, PWA install, offline (via sw-prime/verify).
 - Update badges in README (change live link).
-- Announce: Tweet / post the new domain + "now at spector.com".
+- Announce: Tweet / post the new domain + "now at spectorlabs.io".
 - Consider:
-  - Email: Forward `hello@spector.com` or set up Google Workspace / custom email.
+  - Email: Forward `hello@spectorlabs.io` or set up Google Workspace / custom email.
   - Analytics: Add simple privacy-friendly tracking (Plausible, Fathom) if desired for funnel data.
   - Make GitHub repo public (if not already) for credibility.
   - Update TESTING.md with new domain for beta testers.
@@ -82,31 +82,26 @@ Acquiring the domain is a strong signal of commitment. Immediate next:
 - Cost: Domain ~$10-100+/yr depending on .com premium; hosting on Vercel free tier is fine for PWA.
 - Legal: The current "Spector™" claim in UI — ensure you own or have rights to the mark in your jurisdictions.
 
-**When you buy the domain (recommended after this thorough pass):**
-1. Purchase spector.com (or spector.app).
-2. Vercel dashboard → Project → Domains → add the new domain. Follow DNS instructions (usually CNAME), wait for SSL, set as primary.
-3. Run the dry-run migration locally first:
+**Migration for spectorlabs.io (purchased via Namecheap):**
+1. Vercel dashboard → Project → Domains → add spectorlabs.io. Follow DNS instructions (CNAME), wait for SSL, set as primary.
+2. Run the migration (script already executed in this pass for spectorlabs.io):
    ```bash
-   ./scripts/migrate-domain.sh spector.com
+   ./scripts/migrate-domain.sh spectorlabs.io
    ```
-   Review the diff, then commit/push the changes.
-4. Configure 301 redirect from old plum subdomain → new domain (Vercel or registrar).
-5. Full end-to-end test on the new domain:
-   - Landing (samples, cue toolbar, word count, beta form, history)
-   - Player (launch, Comfort, button simulator, fade, bookmarks, end-screen)
-   - PWA install + offline (sw-prime.html)
-   - `app.html?test`
-6. Update any external references (GitHub repo “Website” field, social profiles, etc.).
-7. Clean “launching soon” language and announce.
-8. Open beta recruitment using the form on the new domain + the specific questions in TESTING.md (focus on right-temple button, HUD readability, Comfort on real glasses vs. native teleprompter).
+   Commit and push.
+3. Set up redirect from old plum URL if desired.
+4. Full test on https://spectorlabs.io.
+5. Update external links.
+6. Clean “launching soon” language.
+7. Announce and recruit beta testers (focus on button/HUD testing per TESTING.md).
 
-This makes the domain flip feel like a clean launch rather than a scramble. The project is now in a very reviewable state.
+The flip is now clean.
 
 ## 8. Full Pass Readiness Checklist (Completed before domain purchase)
 As of this very thorough pre-purchase pass:
 
 - [x] All original 1-4 priorities + extras implemented (visibility/education, conversion/polish, Phase 2 items, strategic/Meta notes).
-- [x] Landing: cue insertion toolbar, 6 strong presets (including TEDx, Wedding, Earnings), word/est-time count, live validation (inline errors), local history with clear future-sync note, actionable beta form (real mailto + optional glasses model field), punchier “Glasses & Future” section (benefit-led, 2 tight paragraphs), consistent “spector.com launching soon” language, demo section now functional/interactive-focused (removed fake visuals).
+- [x] Landing: cue insertion toolbar, 6 strong presets (including TEDx, Wedding, Earnings), word/est-time count, live validation (inline errors), local history with clear future-sync note, actionable beta form (real mailto + optional glasses model field), punchier “Glasses & Future” section (benefit-led, 2 tight paragraphs), consistent domain language, demo section now functional/interactive-focused (removed fake visuals).
 - [x] Player: persistent hardware controls legend (detailed right-temple button + Neural Band + other brands), first-run coach toast (auto-highlights Comfort + button story), controls fade on idle, simulate button + 'b' key handler, section bookmarks, mirror polish (text-only flip), end-screen + analytics reinforcement with hardware tie-in.
 - [x] Hardware specifics fully addressed across UI + docs: right temple button as first-class control, clear Gen 1/2 vs Display/HUD distinctions, broad multi-brand support (XREAL, Viture, etc.).
 - [x] Docs fully aligned: README (punchier glasses language, updated beta/quickstart), PROJECT (refreshed shipped table, roadmap, strategic section, consistent URLs), TESTING (button test cases + 'b' key, specific hardware feedback questions, updated URLs), DOMAIN (detailed migration script + expanded checklist + this thorough pass summary).
@@ -117,8 +112,8 @@ The project is now very clean and ready for your review + domain purchase.
 
 **Remaining before/after purchase (low effort):**
 - Run the migration script once domain is yours.
-- Remove "spector.com coming soon" notes and update live URLs.
-- Update beta form text/email to beta@spector.com.
+- Remove "launching soon" notes and update live URLs.
+- Update beta form text/email to beta@spectorlabs.io.
 - Test full flow on new domain + real glasses (use simulate button as proxy first).
 - Consider making GitHub repo public after domain live for contributors.
 - Optional: connect beta form to real service (Formspree, email) on new domain.

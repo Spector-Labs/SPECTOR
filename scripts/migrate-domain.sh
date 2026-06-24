@@ -1,12 +1,10 @@
 #!/bin/bash
 #
 # SPECTOR Domain Migration Helper
-# Run this when you have acquired the new domain (e.g. spector.com or spector.app)
+# Run this when you have acquired the new domain (spectorlabs.io)
 #
 # Usage:
-#   ./scripts/migrate-domain.sh spector.com
-#   or
-#   NEW_DOMAIN=spector.app ./scripts/migrate-domain.sh
+#   ./scripts/migrate-domain.sh spectorlabs.io
 #
 # What it does:
 # - Replaces all occurrences of the old temporary Vercel URL with the new domain.
@@ -17,17 +15,15 @@
 # - Run from the repo root.
 # - Review the diff before committing.
 # - After running, update Vercel project to add the custom domain and set up DNS records.
-# - Set up a 301 redirect from old domain → new domain (can be done in Vercel).
+# - Set up a 301 redirect from old domain → new domain (can be done in Vercel or registrar).
 # - Re-deploy and test thoroughly (PWA install, offline, player launch, ?test, glasses web app flow).
 # - Update external references (GitHub repo settings, any socials, etc.).
-#
-# Recommended new domain: spector.com (premium) or spector.app (tech feel).
-# Buy both if possible for protection.
+# - Clean “launching soon” language.
 
 set -e
 
 OLD_DOMAIN="spector-plum.vercel.app"
-NEW_DOMAIN="${1:-${NEW_DOMAIN:-spector.com}}"
+NEW_DOMAIN="${1:-${NEW_DOMAIN:-spectorlabs.io}}"
 
 if [[ "$NEW_DOMAIN" == "$OLD_DOMAIN" ]]; then
   echo "Error: NEW_DOMAIN cannot be the same as OLD_DOMAIN"

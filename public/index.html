@@ -20,7 +20,7 @@
             <p class="market-note">Rehearse on your phone today. Perform with confidence on glasses tomorrow. Not affiliated with Meta or Ray-Ban — works with any smart-glasses setup.</p>
 
             <button id="install-btn" class="btn-install" style="margin: 8px auto 20px;">Install for offline use</button>
-            <p style="font-size:11px;color:#666;text-align:center;margin-top:-8px;">spector.com launching soon (beta access open now)</p>
+            <p style="font-size:11px;color:#666;text-align:center;margin-top:-8px;">Live at spectorlabs.io</p>
         </header>
 
         <div class="input-section">
@@ -79,7 +79,7 @@
         <section class="history-section" id="history-section" style="margin-top:16px;">
             <h3 style="font-size:14px;font-weight:600;color:#999;margin:0 0 8px;letter-spacing:0.04em;text-transform:uppercase;">Recent rehearsals</h3>
             <div id="history-list" style="font-size:12px;color:#888;"></div>
-            <div style="font-size:10px;color:#666;margin-top:4px;">Local for now — full cloud history, trends, and cross-device sync coming after spector.com launch.</div>
+            <div style="font-size:10px;color:#666;margin-top:4px;">Local for now — full cloud history, trends, and cross-device sync coming soon.</div>
         </section>
 
         <section class="demo-section">
@@ -92,7 +92,7 @@
                 <li>Launch the player to experience adaptive pacing, Comfort mode, and the hardware controls legend</li>
             </ul>
             <p class="demo-note" style="margin-top:6px;font-size:12px;">Pro tip: Try Comfort mode and move your head gently for the full spatial experience (or use the button simulator in the player).</p>
-            <p style="font-size:11px; color:#666; margin-top:12px;">Real screenshots and usage photos coming with the spector.com launch (after beta feedback on actual hardware).</p>
+            <p style="font-size:11px; color:#666; margin-top:12px;">Real screenshots and usage photos coming after beta feedback on actual hardware.</p>
         </section>
 
         <section class="beta-section" id="beta-section">
@@ -101,14 +101,14 @@
             <ul class="beta-benefits">
                 <li>Early access to on-glasses testing</li>
                 <li>Direct input on right-temple button and Neural Band mappings</li>
-                <li>Priority access when spector.com launches</li>
+                <li>Priority access after launch</li>
             </ul>
             <form id="beta-form" onsubmit="handleBetaSubmit(event)">
                 <input type="email" name="email" placeholder="your@email.com" required style="margin-bottom:6px;">
                 <input type="text" name="glasses" placeholder="Glasses model (e.g. Ray-Ban Meta Display, XREAL One)" style="margin-bottom:8px;">
                 <button type="submit">Request Beta Access</button>
             </form>
-            <div id="beta-success">Thanks — we'll reach out from beta@spector.com once we launch the new domain.</div>
+            <div id="beta-success">Thanks — we'll reach out from beta@spectorlabs.io soon.</div>
         </section>
 
         <!--
@@ -484,14 +484,14 @@
             const glassesInput = form.querySelector('input[name="glasses"]');
             const glasses = glassesInput ? glassesInput.value : '';
 
-            // Make it real today: open pre-filled mailto to beta@spector.com
-            // Real waitlist backend will replace this on spector.com
+            // Open pre-filled mailto to beta@spectorlabs.io
+            // Real waitlist backend can be added later
             const subject = encodeURIComponent('SPECTOR Beta Request');
             const body = encodeURIComponent(`Email: ${email}
 Glasses model: ${glasses || '(please specify e.g. Ray-Ban Meta Display)'}
 
 Feedback / notes: `);
-            window.location.href = `mailto:beta@spector.com?subject=${subject}&body=${body}`;
+            window.location.href = `mailto:beta@spectorlabs.io?subject=${subject}&body=${body}`;
 
             form.style.display = 'none';
             success.style.display = 'block';
@@ -543,7 +543,7 @@ Feedback / notes: `);
                     if (form && success) {
                         form.style.display = 'none';
                         success.style.display = 'block';
-                        success.textContent = `Already joined as ${betaEmail}. We'll reach out from spector.com.`;
+                        success.textContent = `Already joined as ${betaEmail}. We'll reach out from beta@spectorlabs.io.`;
                     }
                 }
             } catch {}

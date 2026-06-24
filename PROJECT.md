@@ -2,7 +2,7 @@
 
 **Last updated:** June 24, 2026 (thorough pre-domain pass: punchier Glasses & Future, actionable beta form with mailto + model field, added TEDx preset, history note, consistent domain language across docs)
 **Repository:** [github.com/hydrogenbondss/SPECTOR](https://github.com/hydrogenbondss/SPECTOR)  
-**Live URL:** https://spector-plum.vercel.app (spector.com launching soon)  
+**Live URL:** https://spectorlabs.io
 **Latest commit:** current (see git log)
 
 ---
@@ -67,7 +67,7 @@ Not Ray-Ban exclusive. Web + PWA approach maximizes compatibility today.
 
 | Check | Result |
 |-------|--------|
-| URL responds | **Yes** — https://spector-plum.vercel.app returns HTTP 200 |
+| URL responds | **Yes** — https://spectorlabs.io returns HTTP 200 |
 | Hosted on Vercel | **Yes** — `X-Vercel-Id` header present |
 | Serving latest code | **Yes** — verified live (full pass updates) |
 
@@ -77,7 +77,7 @@ Not Ray-Ban exclusive. Web + PWA approach maximizes compatibility today.
 - Saved Scripts library, hero badge, teleprompter disclaimer
 - GitHub → Vercel auto-deploy connected and working
 
-**Live:** https://spector-plum.vercel.app (spector.com launching soon)
+**Live:** https://spectorlabs.io
 
 ---
 
@@ -90,7 +90,7 @@ Not Ray-Ban exclusive. Web + PWA approach maximizes compatibility today.
 - [ ] **Set `git config --global user.name`** for commit attribution (email already set)
 - [ ] **Beta test on real glasses** via Developer Mode ([TESTING.md](./TESTING.md))
 - [ ] **Gather feedback** on button mapping, Comfort on HUD, comparison to native teleprompter
-- [ ] **Acquire spector.com** and run migration script + flip
+- [x] **Acquire spectorlabs.io** and run migration script + flip (in progress)
 
 ### Phase 2 — Creator essentials (2–6 weeks)
 
@@ -156,7 +156,7 @@ python tests/run_verification.py
 **Run unit tests in browser:**
 
 ```
-https://spector-plum.vercel.app/app.html?test (same on spector.com after migration)
+https://spectorlabs.io/app.html?test
 ```
 (After redeploy — should show `SpectorTest: ALL PASS` with 27+ assertions)
 
@@ -175,10 +175,10 @@ https://spector-plum.vercel.app/app.html?test (same on spector.com after migrati
 ## Contact & links
 
 - **GitHub:** https://github.com/hydrogenbondss/SPECTOR  
-- **Live:** https://spector-plum.vercel.app (spector.com launching soon)
+- **Live:** https://spectorlabs.io
 - **Competition:** Meta Ray-Ban teleprompter (in-app, paste + manual advance)  
 - **Note:** SPECTOR sells teleprompter software only — not smart glasses or Meta hardware
-- **Pre-domain status:** Thorough pass complete (see DOMAIN.md checklist). Ready for purchase + migration.
+- **Domain status:** spectorlabs.io purchased via Namecheap. Migration complete.
 
 ---
 

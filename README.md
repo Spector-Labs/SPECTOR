@@ -2,11 +2,11 @@
 
 **Auto-paced, comfort-tuned teleprompter for smart glasses and serious rehearsal.**
 
-[![Live Demo](https://img.shields.io/badge/Live-spector--plum.vercel.app-000?style=flat-square)](https://spector-plum.vercel.app)
-[![PWA](https://img.shields.io/badge/PWA-Installable-000?style=flat-square)](https://spector-plum.vercel.app) (spector.com soon)
+[![Live Demo](https://img.shields.io/badge/Live-spectorlabs.io-000?style=flat-square)](https://spectorlabs.io)
+[![PWA](https://img.shields.io/badge/PWA-Installable-000?style=flat-square)](https://spectorlabs.io)
 [![GitHub](https://img.shields.io/badge/GitHub-hydrogenbondss/SPECTOR-000?style=flat-square)](https://github.com/hydrogenbondss/SPECTOR)
 
-**Current live:** spector-plum.vercel.app (spector.com launching soon)
+**Current live:** https://spectorlabs.io
 
 **Rehearse on your phone. Perform with confidence on glasses.**
 
@@ -18,7 +18,7 @@ Spector is a premium digital teleprompter PWA (software only). It gives creators
 
 ## Live Demo & Install
 
-**Try it instantly:** [https://spector-plum.vercel.app](https://spector-plum.vercel.app) (spector.com launching soon) — no account needed.
+**Try it instantly:** [https://spectorlabs.io](https://spectorlabs.io) — no account needed.
 
 - Paste or drop a .txt script
 - Hit **Launch Teleprompter**
@@ -40,7 +40,7 @@ The best way to experience Spector is directly on the site:
 - Watch the live word count and estimated duration
 - Launch the player for adaptive pacing, Comfort spatial mode, and the hardware controls info (including right-temple button guidance for Ray-Ban Meta Display)
 
-Real screenshots, usage photos, and a screen-recorded demo will be added for the spector.com launch once we have beta feedback from actual hardware. The assets/ folder currently contains early concept renders.
+Real screenshots, usage photos, and a screen-recorded demo will be added after beta feedback from actual hardware. The assets/ folder currently contains early concept renders.
 
 ---
 
@@ -96,7 +96,7 @@ Cues are processed in `hybridChunkWithCues` and respected by `getMs()` timing.
 
 ## Quick Start (Phone or Desktop)
 
-1. Open the current live site: https://spector-plum.vercel.app (spector.com launching soon)
+1. Open https://spectorlabs.io
 2. Paste text, drop a `.txt`, or click one of the sample scripts
 3. (Optional) Title it and **Save** to your library
 4. Hit **Launch Teleprompter**
@@ -121,11 +121,9 @@ We're recruiting testers on real hardware (Ray-Ban Meta Display, Gen 1/2, XREAL,
 **Testers get:**
 - Direct input on button and Neural Band mappings
 - Early access to on-glasses testing
-- Priority when spector.com launches
+- Priority when spectorlabs.io launches
 
-Join via the form on the landing or email beta@spector.com (form will point to the new domain after launch).
-
-Beta recruitment is open now; the experience will feel final once we flip to spector.com.
+Join via the form on the landing or email beta@spectorlabs.io.
 
 ---
 
@@ -166,7 +164,7 @@ Explicit non-goals for now: native mobile binaries, accounts/backend, proprietar
 
 - Logo / wordmark: text "Spector™" (premium minimal).
 - PWA icons: inline SVG "S" (192/512) in `manifest.json`.
-- Early concept renders live in `assets/`. Real device screenshots and usage photos will replace generated assets for the spector.com launch (after beta feedback).
+- Early concept renders live in `assets/`. Real device screenshots and usage photos will be added after beta feedback.
 
 ---
 
@@ -186,7 +184,7 @@ Spector sells **teleprompter software only**. Not smart glasses, not Meta hardwa
 
 **Built for the moment before built-in HUD teleprompters become truly great.**
 
-Live: https://spector-plum.vercel.app (spector.com launching soon)  
+Live: https://spectorlabs.io
 Status: [PROJECT.md](PROJECT.md)  
 Testing on glasses: [TESTING.md](TESTING.md)  
 Source: [github.com/hydrogenbondss/SPECTOR](https://github.com/hydrogenbondss/SPECTOR)
