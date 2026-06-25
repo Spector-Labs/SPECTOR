@@ -1288,3 +1288,56 @@ body.mirror-mode .bookmarks {
     color: #888;
     margin-top: 12px;
 }
+
+
+/* === FIXES === */
+.hero-visual img {
+    width: 100%;
+    max-width: 480px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    display: block;
+    margin: 0 auto;
+}
+
+.feature-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 16px 0 24px;
+    justify-content: center;
+}
+
+.badge-pill {
+    display: inline-block;
+    padding: 6px 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 999px;
+    font-size: 12px;
+    color: #999;
+    font-weight: 500;
+    font-family: system-ui, -apple-system, sans-serif;
+    white-space: nowrap;
+}
+
+.demo-visual {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.demo-visual video {
+    width: 100%;
+    max-width: 560px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.06);
+    display: block;
+    margin: 0 auto;
+}
+
+.demo-visual p {
+    font-size: 13px;
+    color: #888;
+    margin-top: 12px;
+}
