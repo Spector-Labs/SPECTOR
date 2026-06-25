@@ -1116,228 +1116,42 @@ body.mirror-mode .bookmarks {
     margin-top: 8px;
 }
 
-/* ═══ SPECTOR v5 — Purple/Black Brand ═══ */
-.brand-lockup {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 32px;
-}
-.hero-logo {
-  height: 48px;
-  width: auto;
-  display: block;
-}
-.hero-visual {
-  margin: 0 auto 32px;
-  max-width: 800px;
-}
-.hero-visual img {
-  width: 100%;
-  border-radius: 24px;
-  border: 1px solid rgba(124, 58, 237, 0.15);
-  display: block;
-}
-.hero-headline {
-  font-size: clamp(48px, 8vw, 96px);
-  font-weight: 900;
-  letter-spacing: -0.03em;
-  line-height: 1.0;
-  margin: 0 0 20px;
-  text-align: center;
-  color: var(--text);
-}
-.text-purple {
-  color: var(--accent);
-}
-.hero-subhead {
-  font-size: clamp(16px, 2.2vw, 20px);
-  color: var(--text-muted);
-  text-align: center;
-  max-width: 560px;
-  margin: 0 auto 36px;
-  line-height: 1.5;
-}
-.hero-cta {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-}
-.hero-note {
-  text-align: center;
-  font-size: 13px;
-  color: #52525B;
-  margin: 0 0 28px;
-}
-.trust-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  font-size: 12px;
-  color: #52525B;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-weight: 600;
-  margin-bottom: 48px;
-  flex-wrap: wrap;
-}
-.trust-dot {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--accent);
-  opacity: 0.6;
-}
-.comparison-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin: 20px 0 40px;
-}
-.comparison-card {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
-}
-.comparison-card h4 {
-  margin: 0 0 16px;
-  font-size: 14px;
-  font-weight: 600;
-}
-.comparison-card ul {
-  margin: 0;
-  padding-left: 18px;
-  font-size: 13px;
-  color: var(--text-muted);
-  line-height: 1.8;
-}
-.comparison-card.spector {
-  border-color: rgba(124, 58, 237, 0.3);
-}
-.comparison-card.spector h4 {
-  color: var(--accent);
-}
-.steps {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  margin: 20px 0 40px;
-}
-.step {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
-  text-align: center;
-}
-.step-number {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--accent);
-  letter-spacing: 0.1em;
-  margin-bottom: 12px;
-}
-.step h4 {
-  margin: 0 0 8px;
-  font-size: 15px;
-}
-.step p {
-  margin: 0;
-  font-size: 13px;
-  color: var(--text-muted);
-  line-height: 1.5;
-}
-.pro-tip {
-  font-size: 14px;
-  color: var(--text-muted);
-  line-height: 1.6;
-  margin: 24px 0;
-  padding: 20px;
-  background: var(--bg-elevated);
-  border-radius: 12px;
-  border: 1px solid var(--border);
-}
-.beta-note {
-  font-size: 13px;
-  color: #52525B;
-  margin: 24px 0 8px;
-  font-style: italic;
-}
-.landing {
-  min-height: auto;
-  padding: 48px 20px 32px;
-}
-.landing .container {
-  max-width: 900px;
-}
-/* Hide old elements */
-.landing header, .landing .logo, .landing .tagline, .landing .subtitle, .landing .hero-badge, .landing .market-note, .landing .benefits-row {
-  display: none;
-}
-/* Update buttons for purple accent */
-.btn-primary {
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  box-shadow: 0 4px 24px rgba(124, 58, 237, 0.35);
-  font-weight: 600;
-}
-.btn-primary:hover {
-  background: var(--accent-dim);
-  transform: translateY(-1px);
-  box-shadow: 0 8px 32px rgba(124, 58, 237, 0.45);
-}
-.btn-secondary {
-  background: rgba(255, 255, 255, 0.06);
-  color: #E4E4E7;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-}
-.btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
-}
-.sample-btn:hover, .cue-btn:hover {
-  background: rgba(124, 58, 237, 0.15);
-  color: #A78BFA;
-  border-color: rgba(124, 58, 237, 0.4);
-}
-.preset-btn.active {
-  background: rgba(124, 58, 237, 0.2);
-  color: #A78BFA;
-  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.15);
-}
-.toggle-chip.active {
-  background: rgba(124, 58, 237, 0.2);
-  color: #A78BFA;
-}
-.progress-fill {
-  background: linear-gradient(to right, var(--accent), #8B5CF6);
-  box-shadow: 0 0 12px rgba(124, 58, 237, 0.35);
-}
-.end-screen h2 {
-  color: #A78BFA;
-}
-.end-screen .stats .value {
-  color: #A78BFA;
-}
-#beta-success {
-  color: #A78BFA;
-}
-::selection {
-  background: rgba(124, 58, 237, 0.3);
-  color: var(--text);
-}
-.library-item:hover {
-  border-color: rgba(124, 58, 237, 0.25);
-  background: rgba(124, 58, 237, 0.04);
-}
-.glasses-future h3 {
-  color: #A78BFA;
-}
-.beta-section h3 {
-  color: #A78BFA;
-}
+/* SPECTOR v5 */
+.brand-lockup{display:flex;align-items:center;justify-content:center;margin-bottom:32px}
+.hero-logo{height:48px;width:auto;display:block}
+.hero-visual{margin:0 auto 32px;max-width:800px}
+.hero-visual img{width:100%;border-radius:24px;border:1px solid rgba(124,58,237,0.15);display:block}
+.hero-headline{font-size:clamp(48px,8vw,96px);font-weight:900;letter-spacing:-0.03em;line-height:1.0;margin:0 0 20px;text-align:center;color:var(--text)}
+.text-purple{color:var(--accent)}
+.hero-subhead{font-size:clamp(16px,2.2vw,20px);color:var(--text-muted);text-align:center;max-width:560px;margin:0 auto 36px;line-height:1.5}
+.hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.hero-note{text-align:center;font-size:13px;color:#52525B;margin:0 0 28px}
+.trust-bar{display:flex;align-items:center;justify-content:center;gap:16px;font-size:12px;color:#52525B;text-transform:uppercase;letter-spacing:0.08em;font-weight:600;margin-bottom:48px;flex-wrap:wrap}
+.trust-dot{width:4px;height:4px;border-radius:50%;background:var(--accent);opacity:0.6}
+.comparison-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0 40px}
+.comparison-card{background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;padding:24px}
+.comparison-card h4{margin:0 0 16px;font-size:14px;font-weight:600}
+.comparison-card ul{margin:0;padding-left:18px;font-size:13px;color:var(--text-muted);line-height:1.8}
+.comparison-card.spector{border-color:rgba(124,58,237,0.3)}
+.comparison-card.spector h4{color:var(--accent)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:20px 0 40px}
+.step{background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center}
+.step-number{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:0.1em;margin-bottom:12px}
+.step h4{margin:0 0 8px;font-size:15px}
+.step p{margin:0;font-size:13px;color:var(--text-muted);line-height:1.5}
+.pro-tip{font-size:14px;color:var(--text-muted);line-height:1.6;margin:24px 0;padding:20px;background:var(--bg-elevated);border-radius:12px;border:1px solid var(--border)}
+.beta-note{font-size:13px;color:#52525B;margin:24px 0 8px;font-style:italic}
+.landing{min-height:auto;padding:48px 20px 32px}
+.landing .container{max-width:900px}
+.landing header,.landing .logo,.landing .tagline,.landing .subtitle,.landing .hero-badge,.landing .market-note,.landing .benefits-row{display:none}
+.btn-primary{background:var(--accent);color:#fff;border:none;box-shadow:0 4px 24px rgba(124,58,237,0.35);font-weight:600}
+.btn-primary:hover{background:var(--accent-dim);transform:translateY(-1px);box-shadow:0 8px 32px rgba(124,58,237,0.45)}
+.btn-secondary{background:rgba(255,255,255,0.06);color:#E4E4E7;border:1px solid rgba(255,255,255,0.12)}
+.sample-btn:hover,.cue-btn:hover{background:rgba(124,58,237,0.15);color:#A78BFA;border-color:rgba(124,58,237,0.4)}
+.preset-btn.active{background:rgba(124,58,237,0.2);color:#A78BFA;box-shadow:0 2px 8px rgba(124,58,237,0.15)}
+.toggle-chip.active{background:rgba(124,58,237,0.2);color:#A78BFA}
+.progress-fill{background:linear-gradient(to right,var(--accent),#8B5CF6);box-shadow:0 0 12px rgba(124,58,237,0.35)}
+.end-screen h2,.end-screen .stats .value,#beta-success{color:#A78BFA}
+::selection{background:rgba(124,58,237,0.3);color:var(--text)}
+.library-item:hover{border-color:rgba(124,58,237,0.25);background:rgba(124,58,237,0.04)}
+.glasses-future h3,.beta-section h3{color:#A78BFA}
