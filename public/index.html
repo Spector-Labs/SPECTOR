@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Spector: premium auto-paced teleprompter PWA with Comfort mode spatial effects, cue markers, script library, and rehearsal analytics. Rehearse on phone, perform on smart glasses.">
     <meta name="theme-color" content="#0A0A0A">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23191817'/%3E%3Ctext x='50' y='68' font-size='55' text-anchor='middle' fill='%23E8D5B7' font-family='Georgia,serif' font-weight='bold'%3ES%3C/text%3E%3C/svg%3E">
     <title>Spector™ • Eyes Forward</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
@@ -17,45 +16,556 @@
             <div class="logo">Spector<span class="tm">™</span></div>
             <p class="tagline">Eyes Forward.</p>
             <p class="subtitle">Auto-paced, comfort-tuned teleprompter for smart glasses and creators who rehearse seriously.</p>
-            <div class="hero-badge">No account required · Works offline · Open source</div>
+            <div class="hero-badge">Better than basic in-app scroll · PWA + ready for glasses SDKs</div>
             <p class="market-note">Rehearse on your phone today. Perform with confidence on glasses tomorrow. Not affiliated with Meta or Ray-Ban — works with any smart-glasses setup.</p>
-
-
-<div class="trust-bar"><span><strong>MIT License</strong> · Open Source</span><span><strong>PWA</strong> · Works Offline</span><span><strong>Zero Sign-up</strong> · Try Instantly</span></div>
 
             <button id="install-btn" class="btn-install" style="margin: 8px auto 20px;">Install for offline use</button>
             <p style="font-size:11px;color:#666;text-align:center;margin-top:-8px;">Live at www.spectorlabs.io</p>
         </header>
 
-        <div class="homepage-cta" style="text-align:center;margin:36px 0 44px;">
+        
+
+<div class="homepage-cta" style="text-align:center;margin:36px 0 44px;">
     <a href="app.html" class="btn-primary" style="display:inline-block;min-width:240px;font-size:17px;">Open App</a>
     <p style="margin-top:16px;color:var(--text-muted);font-size:15px;line-height:1.6;">
         Rehearse on your phone today. Perform with confidence on glasses tomorrow.
     </p>
 </div>
 
-<div class="library-section" style="margin-top:28px;">
-    <div class="library-section">
-    <h3>Why SPECTOR?</h3>
-    <div class="comparison-grid">
-        <div class="library-item comparison-card">
-            <div class="comparison-label">Traditional Teleprompters</div>
-            <ul class="comparison-list">
-                <li>Fixed scrolling speed</li>
-                <li>Easy to lose your place</li>
-                <li>Designed for phones only</li>
-                <li>No rehearsal analytics</li>
+<h3>Practice Better</h3>
+            <ul class="library-list" id="library-list">
+                <li class="library-empty" id="library-empty">Review pace, hesitation points, and session history after every rehearsal.</li>
             </ul>
-        </div>
-        <div class="library-item comparison-card spector-card">
-            <div class="comparison-label accent">SPECTOR</div>
-            <ul class="comparison-list">
-                <li>Adaptive auto-pacing</li>
-                <li>Comfort mode + cues</li>
-                <li>Built for smart glasses</li>
-                <li>Post-run analytics</li>
-            </ul>
-        </div>
-    </div>
-</div>
+        </section>
 
+        <section class="history-section" id="history-section" style="margin-top:16px;">
+            <h3 style="font-size:14px;font-weight:600;color:#999;margin:0 0 8px;letter-spacing:0.04em;text-transform:uppercase;">Recent rehearsals</h3>
+            <div id="history-list" style="font-size:12px;color:#888;"></div>
+            <div style="font-size:10px;color:#666;margin-top:4px;">Local demo. Cloud sync and trends planned.</div>
+        </section>
+
+        <section class="demo-section">
+            <h3>See It In Action</h3>
+            <p class="demo-note">The best demo is hands-on. Use the live tools above:</p>
+            <ul style="font-size:13px; color:#999; line-height:1.6; margin:8px 0 12px; padding-left:20px;">
+                <li>Click any sample script to load a real example with cues</li>
+                <li>Use the **Bold**, [Pause], [Pause 3s] buttons to insert syntax without typing</li>
+                <li>Watch the live word count and estimated speaking time update</li>
+                <li>Launch the player to experience adaptive pacing, Comfort mode, and the hardware controls legend</li>
+            </ul>
+            <p class="demo-note" style="margin-top:6px;font-size:12px;">Pro tip: In player, press <strong>B</strong> (or the sim button) to advance like the right-temple hardware button. For Comfort spatial: on desktop use DevTools → Sensors → Orientation; on phone tilt your device.</p>
+            <p style="font-size:11px;color:#777;margin-top:4px;">Everything above (player, samples, Comfort, etc.) is live and ready to use today on phone. The form below is specifically for real-glasses hardware testing.</p>
+
+            <!-- 
+              Real demo screenshots (from live site + product shots).
+              Images live in public/images/. Update captions or swap files as needed.
+            -->
+            <div class="screenshots" style="margin-top:16px;">
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px; max-width:620px; margin:0 auto;">
+                <figure style="margin:0; text-align:center;">
+                  <img src="images/demo-phone-ui.jpg" alt="Spector teleprompter running on iPhone: large script text, Comfort mode active, pause and speed controls visible" style="width:100%; height:auto; border-radius:8px; border:1px solid rgba(255,255,255,0.08); box-shadow:0 4px 12px rgba(0,0,0,0.3);">
+                  <figcaption style="font-size:10px; color:#666; margin-top:6px;">Player on phone — Comfort mode, cues, adaptive speed</figcaption>
+                </figure>
+                <figure style="margin:0; text-align:center;">
+                  <img src="images/demo-usage.jpg" alt="Presenter wearing smart glasses on stage, holding phone running Spector teleprompter" style="width:100%; height:auto; border-radius:8px; border:1px solid rgba(255,255,255,0.08); box-shadow:0 4px 12px rgba(0,0,0,0.3);">
+                  <figcaption style="font-size:10px; color:#666; margin-top:6px;">Rehearse on phone, perform on glasses (PWA + future HUD/button support)</figcaption>
+                </figure>
+              </div>
+            </div>
+        </section>
+
+        <section class="beta-section" id="beta-section">
+            <h3>Hardware beta (open now)</h3>
+            <p>The player, samples, cues, Comfort mode, and PWA install are <strong>fully live and usable today</strong> for phone rehearsal. The beta is specifically for people testing on real smart glasses (Ray-Ban Meta Display, Gen 1/2, XREAL, Viture, Brilliant Labs, etc.). We're validating the right-temple button, touch gestures, Comfort spatial effects on actual HUD, and the end-to-end flow.</p>
+            <ul class="beta-benefits">
+                <li>Direct input on right-temple button + future Neural Band mappings</li>
+                <li>Early feedback on real-device HUD readability and Comfort mode</li>
+                <li>Help shape glasses-specific features before wider release</li>
+            </ul>
+            <!-- 
+              BETA FORM (Formspree - configured):
+              Endpoint: https://formspree.io/f/mzdlddkp
+              Notifications go to hello@spectorlabs.io.
+              Form name in dashboard: Spector Beta Requests (or similar).
+              From name in email template recommended: "Spector" or "Spector Labs".
+              Collects: email (required) + glasses model (key for hardware testing) + optional notes.
+              AJAX submit + mailto fallback in JS.
+            -->
+            <form id="beta-form" action="https://formspree.io/f/mzdlddkp" method="POST">
+                <input type="email" name="email" placeholder="your@email.com" required style="margin-bottom:6px;">
+                <input type="text" name="glasses" placeholder="Glasses model (e.g. Ray-Ban Meta Display, XREAL One)" style="margin-bottom:8px;">
+                <textarea name="message" placeholder="Any notes or hardware details (optional)" rows="2" style="margin-bottom:8px;"></textarea>
+                <button type="submit">Join hardware beta</button>
+            </form>
+            <div id="beta-success" style="display:none;">Thanks! We'll reach out from hello@spectorlabs.io soon.</div>
+            <p style="font-size:10px; color:#666; margin-top:4px;">
+                Or email <a href="mailto:hello@spectorlabs.io">hello@spectorlabs.io</a> directly.<br>
+                Source: <a href="https://github.com/Spector-Labs/SPECTOR" target="_blank">github.com/Spector-Labs/SPECTOR</a> (open source).
+            </p>
+        </section>
+
+        <!--
+            CUSTOMER JOURNEY: paste/upload → save to library → configure in player →
+            rehearse with spatial comfort → review stats → iterate.
+            POSITIONING vs Meta: their tool is paste-only, manual Neural Band advance,
+            basic vertical/cards. Spector offers intelligent chunking, adaptive pacing,
+            comfort spatial effects, script library, and PWA install for daily rehearsal.
+        -->
+        <section class="glasses-future">
+            <h3>Built for smart glasses — today and tomorrow</h3>
+            <p>Rehearse on your phone with the tools pros actually need: script library, adaptive auto-pacing, inline cues, and real post-run analytics. Then step onto glasses with the right-temple button (and future Neural Band gestures) handling advance, pause, and rewind.</p>
+            <p>Works on Ray-Ban Meta (Display HUD and Gen 1/2), plus other brands like XREAL, Viture, and Brilliant Labs via PWA. No affiliation with Meta or Ray-Ban. Modular SpectorCore is ready for native SDKs when the app stores open.</p>
+        </section>
+
+        <footer style="margin-top:32px;text-align:center;font-size:11px;color:#666;">
+            Open source under <a href="https://github.com/Spector-Labs/SPECTOR" target="_blank">Spector-Labs</a> • <a href="https://www.spectorlabs.io" target="_blank">www.spectorlabs.io</a>
+        </footer>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'spector_scripts_v1';
+
+        function getLibrary() {
+            try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+            catch { return []; }
+        }
+
+        function setLibrary(scripts) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(scripts));
+        }
+
+        function saveScript(title, text) {
+            const library = getLibrary();
+            const entry = {
+                id: Date.now().toString(36),
+                title: title || 'Untitled Script',
+                text,
+                savedAt: Date.now()
+            };
+            const existing = library.findIndex(s => s.title === entry.title && s.text === text);
+            if (existing >= 0) library[existing] = entry;
+            else library.unshift(entry);
+            if (library.length > 20) library.length = 20;
+            setLibrary(library);
+            renderLibrary();
+        }
+
+        function deleteScript(id) {
+            setLibrary(getLibrary().filter(s => s.id !== id));
+            renderLibrary();
+        }
+
+        function launchScript(text) {
+            const encoded = btoa(encodeURIComponent(text));
+            window.location.href = `app.html?script=${encoded}`;
+        }
+
+        function renderLibrary() {
+            const list = document.getElementById('library-list');
+            const empty = document.getElementById('library-empty');
+            const scripts = getLibrary();
+            list.innerHTML = '';
+            if (!scripts.length) {
+                list.appendChild(empty);
+                empty.style.display = 'block';
+                return;
+            }
+            scripts.forEach(script => {
+                const li = document.createElement('li');
+                li.className = 'library-item';
+                const meta = document.createElement('div');
+                meta.innerHTML = `<div class="library-item-title">${escapeHtml(script.title)}</div>
+                    <div class="library-item-meta">${new Date(script.savedAt).toLocaleDateString()} · ${script.text.split(/\s+/).length} words</div>`;
+                const del = document.createElement('button');
+                del.className = 'btn-ghost';
+                del.textContent = 'Delete';
+                del.addEventListener('click', (e) => { e.stopPropagation(); deleteScript(script.id); });
+                li.appendChild(meta);
+                li.appendChild(del);
+                li.addEventListener('click', () => {
+                    document.getElementById('script-input').value = script.text;
+                    document.getElementById('script-title').value = script.title;
+                });
+                li.addEventListener('dblclick', () => launchScript(script.text));
+                list.appendChild(li);
+            });
+        }
+
+        function renderHistory() {
+            const container = document.getElementById('history-list');
+            if (!container) return;
+            let runs = [];
+            try { runs = JSON.parse(localStorage.getItem('spector_runs_v1')) || []; } catch {}
+            if (!runs.length) {
+                container.innerHTML = '<div style="font-size:11px;color:#666;">Track your progress across rehearsals. Cloud sync and trends planned.</div>';
+                return;
+            }
+            container.innerHTML = runs.map(r => {
+                const d = new Date(r.ts).toLocaleDateString();
+                return `<div class="history-item">${d} · ${r.chunks} chunks · ${r.time} min · ${r.wpm} wpm · ${r.pacing} pacing<br><span style="font-size:10px;opacity:0.7;">${escapeHtml(r.scriptPreview)}</span></div>`;
+            }).join('');
+        }
+
+        function escapeHtml(str) {
+            const d = document.createElement('div');
+            d.textContent = str;
+            return d.innerHTML;
+        }
+
+        function initFileUpload() {
+            const fileArea = document.getElementById('file-area');
+            const fileInput = document.getElementById('file-input');
+            const textarea = document.getElementById('script-input');
+
+            fileArea.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        textarea.value = event.target.result;
+                        updateScriptMeta();
+                        const titleEl = document.getElementById('script-title');
+                        if (!titleEl.value) titleEl.value = file.name.replace(/\.txt$/i, '');
+                    };
+                    reader.readAsText(file);
+                }
+            });
+            fileArea.addEventListener('dragover', (e) => { e.preventDefault(); fileArea.classList.add('dragover'); });
+            fileArea.addEventListener('dragleave', () => fileArea.classList.remove('dragover'));
+            fileArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileArea.classList.remove('dragover');
+                const file = e.dataTransfer.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        textarea.value = event.target.result;
+                        updateScriptMeta();
+                        const titleEl = document.getElementById('script-title');
+                        if (!titleEl.value) titleEl.value = file.name.replace(/\.txt$/i, '');
+                    };
+                    reader.readAsText(file);
+                }
+            });
+        }
+
+        const SAMPLE_SCRIPTS = {
+            keynote: {
+                title: "Keynote Opener",
+                text: "Good morning. **Thank you** for being here.\n\nToday we're going to talk about the future of [pause] eyes-forward interfaces.\n\n[pause:2s]\n\nThe problem is simple: most teleprompters still feel like reading from a script. **We can do better.**"
+            },
+            pitch: {
+                title: "Investor Pitch",
+                text: "We're building the rehearsal layer for the next generation of computing. [pause]\n\nOur users rehearse on phone today. [pause:3s] They perform on glasses tomorrow.\n\n**Traction** is strong. **Retention** even stronger. The market is waking up to smart glasses. [pause]"
+            },
+            demo: {
+                title: "Product Demo",
+                text: "This is Spector. [pause]\n\nPaste any script. Hit play. The text advances at the right pace for **your** voice.\n\nIn Comfort mode your head movement creates gentle spatial anchoring — it feels alive, not robotic. [pause:2s]\n\nWhen you finish, you get real analytics: pacing consistency, where you hesitated, the slowest chunk.\n\nRehearse here. Nail it on stage — or on your glasses."
+            },
+            ted: {
+                title: "TEDx Opener",
+                text: "Good [pause] afternoon.\n\n**What if** the most important talk of your life started with you feeling completely in control?\n\n[pause:2s]\n\nToday I'm going to show you a different way to rehearse — one that uses the hardware already on (or in front of) your face."
+            },
+            wedding: {
+                title: "Wedding Toast",
+                text: "To the happy couple. [pause]\n\n**I’ve known** the groom for years, and if there’s one thing I’ve learned, it’s that he’s found his perfect match.\n\n[pause:3s]\n\nMay your life together be as full of laughter and [pause] love as today."
+            },
+            earnings: {
+                title: "Earnings Call",
+                text: "Good morning, everyone. [pause]\n\n**Q3 results** came in strong — revenue up 18% year-over-year, driven by our new product line.\n\n[pause:2s]\n\nGuidance for Q4 remains confident. We’re executing well against our plan."
+            }
+        };
+
+        function initSampleButtons() {
+            document.querySelectorAll('.sample-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const key = btn.dataset.sample;
+                    const sample = SAMPLE_SCRIPTS[key];
+                    if (!sample) return;
+                    document.getElementById('script-title').value = sample.title;
+                    document.getElementById('script-input').value = sample.text;
+                    updateScriptMeta();
+                    // optional: auto-launch hint or just populate
+                    btn.style.transition = 'none';
+                    btn.textContent = 'Loaded ✓';
+                    setTimeout(() => {
+                        const label = {
+                            keynote: 'Keynote Opener',
+                            pitch: 'Investor Pitch',
+                            demo: 'Product Demo',
+                            ted: 'TEDx Opener',
+                            wedding: 'Wedding Toast',
+                            earnings: 'Earnings Call'
+                        }[btn.dataset.sample] || 'Sample';
+                        btn.textContent = label;
+                        btn.style.transition = '';
+                    }, 900);
+                });
+            });
+        }
+
+        function insertAtCursor(textarea, text) {
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            textarea.value = textarea.value.substring(0, start) + text + textarea.value.substring(end);
+            textarea.selectionStart = textarea.selectionEnd = start + text.length;
+            textarea.focus();
+        }
+
+        function initCueToolbar() {
+            const toolbar = document.querySelector('.cue-toolbar');
+            if (!toolbar) return;
+            const ta = document.getElementById('script-input');
+            document.querySelectorAll('.cue-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const insert = btn.dataset.insert;
+                    if (insert === '**') {
+                        insertAtCursor(ta, '**text**');
+                        // select the inner text for easy replacement
+                        const pos = ta.selectionStart - 4;
+                        ta.selectionStart = pos;
+                        ta.selectionEnd = pos + 4;
+                    } else {
+                        insertAtCursor(ta, insert);
+                    }
+                });
+            });
+            // hide error on typing
+            ta.addEventListener('input', () => {
+                const err = document.getElementById('input-error');
+                if (err) err.style.display = 'none';
+            });
+        }
+
+        function showInputError(msg) {
+            const err = document.getElementById('input-error');
+            if (!err) { alert(msg); return; }
+            err.textContent = msg;
+            err.style.display = 'block';
+            setTimeout(() => { if (err) err.style.display = 'none'; }, 3000);
+        }
+
+        let audioContext;
+        function getAudioContext() {
+            if (!audioContext) {
+                try {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                } catch(e) { return null; }
+            }
+            return audioContext;
+        }
+
+        function buttonFeedback() {
+            // Haptics
+            if (navigator.vibrate) {
+                navigator.vibrate(8);
+            }
+            // Sound - short liquid click
+            const ctx = getAudioContext();
+            if (ctx) {
+                try {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    const filter = ctx.createBiquadFilter();
+                    osc.type = 'sine';
+                    osc.frequency.value = 1400;
+                    filter.type = 'lowpass';
+                    filter.frequency.value = 2200;
+                    gain.gain.value = 0.08;
+                    osc.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start();
+                    setTimeout(() => {
+                        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+                        setTimeout(() => osc.stop(), 150);
+                    }, 25);
+                } catch(e) {}
+            }
+        }
+
+        function wireGlassButtons() {
+            const glassButtons = document.querySelectorAll('.btn-primary, .btn-secondary, .btn-install, .cue-btn, .sample-btn, #glasses-button-sim');
+            glassButtons.forEach(btn => {
+                btn.addEventListener('click', () => buttonFeedback());
+            });
+        }
+
+        function updateScriptMeta() {
+            const textarea = document.getElementById('script-input');
+            const text = textarea.value.trim();
+            const words = text ? text.split(/\s+/).filter(Boolean).length : 0;
+            const estMinutes = words > 0 ? Math.max(1, Math.round(words / 140)) : 0; // ~140 wpm speaking rate
+
+            const countEl = document.getElementById('word-count');
+            const minEl = document.getElementById('est-minutes');
+            if (countEl) countEl.textContent = `${words} words`;
+            if (minEl) minEl.textContent = estMinutes;
+        }
+
+        function initButtons() {
+            const launchBtn = document.getElementById('launch-btn');
+            const saveBtn = document.getElementById('save-btn');
+            const textarea = document.getElementById('script-input');
+            const titleEl = document.getElementById('script-title');
+
+            launchBtn.addEventListener('click', () => {
+                const text = textarea.value.trim();
+                if (!text) { showInputError('Please paste or choose a sample script first.'); return; }
+                launchScript(text);
+            });
+
+            saveBtn.addEventListener('click', () => {
+                const text = textarea.value.trim();
+                if (!text) { showInputError('Add some text to your script before saving.'); return; }
+                saveScript(titleEl.value.trim() || 'Untitled Script', text);
+                saveBtn.textContent = 'Saved ✓';
+                setTimeout(() => { saveBtn.textContent = 'Save'; }, 1500);
+            });
+        }
+
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js').catch(() => {});
+            }
+        }
+
+        // PWA install prompt (prominent for visibility/education goal)
+        let deferredInstallPrompt = null;
+
+        function initInstallPrompt() {
+            const btn = document.getElementById('install-btn');
+            if (!btn) return;
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredInstallPrompt = e;
+                // Enhance label when the smart prompt is available
+                if (!btn.textContent.includes('✓')) {
+                    btn.textContent = 'Install (one-tap PWA)';
+                }
+            });
+
+            btn.addEventListener('click', async () => {
+                if (deferredInstallPrompt) {
+                    deferredInstallPrompt.prompt();
+                    const { outcome } = await deferredInstallPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        btn.textContent = 'Thanks! Check your home screen ✓';
+                        btn.style.opacity = '0.7';
+                        btn.disabled = true;
+                    }
+                    deferredInstallPrompt = null;
+                    return;
+                }
+                // Cross-platform guidance (iOS Safari, desktop, etc.)
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                if (isIOS) {
+                    alert('On iPhone/iPad: tap the Share button → "Add to Home Screen". Works great offline.');
+                } else {
+                    alert('Use your browser menu → "Install app" or "Add to Home Screen" for offline rehearsal.');
+                }
+            });
+        }
+
+        async function handleBetaSubmit(e) {
+            e.preventDefault();
+            const form = e.target;
+            const success = document.getElementById('beta-success');
+
+            // Formspree endpoint configured: https://formspree.io/f/mzdlddkp (notifications to hello@spectorlabs.io). From name in dashboard should be "Spector" / "Spector Labs". AJAX + mailto fallback.
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    form.style.display = 'none';
+                    success.style.display = 'block';
+                    success.textContent = "Thanks! We'll reach out from hello@spectorlabs.io soon.";
+
+                    const email = formData.get('email');
+                    try {
+                        localStorage.setItem('spector_beta_email', email);
+                    } catch {}
+
+                    form.reset();
+                } else {
+                    // Fallback
+                    submitFallback(formData);
+                }
+            } catch (error) {
+                submitFallback(formData);
+            }
+        }
+
+        function submitFallback(formData) {
+            const email = formData.get('email');
+            const glasses = formData.get('glasses') || '';
+            const message = formData.get('message') || '';
+            const subject = encodeURIComponent('SPECTOR Beta Request');
+            const body = encodeURIComponent(`Email: ${email}
+Glasses model: ${glasses}
+
+Notes: ${message}`);
+            window.location.href = `mailto:hello@spectorlabs.io?subject=${subject}&body=${body}`;
+        }
+
+        function init() {
+            initFileUpload();
+            initButtons();
+            initSampleButtons();
+            initCueToolbar();
+            renderLibrary();
+            renderHistory();
+            registerServiceWorker();
+            initInstallPrompt();
+            wireGlassButtons();
+
+            const textarea = document.getElementById('script-input');
+            if (textarea) {
+                textarea.addEventListener('input', updateScriptMeta);
+            }
+
+            const draft = localStorage.getItem('spector_draft');
+            if (draft) {
+                try {
+                    const { title, text } = JSON.parse(draft);
+                    if (text) {
+                        document.getElementById('script-input').value = text;
+                        updateScriptMeta();
+                    }
+                    if (title) document.getElementById('script-title').value = title;
+                    localStorage.removeItem('spector_draft');
+                } catch {}
+            } else {
+                // initial count
+                updateScriptMeta();
+            }
+
+            // Beta form: if already signed up, show success state
+            try {
+                const betaEmail = localStorage.getItem('spector_beta_email');
+                if (betaEmail) {
+                    const form = document.getElementById('beta-form');
+                    const success = document.getElementById('beta-success');
+                    if (form && success) {
+                        form.style.display = 'none';
+                        success.style.display = 'block';
+                        success.textContent = `Already joined as ${betaEmail}. We'll reach out from hello@spectorlabs.io.`;
+                    }
+                }
+            } catch {}
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
