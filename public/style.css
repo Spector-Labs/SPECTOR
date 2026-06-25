@@ -37,12 +37,13 @@ body {
 }
 
 .container {
+    margin: 0 auto;
     max-width: 640px;
     width: 100%;
 }
 
 .logo {
-    font-size: 42px;
+    font-size: 56px;
     font-weight: 700;
     letter-spacing: -0.04em;
     margin-bottom: 8px;
@@ -56,7 +57,7 @@ body {
 }
 
 .tagline {
-    font-size: 21px;
+    font-size: 28px;
     color: var(--accent);
     margin: 0 0 8px;
     font-weight: 600;
@@ -1214,7 +1215,7 @@ body.mirror-mode .bookmarks {
     white-space: nowrap;
 }
 
-.demo-visual video {
+.demo-visual img {
     width: 100%;
     max-width: 560px;
     border-radius: 16px;
@@ -1275,7 +1276,7 @@ body.mirror-mode .bookmarks {
     margin: 20px 0;
     text-align: center;
 }
-.demo-visual video {
+.demo-visual img {
     width: 100%;
     max-width: 560px;
     border-radius: 16px;
@@ -1327,7 +1328,7 @@ body.mirror-mode .bookmarks {
     text-align: center;
 }
 
-.demo-visual video {
+.demo-visual img {
     width: 100%;
     max-width: 560px;
     border-radius: 16px;
