@@ -1102,20 +1102,100 @@ body.mirror-mode .bookmarks {
     margin-top: 8px;
 }
 
-/* === HERO & DEMO VISUALS === */
-.hero-visual, .demo-visual {
-  margin: 32px auto 40px;
-  text-align: center;
-  width: 100%;
-  max-width: 100%;
-  overflow: hidden;
+.comparison-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
 }
-.hero-visual img, .demo-visual img {
-  display: block;
-  margin: 0 auto;
-  max-width: 100%;
-  height: auto;
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.06);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+
+.comparison-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 20px;
+}
+
+.comparison-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #888;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.comparison-label.accent {
+    color: var(--accent);
+}
+
+.comparison-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    color: #999;
+    font-size: 13.5px;
+    line-height: 1.9;
+}
+
+.spector-card {
+    background: rgba(201, 100, 66, 0.04);
+    border-left: 2px solid var(--accent);
+}
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.step {
+    text-align: center;
+    padding: 20px 12px;
+}
+
+.step-number {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.step-title {
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.step-desc {
+    font-size: 13px;
+    color: #999;
+    line-height: 1.5;
+}
+
+.library-item {
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.library-item:hover {
+    transform: translateY(-2px);
+    border-color: rgba(201, 100, 66, 0.2);
+}
+
+.homepage-cta .btn-primary {
+    box-shadow: 0 4px 20px rgba(201, 100, 66, 0.12);
+    transition: all 0.25s ease;
+}
+
+.homepage-cta .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(201, 100, 66, 0.2);
+}
+
+body {
+    background: linear-gradient(180deg, #191817 0%, #1a1918 50%, #191817 100%);
+    overflow-x: hidden;
 }
