@@ -1101,244 +1101,26 @@ body.mirror-mode .bookmarks {
     color: var(--accent);
     margin-top: 8px;
 }
+/* === DESIGN UPGRADES (clean) === */
+.hero-visual { margin: 32px 0 40px; text-align: center; }
+.hero-visual img { width: 100%; max-width: 480px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 20px 60px rgba(0,0,0,0.4); display: block; margin: 0 auto; }
+.hero-visual p { font-size: 13px; color: #888; margin-top: 12px; }
 
+.feature-badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 24px; justify-content: center; }
+.badge-pill { display: inline-block; padding: 6px 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 999px; font-size: 12px; color: #999; font-weight: 500; font-family: system-ui, -apple-system, sans-serif; white-space: nowrap; }
 
-/* === DESIGN UPGRADES === */
-.hero-visual {
-    margin: 32px 0 40px;
-    text-align: center;
-}
-.hero-visual img {
-    width: 100%;
-    max-width: 480px;
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,0.06);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-}
-.hero-visual p {
-    font-size: 13px;
-    color: #888;
-    margin-top: 12px;
-}
+.demo-visual { margin: 20px 0; text-align: center; }
+.demo-visual img { width: 100%; max-width: 560px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.06); display: block; margin: 0 auto; }
+.demo-visual p { font-size: 13px; color: #888; margin-top: 12px; }
 
-.feature-badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 16px 0 24px;
-    justify-content: center;
-}
-.badge-pill {
-    display: inline-block;
-    padding: 6px 14px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 999px;
-    font-size: 12px;
-    color: #999;
-    font-weight: 500;
-    font-family: 'Inter', -apple-system, sans-serif;
-    white-space: nowrap;
-}
-
-.demo-visual {
-    margin: 20px 0;
-    text-align: center;
-}
-.demo-visual video {
-    width: 100%;
-    max-width: 560px;
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,0.06);
-}
-.demo-visual p {
-    font-size: 13px;
-    color: #888;
-    margin-top: 12px;
-}
-
-.beta-section {
-    border-left: 2px solid var(--accent);
-    padding-left: 24px;
-    margin-left: -24px;
-}
-#beta-form input[type="email"] {
-    background: var(--bg-elevated);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 14px 18px;
-    border-radius: 12px;
-    font-size: 15px;
-    width: 100%;
-}
-#beta-form button {
-    background: var(--accent);
-    color: #111;
-    border: none;
-    padding: 14px 28px;
-    border-radius: 999px;
-    font-weight: 600;
-    font-size: 15px;
-    cursor: pointer;
-}
-
-
-/* === FIXES === */
-.hero-visual img {
-    width: 100%;
-    max-width: 480px;
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,0.06);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-    display: block;
-    margin: 0 auto;
-}
-
-.feature-badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 16px 0 24px;
-    justify-content: center;
-}
-
-.badge-pill {
-    display: inline-block;
-    padding: 6px 14px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 999px;
-    font-size: 12px;
-    color: #999;
-    font-weight: 500;
-    font-family: system-ui, -apple-system, sans-serif;
-    white-space: nowrap;
-}
-
-.demo-visual img {
-    width: 100%;
-    max-width: 560px;
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,0.06);
-    display: block;
-    margin: 0 auto;
-}
-
-.demo-visual p {
-    font-size: 13px;
-    color: #888;
-    margin-top: 12px;
-    text-align: center;
-}
-
-
-/* === DESIGN UPGRADES === */
-.hero-visual {
-    margin: 32px 0 40px;
-    text-align: center;
-}
-.hero-visual img {
-    width: 100%;
-    max-width: 480px;
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,0.06);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-    display: block;
-    margin: 0 auto;
-}
-.hero-visual p {
-    font-size: 13px;
-    color: #888;
-    margin-top: 12px;
-}
-
-.feature-badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 16px 0 24px;
-    justify-content: center;
-}
-.badge-pill {
-    display: inline-block;
-    padding: 6px 14px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 999px;
-    font-size: 12px;
-    color: #999;
-    font-weight: 500;
-    font-family: system-ui, -apple-system, sans-serif;
-    white-space: nowrap;
-}
-
-.demo-visual {
-    margin: 20px 0;
-    text-align: center;
-}
-.demo-visual img {
-    width: 100%;
-    max-width: 560px;
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,0.06);
-    display: block;
-    margin: 0 auto;
-}
-.demo-visual p {
-    font-size: 13px;
-    color: #888;
-    margin-top: 12px;
-}
-
-
-/* === FIXES === */
-.hero-visual img {
-    width: 100%;
-    max-width: 480px;
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,0.06);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-    display: block;
-    margin: 0 auto;
-}
-
-.feature-badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 16px 0 24px;
-    justify-content: center;
-}
-
-.badge-pill {
-    display: inline-block;
-    padding: 6px 14px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 999px;
-    font-size: 12px;
-    color: #999;
-    font-weight: 500;
-    font-family: system-ui, -apple-system, sans-serif;
-    white-space: nowrap;
-}
-
-.demo-visual {
-    margin: 20px 0;
-    text-align: center;
-}
-
-.demo-visual img {
-    width: 100%;
-    max-width: 560px;
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,0.06);
-    display: block;
-    margin: 0 auto;
-}
-
-.demo-visual p {
-    font-size: 13px;
-    color: #888;
-    margin-top: 12px;
-}
+/* FIXED: removed margin-left: -24px that was causing the right-shift */
+.beta-section { margin-top: 28px; padding: 24px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); border-left: 2px solid var(--accent); }
+.beta-section h3 { font-size: 15px; font-weight: 600; color: var(--accent); margin: 0 0 10px; }
+.beta-section p { font-size: 13.5px; color: #999; line-height: 1.5; margin: 0 0 12px; }
+.beta-benefits { font-size: 13px; color: #aaa; margin: 0 0 16px; padding-left: 18px; }
+.beta-benefits li { margin-bottom: 4px; }
+#beta-form { display: flex; gap: 8px; flex-wrap: wrap; }
+#beta-form input[type="email"] { flex: 1; min-width: 220px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; color: var(--text); font-size: 14px; font-family: inherit; }
+#beta-form button { padding: 10px 20px; background: var(--accent); color: #111; border: none; border-radius: var(--radius-pill); font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s var(--transition-smooth); }
+#beta-form button:hover { background: var(--accent-dim); }
+#beta-success { display: none; font-size: 13px; color: var(--accent); margin-top: 8px; }
