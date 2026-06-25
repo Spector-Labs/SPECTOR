@@ -13,17 +13,72 @@
 
     <div class="container">
         <header>
-            <div class="logo">Spector<span class="tm">™</span></div>
+            <div class="logo">Spector</div>
             <p class="tagline">Eyes Forward.</p>
             <p class="subtitle">Auto-paced, comfort-tuned teleprompter for smart glasses and creators who rehearse seriously.</p>
             <div class="hero-badge">Better than basic in-app scroll · PWA + ready for glasses SDKs</div>
             <p class="market-note">Rehearse on your phone today. Perform with confidence on glasses tomorrow. Not affiliated with Meta or Ray-Ban — works with any smart-glasses setup.</p>
 
+            <div class="benefits-row" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:20px 0 24px;">
+                <div class="benefit" style="font-size:15px;font-weight:500;color:var(--text);padding:10px 20px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-pill);">Know your lines cold.</div>
+                <div class="benefit" style="font-size:15px;font-weight:500;color:var(--text);padding:10px 20px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-pill);">Pace yourself perfectly.</div>
+                <div class="benefit" style="font-size:15px;font-weight:500;color:var(--text);padding:10px 20px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-pill);">Walk on stage confident.</div>
+            </div>
+            <div class="hero-cta" style="text-align:center;margin:28px 0 36px;">
+                <a href="app.html" class="btn-primary" style="display:inline-block;min-width:220px;font-size:16px;">Try It Free</a>
+                <p style="margin-top:12px;font-size:13px;color:var(--text-muted);">No account required · Works offline · Open source</p>
+            </div>
+
             <button id="install-btn" class="btn-install" style="margin: 8px auto 20px;">Install for offline use</button>
             <p style="font-size:11px;color:#666;text-align:center;margin-top:-8px;">Live at www.spectorlabs.io</p>
         </header>
 
-        <div class="input-section">
+        <div class="library-section">
+    <h3>Why SPECTOR?</h3>
+    <div class="comparison-grid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:12px;margin-top:14px;">
+        <div class="library-item" style="flex-direction:column;align-items:flex-start;gap:12px;padding:22px;">
+            <div style="font-size:11px;font-weight:600;color:#888;letter-spacing:0.08em;text-transform:uppercase;">Traditional Teleprompters</div>
+            <ul style="list-style:none;padding:0;margin:0;color:#999;font-size:13.5px;line-height:1.9;">
+                <li style="position:relative;padding-left:16px;"><span style="position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:#555;"></span>Fixed scrolling speed</li>
+                <li style="position:relative;padding-left:16px;"><span style="position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:#555;"></span>Easy to lose your place</li>
+                <li style="position:relative;padding-left:16px;"><span style="position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:#555;"></span>Designed for phones only</li>
+                <li style="position:relative;padding-left:16px;"><span style="position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:#555;"></span>No rehearsal analytics</li>
+            </ul>
+        </div>
+        <div class="library-item" style="flex-direction:column;align-items:flex-start;gap:12px;padding:22px;background:rgba(201,100,66,0.04);border-left:2px solid var(--accent);">
+            <div style="font-size:11px;font-weight:600;color:var(--accent);letter-spacing:0.08em;text-transform:uppercase;">SPECTOR</div>
+            <ul style="list-style:none;padding:0;margin:0;color:var(--text-muted);font-size:13.5px;line-height:1.9;">
+                <li style="position:relative;padding-left:16px;"><span style="position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:var(--accent);"></span>Adaptive auto-pacing</li>
+                <li style="position:relative;padding-left:16px;"><span style="position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:var(--accent);"></span>Comfort mode + cues</li>
+                <li style="position:relative;padding-left:16px;"><span style="position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:var(--accent);"></span>Built for smart glasses</li>
+                <li style="position:relative;padding-left:16px;"><span style="position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:var(--accent);"></span>Post-run analytics</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="library-section">
+    <h3>How It Works</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));gap:16px;margin-top:16px;">
+        <div style="text-align:center;padding:28px 16px;background:var(--bg-elevated);border:1px solid rgba(255,255,255,0.05);border-radius:12px;">
+            <div style="font-size:10px;font-weight:700;color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:12px;">01</div>
+            <div style="font-size:14px;color:var(--text);font-weight:500;margin-bottom:8px;">Paste Your Script</div>
+            <div style="font-size:13px;color:#999;line-height:1.5;">Drop a .txt file or type directly. Supports bold emphasis and pause cues.</div>
+        </div>
+        <div style="text-align:center;padding:28px 16px;background:var(--bg-elevated);border:1px solid rgba(255,255,255,0.05);border-radius:12px;">
+            <div style="font-size:10px;font-weight:700;color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:12px;">02</div>
+            <div style="font-size:14px;color:var(--text);font-weight:500;margin-bottom:8px;">Rehearse</div>
+            <div style="font-size:13px;color:#999;line-height:1.5;">Adaptive pacing follows your rhythm. Comfort mode reduces eye strain.</div>
+        </div>
+        <div style="text-align:center;padding:28px 16px;background:var(--bg-elevated);border:1px solid rgba(255,255,255,0.05);border-radius:12px;">
+            <div style="font-size:10px;font-weight:700;color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:12px;">03</div>
+            <div style="font-size:14px;color:var(--text);font-weight:500;margin-bottom:8px;">Review</div>
+            <div style="font-size:13px;color:#999;line-height:1.5;">See pace, hesitation points, and session history after every run.</div>
+        </div>
+    </div>
+</div>
+
+<div class="input-section">
             <label for="script-title">Script Title</label>
             <input type="text" id="script-title" class="script-title-input" placeholder="e.g. Keynote opener, investor pitch…" maxlength="80">
 
@@ -91,7 +146,7 @@
                 <li>Watch the live word count and estimated speaking time update</li>
                 <li>Launch the player to experience adaptive pacing, Comfort mode, and the hardware controls legend</li>
             </ul>
-            <p class="demo-note" style="margin-top:6px;font-size:12px;">Pro tip: In player, press <strong>B</strong> (or the sim button) to advance like the right-temple hardware button. For Comfort spatial: on desktop use DevTools → Sensors → Orientation; on phone tilt your device.</p>
+            <p style="margin-top: 12px; color: var(--text-muted); font-size: 14px; line-height: 1.5;">The best demo is hands-on. Use the live tools above, or open <a href="app.html" style="color:var(--accent);">app.html</a> to start from a clean player.<br><br>Comfort mode uses spatial anchoring to reduce eye strain. On phone, tilt your device to feel the effect. On desktop, the player simulates head movement automatically.</p>
             <p style="font-size:11px;color:#777;margin-top:4px;">Everything above (player, samples, Comfort, etc.) is live and ready to use today on phone. The form below is specifically for real-glasses hardware testing.</p>
 
             <!-- 
