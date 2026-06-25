@@ -1,36 +1,56 @@
-<!DOCTYPE html> 
-<html lang="en"> 
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Spector: premium auto-paced teleprompter PWA with Comfort mode spatial effects, cue markers, script library, and rehearsal analytics. Rehearse on phone, perform on smart glasses.">
-    <meta name="theme-color" content="#0A0A0A">
+    <meta name="theme-color" content="#000000">
     <title>Spector™ • Eyes Forward</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
-</head> 
+</head>
 <body class="landing">
 
+    <!-- NAV -->
+    <nav class="site-nav">
+        <div class="nav-brand">
+            <div class="nav-logo">
+                <svg width="20" height="20" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 5 L89 27.5 V72.5 L50 95 L11 72.5 V27.5 Z" stroke="white" stroke-width="10"/>
+                    <path d="M50 5 L50 35 M89 27.5 L63 42 M89 72.5 L63 58 M50 95 L50 65 M11 72.5 L37 58 M11 27.5 L37 42" stroke="white" stroke-width="6"/>
+                </svg>
+            </div>
+            <span class="nav-wordmark">SPECTOR</span>
+        </div>
+        <div class="nav-links">
+            <a href="#how-it-works">How it works</a>
+            <a href="#try">Editor</a>
+            <a href="https://github.com/hydrogenbondss/SPECTOR" target="_blank">GitHub</a>
+            <a href="#beta" class="nav-cta">Join beta</a>
+        </div>
+    </nav>
+
     <div class="container">
-        <div class="brand-lockup">
-            <img src="images/logo-full.png" alt="SPECTOR" class="hero-logo">
-        </div>
 
+        <!-- HERO -->
+        <section class="hero-section">
+            <p class="hero-eyebrow">Teleprompter for smart glasses</p>
+            <h1 class="hero-headline">Eyes <span class="text-purple">Forward.</span></h1>
+            <p class="hero-subhead">Rehearse on your phone. Perform on smart glasses — without glancing down or sounding scripted.</p>
+            <div class="hero-cta">
+                <a href="#try" class="btn-primary">Try it free</a>
+                <a href="#beta" class="btn-secondary">Join glasses beta →</a>
+            </div>
+            <p class="hero-note">No account required · Works on Ray-Ban Meta, XREAL, Viture · Install as PWA</p>
+        </section>
+
+        <!-- HERO IMAGE -->
         <div class="hero-visual">
-            <img src="images/hero-glasses.png" alt="SPECTOR teleprompter in smart glasses">
+            <img src="images/hero-glasses.png" alt="Spector teleprompter running on smart glasses HUD">
         </div>
 
-        <h1 class="hero-headline">Eyes <span class="text-purple">Forward.</span></h1>
-        <p class="hero-subhead">Rehearse naturally on smart glasses. Open-source teleprompter with adaptive pacing, comfort reading mode, and rehearsal analytics.</p>
-
-        <div class="hero-cta">
-            <a href="#try" class="btn-primary">Launch Demo</a>
-            <a href="https://github.com/Spector-Labs/SPECTOR" target="_blank" class="btn-secondary">GitHub</a>
-            <a href="#beta" class="btn-ghost">Join Hardware Beta</a>
-        </div>
-
-        <p class="hero-note">Install as PWA · No account required · Works on Ray-Ban Meta, XREAL, Viture</p>
-
+        <!-- TRUST BAR -->
         <div class="trust-bar">
             <span>Works today on phone</span>
             <span class="trust-dot"></span>
@@ -39,186 +59,188 @@
             <span>Open source</span>
         </div>
 
-        <h3>Why SPECTOR?</h3>
-        <div class="comparison-grid">
-            <div class="comparison-card">
-                <h4>Traditional Teleprompters</h4>
-                <ul>
-                    <li>Fixed scrolling speed</li>
-                    <li>Easy to lose your place</li>
-                    <li>Designed for phones only</li>
-                    <li>No rehearsal analytics</li>
-                </ul>
+        <!-- FEATURE CARDS -->
+        <div class="feature-grid">
+            <div class="feature-card">
+                <p class="feature-label">Pacing</p>
+                <h3>Adaptive speed</h3>
+                <p>Speeds up and slows with your natural rhythm. No manual scroll.</p>
             </div>
-            <div class="comparison-card spector">
-                <h4>SPECTOR</h4>
-                <ul>
-                    <li>Adaptive auto-pacing</li>
-                    <li>Comfort mode + cues</li>
-                    <li>Built for smart glasses</li>
-                    <li>Post-run analytics</li>
-                </ul>
+            <div class="feature-card">
+                <p class="feature-label">Comfort</p>
+                <h3>Spatial anchoring</h3>
+                <p>Kalman-filtered head-tilt keeps text stable. Reduces eye strain over long rehearsals.</p>
+            </div>
+            <div class="feature-card">
+                <p class="feature-label">Glasses</p>
+                <h3>HUD-ready</h3>
+                <p>Right-temple button controls. Works with Ray-Ban Meta, XREAL, Viture, and Brilliant Labs.</p>
             </div>
         </div>
 
-        <h3>How It Works</h3>
-        <div class="steps">
-            <div class="step">
-                <div class="step-number">01</div>
-                <h4>Paste Your Script</h4>
-                <p>Drop a .txt file or type directly. Supports bold emphasis and pause cues.</p>
+        <!-- HOW IT WORKS -->
+        <section id="how-it-works" class="steps-section">
+            <p class="section-eyebrow">How it works</p>
+            <h2>From script to stage in three steps.</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">01</div>
+                    <h4>Paste your script</h4>
+                    <p>Drop a .txt file or type directly. Add emphasis and pause markers with one tap.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">02</div>
+                    <h4>Rehearse on your phone</h4>
+                    <p>Adaptive pacing, Comfort spatial mode, and end-of-run analytics. Install as PWA for offline use.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">03</div>
+                    <h4>Perform on glasses</h4>
+                    <p>Right-temple button controls advance, pause, and rewind. HUD-ready for Ray-Ban Meta, XREAL, Viture, and Brilliant Labs.</p>
+                </div>
             </div>
-            <div class="step">
-                <div class="step-number">02</div>
-                <h4>Rehearse</h4>
-                <p>Adaptive pacing follows your rhythm. Comfort mode reduces eye strain.</p>
+            <div class="screenshots">
+                <figure>
+                    <img src="images/demo-phone-ui.jpg" alt="Spector teleprompter running on iPhone with Comfort mode active">
+                    <figcaption>Phone — Comfort mode, cues, adaptive speed</figcaption>
+                </figure>
+                <figure>
+                    <img src="images/demo-usage.jpg" alt="Presenter on stage using Spector on smart glasses">
+                    <figcaption>Rehearse on phone, perform on glasses</figcaption>
+                </figure>
             </div>
-            <div class="step">
-                <div class="step-number">03</div>
-                <h4>Review</h4>
-                <p>See pace, hesitation points, and session history after every run.</p>
+            <div class="glasses-badges">
+                <span>Ray-Ban Meta</span>
+                <span>XREAL</span>
+                <span>Viture</span>
+                <span>Brilliant Labs</span>
             </div>
-        </div>
+        </section>
 
-        <p class="pro-tip">The best demo is hands-on. Use the live tools below, or open <a href="app.html">app.html</a> to start from a clean player.<br><br>Comfort mode uses spatial anchoring to reduce eye strain. On phone, tilt your device to feel the effect. On desktop, the player simulates head movement automatically.</p>
-
-        <p class="beta-note">Everything above (player, samples, Comfort, etc.) is live and ready to use today on phone. The form below is specifically for real-glasses hardware testing.</p>
-
-    <div class="input-section" id="try">
-            <label for="script-title">Script Title</label>
-            <input type="text" id="script-title" class="script-title-input" placeholder="e.g. Keynote opener, investor pitch…" maxlength="80">
-
-            <label for="script-input">Your Script</label>
-            <div class="cue-toolbar" style="margin-bottom:6px;display:flex;gap:6px;flex-wrap:wrap;">
-                <button type="button" class="cue-btn" data-insert="**">**Bold**</button>
-                <button type="button" class="cue-btn" data-insert="[pause]">[Pause]</button>
-                <button type="button" class="cue-btn" data-insert="[pause:3s]">[Pause 3s]</button>
+        <!-- COMPARISON -->
+        <section class="comparison-section">
+            <p class="section-eyebrow">Why Spector</p>
+            <h2>Not just another teleprompter.</h2>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h4>Basic teleprompter</h4>
+                    <ul>
+                        <li>Fixed scrolling speed</li>
+                        <li>Easy to lose your place</li>
+                        <li>Designed for phones only</li>
+                        <li>No rehearsal analytics</li>
+                    </ul>
+                </div>
+                <div class="comparison-card spector">
+                    <h4>Spector</h4>
+                    <ul>
+                        <li>Adaptive auto-pacing</li>
+                        <li>Comfort mode + cue markers</li>
+                        <li>Built for smart glasses HUD</li>
+                        <li>Post-run pacing analytics</li>
+                    </ul>
+                </div>
             </div>
-            <textarea id="script-input" placeholder="Paste your speech, presentation, or notes here…"></textarea>
+        </section>
 
-            <div id="script-meta" style="font-size:12px;color:#888;margin-bottom:8px;display:flex;gap:8px;align-items:center;">
-                <span id="word-count">0 words</span>
-                <span>·</span>
-                <span>~<span id="est-minutes">0</span> min at speaking pace</span>
+        <!-- EDITOR -->
+        <section class="editor-section" id="try">
+            <p class="section-eyebrow">Live editor</p>
+            <h2>Try it now.</h2>
+
+            <div class="editor-card">
+                <label for="script-title">Script title</label>
+                <input type="text" id="script-title" class="script-title-input" placeholder="e.g. Keynote opener, investor pitch…" maxlength="80">
+
+                <label for="script-input">Your script</label>
+                <div class="cue-toolbar" style="margin-bottom:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                    <button type="button" class="cue-btn" data-insert="**">**Bold**</button>
+                    <button type="button" class="cue-btn" data-insert="[pause]">[Pause]</button>
+                    <button type="button" class="cue-btn" data-insert="[pause:3s]">[Pause 3s]</button>
+                </div>
+                <textarea id="script-input" placeholder="Paste your speech, presentation, or notes here…"></textarea>
+
+                <div id="script-meta" style="font-size:12px;color:#888;margin-bottom:8px;display:flex;gap:8px;align-items:center;">
+                    <span id="word-count">0 words</span>
+                    <span>·</span>
+                    <span>~<span id="est-minutes">0</span> min at speaking pace</span>
+                </div>
+
+                <div class="samples-row" style="margin-bottom:12px;">
+                    <span class="samples-label">Start with a sample:</span>
+                    <button type="button" class="sample-btn" data-sample="keynote">Keynote Opener</button>
+                    <button type="button" class="sample-btn" data-sample="pitch">Investor Pitch</button>
+                    <button type="button" class="sample-btn" data-sample="demo">Product Demo</button>
+                    <button type="button" class="sample-btn" data-sample="ted">TEDx Opener</button>
+                    <button type="button" class="sample-btn" data-sample="wedding">Wedding Toast</button>
+                    <button type="button" class="sample-btn" data-sample="earnings">Earnings Call</button>
+                </div>
+
+                <div class="cue-legend" style="font-size:11px;color:#777;margin-bottom:12px;line-height:1.4;">
+                    Supports <code>**emphasis**</code> (stronger hold) and <code>[pause]</code> / <code>[pause:3s]</code> markers.
+                </div>
+
+                <div id="input-error" style="color:#e88; font-size:12px; margin-bottom:8px; display:none;"></div>
+
+                <div class="file-upload" id="file-area">
+                    Drop .txt file here or click to browse
+                    <input type="file" id="file-input" accept=".txt" style="display:none;">
+                </div>
+
+                <div class="btn-row">
+                    <button id="launch-btn" class="btn-primary">Launch Teleprompter</button>
+                    <button id="save-btn" class="btn-secondary">Save</button>
+                </div>
             </div>
+        </section>
 
-            <div class="samples-row" style="margin-bottom:12px;">
-                <span class="samples-label">Or start with a sample script:</span>
-                <button type="button" class="sample-btn" data-sample="keynote">Keynote Opener</button>
-                <button type="button" class="sample-btn" data-sample="pitch">Investor Pitch</button>
-                <button type="button" class="sample-btn" data-sample="demo">Product Demo</button>
-                <button type="button" class="sample-btn" data-sample="ted">TEDx Opener</button>
-                <button type="button" class="sample-btn" data-sample="wedding">Wedding Toast</button>
-                <button type="button" class="sample-btn" data-sample="earnings">Earnings Call</button>
-            </div>
-
-            <div class="cue-legend" style="font-size:11px;color:#777;margin-bottom:12px;line-height:1.4;">
-                Supports <code>**emphasis**</code> (stronger hold) and <code>[pause]</code> / <code>[pause:3s]</code> markers.
-            </div>
-
-            <div id="input-error" style="color:#e88; font-size:12px; margin-bottom:8px; display:none;"></div>
-
-            <div class="file-upload" id="file-area">
-                Drop .txt file here or click to browse
-                <input type="file" id="file-input" accept=".txt" style="display:none;">
-            </div>
-
-            <div class="btn-row">
-                <button id="launch-btn" class="btn-primary">Launch Teleprompter</button>
-                <button id="save-btn" class="btn-secondary">Save</button>
-            </div>
-            <div style="font-size:11px;color:#777;margin-bottom:8px;">Optimized for phone rehearsal and future glasses use</div>
-        </div>
-
+        <!-- LIBRARY -->
         <section class="library-section" id="library-section">
-            <h3>Saved Scripts</h3>
+            <h3>Saved scripts</h3>
             <ul class="library-list" id="library-list">
                 <li class="library-empty" id="library-empty">No saved scripts yet — save one to build your library.</li>
             </ul>
         </section>
 
+        <!-- HISTORY -->
         <section class="history-section" id="history-section" style="margin-top:16px;">
             <h3 style="font-size:14px;font-weight:600;color:#999;margin:0 0 8px;letter-spacing:0.04em;text-transform:uppercase;">Recent rehearsals</h3>
             <div id="history-list" style="font-size:12px;color:#888;"></div>
-            <div style="font-size:10px;color:#666;margin-top:4px;">Local demo. Cloud sync and trends planned.</div>
+            <div style="font-size:10px;color:#666;margin-top:4px;">Local only. Cloud sync planned.</div>
         </section>
 
-        <section class="demo-section">
-            <h3>See it in action</h3>
-            <p class="demo-note">The best demo is hands-on. Use the live tools above:</p>
-            <ul style="font-size:13px; color:#999; line-height:1.6; margin:8px 0 12px; padding-left:20px;">
-                <li>Click any sample script to load a real example with cues</li>
-                <li>Use the **Bold**, [Pause], [Pause 3s] buttons to insert syntax without typing</li>
-                <li>Watch the live word count and estimated speaking time update</li>
-                <li>Launch the player to experience adaptive pacing, Comfort mode, and the hardware controls legend</li>
-            </ul>
-            <p style="margin-top: 12px; color: var(--text-muted); font-size: 14px; line-height: 1.5;">The best demo is hands-on. Use the live tools above, or open <a href="app.html" style="color:var(--accent);">app.html</a> to start from a clean player.<br><br>Comfort mode uses spatial anchoring to reduce eye strain. On phone, tilt your device to feel the effect. On desktop, the player simulates head movement automatically.</p>
-            <p style="font-size:11px;color:#777;margin-top:4px;">Everything above (player, samples, Comfort, etc.) is live and ready to use today on phone. The form below is specifically for real-glasses hardware testing.</p>
-
-            <!-- 
-              Real demo screenshots (from live site + product shots).
-              Images live in public/images/. Update captions or swap files as needed.
-            -->
-            <div class="screenshots" style="margin-top:16px;">
-              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px; max-width:620px; margin:0 auto;">
-                <figure style="margin:0; text-align:center;">
-                  <img src="images/demo-phone-ui.jpg" alt="Spector teleprompter running on iPhone: large script text, Comfort mode active, pause and speed controls visible" style="width:100%; height:auto; border-radius:8px; border:1px solid rgba(255,255,255,0.08); box-shadow:0 4px 12px rgba(0,0,0,0.3);">
-                  <figcaption style="font-size:10px; color:#666; margin-top:6px;">Player on phone — Comfort mode, cues, adaptive speed</figcaption>
-                </figure>
-                <figure style="margin:0; text-align:center;">
-                  <img src="images/demo-usage.jpg" alt="Presenter wearing smart glasses on stage, holding phone running Spector teleprompter" style="width:100%; height:auto; border-radius:8px; border:1px solid rgba(255,255,255,0.08); box-shadow:0 4px 12px rgba(0,0,0,0.3);">
-                  <figcaption style="font-size:10px; color:#666; margin-top:6px;">Rehearse on phone, perform on glasses (PWA + future HUD/button support)</figcaption>
-                </figure>
-              </div>
-            </div>
-        </section>
-
-        <section class="beta-section" id="beta-section">
-            <h3>Hardware beta (open now)</h3>
-            <p>The player, samples, cues, Comfort mode, and PWA install are <strong>fully live and usable today</strong> for phone rehearsal. The beta is specifically for people testing on real smart glasses (Ray-Ban Meta Display, Gen 1/2, XREAL, Viture, Brilliant Labs, etc.). We're validating the right-temple button, touch gestures, Comfort spatial effects on actual HUD, and the end-to-end flow.</p>
+        <!-- BETA -->
+        <section class="beta-section" id="beta">
+            <p class="section-eyebrow">Hardware beta — open now</p>
+            <h2>Testing on real glasses?</h2>
+            <p>The phone app is fully live today. We're recruiting people with Ray-Ban Meta, XREAL, Viture, or Brilliant Labs hardware to validate button controls, Comfort mode on actual HUD, and the end-to-end flow.</p>
             <ul class="beta-benefits">
-                <li>Direct input on right-temple button + future Neural Band mappings</li>
+                <li>Direct input on right-temple button and future Neural Band mappings</li>
                 <li>Early feedback on real-device HUD readability and Comfort mode</li>
                 <li>Help shape glasses-specific features before wider release</li>
             </ul>
-            <!-- 
-              BETA FORM (Formspree - configured):
-              Endpoint: https://formspree.io/f/mzdlddkp
-              Notifications go to hello@spectorlabs.io.
-              Form name in dashboard: Spector Beta Requests (or similar).
-              From name in email template recommended: "Spector" or "Spector Labs".
-              Collects: email (required) + glasses model (key for hardware testing) + optional notes.
-              AJAX submit + mailto fallback in JS.
-            -->
             <form id="beta-form" action="https://formspree.io/f/mzdlddkp" method="POST">
-                <input type="email" name="email" placeholder="your@email.com" required style="margin-bottom:6px;">
-                <input type="text" name="glasses" placeholder="Glasses model (e.g. Ray-Ban Meta Display, XREAL One)" style="margin-bottom:8px;">
-                <textarea name="message" placeholder="Any notes or hardware details (optional)" rows="2" style="margin-bottom:8px;"></textarea>
+                <input type="email" name="email" placeholder="your@email.com" required>
+                <input type="text" name="glasses" placeholder="Glasses model (e.g. Ray-Ban Meta Display, XREAL One)">
+                <textarea name="message" placeholder="Any notes or hardware details (optional)" rows="2"></textarea>
                 <button type="submit">Join hardware beta</button>
             </form>
             <div id="beta-success" style="display:none;">Thanks! We'll reach out from hello@spectorlabs.io soon.</div>
-            <p style="font-size:10px; color:#666; margin-top:4px;">
+            <p class="beta-footer-note">
                 Or email <a href="mailto:hello@spectorlabs.io">hello@spectorlabs.io</a> directly.<br>
-                Source: <a href="https://github.com/Spector-Labs/SPECTOR" target="_blank">github.com/Spector-Labs/SPECTOR</a> (open source).
+                Source: <a href="https://github.com/hydrogenbondss/SPECTOR" target="_blank">github.com/hydrogenbondss/SPECTOR</a> (open source).
             </p>
         </section>
 
-        <!--
-            CUSTOMER JOURNEY: paste/upload → save to library → configure in player →
-            rehearse with spatial comfort → review stats → iterate.
-            POSITIONING vs Meta: their tool is paste-only, manual Neural Band advance,
-            basic vertical/cards. Spector offers intelligent chunking, adaptive pacing,
-            comfort spatial effects, script library, and PWA install for daily rehearsal.
-        -->
-        <section class="glasses-future">
-            <h3>Built for smart glasses — today and tomorrow</h3>
-            <p>Rehearse on your phone with the tools pros actually need: script library, adaptive auto-pacing, inline cues, and real post-run analytics. Then step onto glasses with the right-temple button (and future Neural Band gestures) handling advance, pause, and rewind.</p>
-            <p>Works on Ray-Ban Meta (Display HUD and Gen 1/2), plus other brands like XREAL, Viture, and Brilliant Labs via PWA. No affiliation with Meta or Ray-Ban. Modular SpectorCore is ready for native SDKs when the app stores open.</p>
-        </section>
-
-        <footer style="margin-top:32px;text-align:center;font-size:11px;color:#666;">
-            Open source under <a href="https://github.com/Spector-Labs/SPECTOR" target="_blank">Spector-Labs</a> • <a href="https://www.spectorlabs.io" target="_blank">www.spectorlabs.io</a>
+        <!-- FOOTER -->
+        <footer class="site-footer">
+            <span>© 2026 Spector Labs · MIT License</span>
+            <div class="footer-links">
+                <a href="https://github.com/hydrogenbondss/SPECTOR" target="_blank">GitHub</a>
+                <a href="mailto:hello@spectorlabs.io">hello@spectorlabs.io</a>
+            </div>
         </footer>
+
     </div>
 
     <script>
@@ -368,11 +390,11 @@
             },
             wedding: {
                 title: "Wedding Toast",
-                text: "To the happy couple. [pause]\n\n**I’ve known** the groom for years, and if there’s one thing I’ve learned, it’s that he’s found his perfect match.\n\n[pause:3s]\n\nMay your life together be as full of laughter and [pause] love as today."
+                text: "To the happy couple. [pause]\n\n**I've known** the groom for years, and if there's one thing I've learned, it's that he's found his perfect match.\n\n[pause:3s]\n\nMay your life together be as full of laughter and [pause] love as today."
             },
             earnings: {
                 title: "Earnings Call",
-                text: "Good morning, everyone. [pause]\n\n**Q3 results** came in strong — revenue up 18% year-over-year, driven by our new product line.\n\n[pause:2s]\n\nGuidance for Q4 remains confident. We’re executing well against our plan."
+                text: "Good morning, everyone. [pause]\n\n**Q3 results** came in strong — revenue up 18% year-over-year, driven by our new product line.\n\n[pause:2s]\n\nGuidance for Q4 remains confident. We're executing well against our plan."
             }
         };
 
@@ -385,20 +407,10 @@
                     document.getElementById('script-title').value = sample.title;
                     document.getElementById('script-input').value = sample.text;
                     updateScriptMeta();
-                    // optional: auto-launch hint or just populate
-                    btn.style.transition = 'none';
                     btn.textContent = 'Loaded ✓';
                     setTimeout(() => {
-                        const label = {
-                            keynote: 'Keynote Opener',
-                            pitch: 'Investor Pitch',
-                            demo: 'Product Demo',
-                            ted: 'TEDx Opener',
-                            wedding: 'Wedding Toast',
-                            earnings: 'Earnings Call'
-                        }[btn.dataset.sample] || 'Sample';
-                        btn.textContent = label;
-                        btn.style.transition = '';
+                        const labels = { keynote:'Keynote Opener', pitch:'Investor Pitch', demo:'Product Demo', ted:'TEDx Opener', wedding:'Wedding Toast', earnings:'Earnings Call' };
+                        btn.textContent = labels[btn.dataset.sample] || 'Sample';
                     }, 900);
                 });
             });
@@ -413,15 +425,12 @@
         }
 
         function initCueToolbar() {
-            const toolbar = document.querySelector('.cue-toolbar');
-            if (!toolbar) return;
             const ta = document.getElementById('script-input');
             document.querySelectorAll('.cue-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const insert = btn.dataset.insert;
                     if (insert === '**') {
                         insertAtCursor(ta, '**text**');
-                        // select the inner text for easy replacement
                         const pos = ta.selectionStart - 4;
                         ta.selectionStart = pos;
                         ta.selectionEnd = pos + 4;
@@ -430,7 +439,6 @@
                     }
                 });
             });
-            // hide error on typing
             ta.addEventListener('input', () => {
                 const err = document.getElementById('input-error');
                 if (err) err.style.display = 'none';
@@ -448,19 +456,14 @@
         let audioContext;
         function getAudioContext() {
             if (!audioContext) {
-                try {
-                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                } catch(e) { return null; }
+                try { audioContext = new (window.AudioContext || window.webkitAudioContext)(); }
+                catch(e) { return null; }
             }
             return audioContext;
         }
 
         function buttonFeedback() {
-            // Haptics
-            if (navigator.vibrate) {
-                navigator.vibrate(8);
-            }
-            // Sound - short liquid click
+            if (navigator.vibrate) navigator.vibrate(8);
             const ctx = getAudioContext();
             if (ctx) {
                 try {
@@ -485,8 +488,7 @@
         }
 
         function wireGlassButtons() {
-            const glassButtons = document.querySelectorAll('.btn-primary, .btn-secondary, .btn-install, .cue-btn, .sample-btn, #glasses-button-sim');
-            glassButtons.forEach(btn => {
+            document.querySelectorAll('.btn-primary, .btn-secondary, .cue-btn, .sample-btn').forEach(btn => {
                 btn.addEventListener('click', () => buttonFeedback());
             });
         }
@@ -495,8 +497,7 @@
             const textarea = document.getElementById('script-input');
             const text = textarea.value.trim();
             const words = text ? text.split(/\s+/).filter(Boolean).length : 0;
-            const estMinutes = words > 0 ? Math.max(1, Math.round(words / 140)) : 0; // ~140 wpm speaking rate
-
+            const estMinutes = words > 0 ? Math.max(1, Math.round(words / 140)) : 0;
             const countEl = document.getElementById('word-count');
             const minEl = document.getElementById('est-minutes');
             if (countEl) countEl.textContent = `${words} words`;
@@ -530,38 +531,31 @@
             }
         }
 
-        // PWA install prompt (prominent for visibility/education goal)
         let deferredInstallPrompt = null;
 
         function initInstallPrompt() {
             const btn = document.getElementById('install-btn');
             if (!btn) return;
-
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
                 deferredInstallPrompt = e;
-                // Enhance label when the smart prompt is available
-                if (!btn.textContent.includes('✓')) {
-                    btn.textContent = 'Install (one-tap PWA)';
-                }
+                btn.textContent = 'Install (one-tap PWA)';
             });
-
             btn.addEventListener('click', async () => {
                 if (deferredInstallPrompt) {
                     deferredInstallPrompt.prompt();
                     const { outcome } = await deferredInstallPrompt.userChoice;
                     if (outcome === 'accepted') {
-                        btn.textContent = 'Thanks! Check your home screen ✓';
+                        btn.textContent = 'Installed ✓';
                         btn.style.opacity = '0.7';
                         btn.disabled = true;
                     }
                     deferredInstallPrompt = null;
                     return;
                 }
-                // Cross-platform guidance (iOS Safari, desktop, etc.)
                 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
                 if (isIOS) {
-                    alert('On iPhone/iPad: tap the Share button → "Add to Home Screen". Works great offline.');
+                    alert('On iPhone/iPad: tap the Share button → "Add to Home Screen".');
                 } else {
                     alert('Use your browser menu → "Install app" or "Add to Home Screen" for offline rehearsal.');
                 }
@@ -572,32 +566,19 @@
             e.preventDefault();
             const form = e.target;
             const success = document.getElementById('beta-success');
-
-            // Formspree endpoint configured: https://formspree.io/f/mzdlddkp (notifications to hello@spectorlabs.io). From name in dashboard should be "Spector" / "Spector Labs". AJAX + mailto fallback.
             const formData = new FormData(form);
-
             try {
                 const response = await fetch(form.action, {
                     method: 'POST',
                     body: formData,
-                    headers: {
-                        'Accept': 'application/json'
-                    }
+                    headers: { 'Accept': 'application/json' }
                 });
-
                 if (response.ok) {
                     form.style.display = 'none';
                     success.style.display = 'block';
-                    success.textContent = "Thanks! We'll reach out from hello@spectorlabs.io soon.";
-
-                    const email = formData.get('email');
-                    try {
-                        localStorage.setItem('spector_beta_email', email);
-                    } catch {}
-
+                    try { localStorage.setItem('spector_beta_email', formData.get('email')); } catch {}
                     form.reset();
                 } else {
-                    // Fallback
                     submitFallback(formData);
                 }
             } catch (error) {
@@ -610,10 +591,7 @@
             const glasses = formData.get('glasses') || '';
             const message = formData.get('message') || '';
             const subject = encodeURIComponent('SPECTOR Beta Request');
-            const body = encodeURIComponent(`Email: ${email}
-Glasses model: ${glasses}
-
-Notes: ${message}`);
+            const body = encodeURIComponent(`Email: ${email}\nGlasses model: ${glasses}\n\nNotes: ${message}`);
             window.location.href = `mailto:hello@spectorlabs.io?subject=${subject}&body=${body}`;
         }
 
@@ -629,27 +607,23 @@ Notes: ${message}`);
             wireGlassButtons();
 
             const textarea = document.getElementById('script-input');
-            if (textarea) {
-                textarea.addEventListener('input', updateScriptMeta);
-            }
+            if (textarea) textarea.addEventListener('input', updateScriptMeta);
+
+            const betaForm = document.getElementById('beta-form');
+            if (betaForm) betaForm.addEventListener('submit', handleBetaSubmit);
 
             const draft = localStorage.getItem('spector_draft');
             if (draft) {
                 try {
                     const { title, text } = JSON.parse(draft);
-                    if (text) {
-                        document.getElementById('script-input').value = text;
-                        updateScriptMeta();
-                    }
+                    if (text) { document.getElementById('script-input').value = text; updateScriptMeta(); }
                     if (title) document.getElementById('script-title').value = title;
                     localStorage.removeItem('spector_draft');
                 } catch {}
             } else {
-                // initial count
                 updateScriptMeta();
             }
 
-            // Beta form: if already signed up, show success state
             try {
                 const betaEmail = localStorage.getItem('spector_beta_email');
                 if (betaEmail) {
