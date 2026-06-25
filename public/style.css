@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400family=Inter:wght@300;400;500;600;700display=swap');
+
 /* ═══════════════════════════════════════════
    SPECTOR LANDING — ORIGINAL STYLES
    ═══════════════════════════════════════════ */
@@ -884,6 +886,10 @@ body.landing .btn-install:hover {
     margin-top: 60px;
   }
 }
+
+/* Claude vibe — landing font */
+.landing { font-family: "Spectral", Georgia, serif; }
+.landing .logo, .landing .tagline, .landing h3, .landing .btn-primary, .landing .btn-secondary, .landing .cue-btn, .landing .sample-btn, .landing .hero-badge, .landing .word-count { font-family: "Inter", -apple-system, sans-serif; }
 
 /* Claude vibe — landing font */
 .landing { font-family: "Spectral", Georgia, serif; }
