@@ -13,72 +13,74 @@
 
     <div class="container">
         <header>
-            <div class="logo">Spector</div>
+            <div class="logo">Spector<span class="tm">™</span></div>
             <p class="tagline">Eyes Forward.</p>
             <p class="subtitle">Auto-paced, comfort-tuned teleprompter for smart glasses and creators who rehearse seriously.</p>
             <div class="hero-badge">Better than basic in-app scroll · PWA + ready for glasses SDKs</div>
             <p class="market-note">Rehearse on your phone today. Perform with confidence on glasses tomorrow. Not affiliated with Meta or Ray-Ban — works with any smart-glasses setup.</p>
 
-            <div class="benefits-row" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:20px 0 24px;">
-                <div class="benefit" style="font-size:15px;font-weight:500;color:var(--text);padding:10px 20px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-pill);">Know your lines cold.</div>
-                <div class="benefit" style="font-size:15px;font-weight:500;color:var(--text);padding:10px 20px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-pill);">Pace yourself perfectly.</div>
-                <div class="benefit" style="font-size:15px;font-weight:500;color:var(--text);padding:10px 20px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-pill);">Walk on stage confident.</div>
-            </div>
-            <div class="hero-cta" style="text-align:center;margin:28px 0 36px;">
-                <a href="app.html" class="btn-primary" style="display:inline-block;min-width:220px;font-size:16px;">Try It Free</a>
-                <p style="margin-top:12px;font-size:13px;color:var(--text-muted);">No account required · Works offline · Open source</p>
-            </div>
-
             <button id="install-btn" class="btn-install" style="margin: 8px auto 20px;">Install for offline use</button>
             <p style="font-size:11px;color:#666;text-align:center;margin-top:-8px;">Live at www.spectorlabs.io</p>
         </header>
 
-        <div class="library-section">
-    <h3>Why SPECTOR?</h3>
-    <div class="comparison-grid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:12px;margin-top:14px;">
-        <div class="library-item" style="flex-direction:column;align-items:flex-start;gap:12px;padding:22px;">
-            <div style="font-size:11px;font-weight:600;color:#888;letter-spacing:0.08em;text-transform:uppercase;">Traditional Teleprompters</div>
-            <ul style="list-style:none;padding:0;margin:0;color:#999;font-size:13.5px;line-height:1.9;">
-                <li style="position:relative;padding-left:16px;"><span style="position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:#555;"></span>Fixed scrolling speed</li>
-                <li style="position:relative;padding-left:16px;"><span style="position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:#555;"></span>Easy to lose your place</li>
-                <li style="position:relative;padding-left:16px;"><span style="position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:#555;"></span>Designed for phones only</li>
-                <li style="position:relative;padding-left:16px;"><span style="position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:#555;"></span>No rehearsal analytics</li>
+        <div class="input-section">
+            <label for="script-title">Script Title</label>
+            <input type="text" id="script-title" class="script-title-input" placeholder="e.g. Keynote opener, investor pitch…" maxlength="80">
+
+            <label for="script-input">Your Script</label>
+            <div class="cue-toolbar" style="margin-bottom:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                <button type="button" class="cue-btn" data-insert="**">**Bold**</button>
+                <button type="button" class="cue-btn" data-insert="[pause]">[Pause]</button>
+                <button type="button" class="cue-btn" data-insert="[pause:3s]">[Pause 3s]</button>
+            </div>
+            <textarea id="script-input" placeholder="Paste your speech, presentation, or notes here…"></textarea>
+
+            <div id="script-meta" style="font-size:12px;color:#888;margin-bottom:8px;display:flex;gap:8px;align-items:center;">
+                <span id="word-count">0 words</span>
+                <span>·</span>
+                <span>~<span id="est-minutes">0</span> min at speaking pace</span>
+            </div>
+
+            <div class="samples-row" style="margin-bottom:12px;">
+                <span class="samples-label">Or start with a sample script:</span>
+                <button type="button" class="sample-btn" data-sample="keynote">Keynote Opener</button>
+                <button type="button" class="sample-btn" data-sample="pitch">Investor Pitch</button>
+                <button type="button" class="sample-btn" data-sample="demo">Product Demo</button>
+                <button type="button" class="sample-btn" data-sample="ted">TEDx Opener</button>
+                <button type="button" class="sample-btn" data-sample="wedding">Wedding Toast</button>
+                <button type="button" class="sample-btn" data-sample="earnings">Earnings Call</button>
+            </div>
+
+            <div class="cue-legend" style="font-size:11px;color:#777;margin-bottom:12px;line-height:1.4;">
+                Supports <code>**emphasis**</code> (stronger hold) and <code>[pause]</code> / <code>[pause:3s]</code> markers.
+            </div>
+
+            <div id="input-error" style="color:#e88; font-size:12px; margin-bottom:8px; display:none;"></div>
+
+            <div class="file-upload" id="file-area">
+                Drop .txt file here or click to browse
+                <input type="file" id="file-input" accept=".txt" style="display:none;">
+            </div>
+
+            <div class="btn-row">
+                <button id="launch-btn" class="btn-primary">Launch Teleprompter</button>
+                <button id="save-btn" class="btn-secondary">Save</button>
+            </div>
+            <div style="font-size:11px;color:#777;margin-bottom:8px;">Optimized for phone rehearsal and future glasses use</div>
+        </div>
+
+        <section class="library-section" id="library-section">
+            <h3>Saved Scripts</h3>
+            <ul class="library-list" id="library-list">
+                <li class="library-empty" id="library-empty">No saved scripts yet — save one to build your library.</li>
             </ul>
-        </div>
-        <div class="library-item" style="flex-direction:column;align-items:flex-start;gap:12px;padding:22px;background:rgba(201,100,66,0.04);border-left:2px solid var(--accent);">
-            <div style="font-size:11px;font-weight:600;color:var(--accent);letter-spacing:0.08em;text-transform:uppercase;">SPECTOR</div>
-            <ul style="list-style:none;padding:0;margin:0;color:var(--text-muted);font-size:13.5px;line-height:1.9;">
-                <li style="position:relative;padding-left:16px;"><span style="position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:var(--accent);"></span>Adaptive auto-pacing</li>
-                <li style="position:relative;padding-left:16px;"><span style="position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:var(--accent);"></span>Comfort mode + cues</li>
-                <li style="position:relative;padding-left:16px;"><span style="position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:var(--accent);"></span>Built for smart glasses</li>
-                <li style="position:relative;padding-left:16px;"><span style="position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:var(--accent);"></span>Post-run analytics</li>
-            </ul>
-        </div>
-    </div>
-</div>
+        </section>
 
-<div class="library-section">
-    <h3>How It Works</h3>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));gap:16px;margin-top:16px;">
-        <div style="text-align:center;padding:28px 16px;background:var(--bg-elevated);border:1px solid rgba(255,255,255,0.05);border-radius:12px;">
-            <div style="font-size:10px;font-weight:700;color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:12px;">01</div>
-            <div style="font-size:14px;color:var(--text);font-weight:500;margin-bottom:8px;">Paste Your Script</div>
-            <div style="font-size:13px;color:#999;line-height:1.5;">Drop a .txt file or type directly. Supports bold emphasis and pause cues.</div>
-        </div>
-        <div style="text-align:center;padding:28px 16px;background:var(--bg-elevated);border:1px solid rgba(255,255,255,0.05);border-radius:12px;">
-            <div style="font-size:10px;font-weight:700;color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:12px;">02</div>
-            <div style="font-size:14px;color:var(--text);font-weight:500;margin-bottom:8px;">Rehearse</div>
-            <div style="font-size:13px;color:#999;line-height:1.5;">Adaptive pacing follows your rhythm. Comfort mode reduces eye strain.</div>
-        </div>
-        <div style="text-align:center;padding:28px 16px;background:var(--bg-elevated);border:1px solid rgba(255,255,255,0.05);border-radius:12px;">
-            <div style="font-size:10px;font-weight:700;color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:12px;">03</div>
-            <div style="font-size:14px;color:var(--text);font-weight:500;margin-bottom:8px;">Review</div>
-            <div style="font-size:13px;color:#999;line-height:1.5;">See pace, hesitation points, and session history after every run.</div>
-        </div>
-    </div>
-</div>
-
-
+        <section class="history-section" id="history-section" style="margin-top:16px;">
+            <h3 style="font-size:14px;font-weight:600;color:#999;margin:0 0 8px;letter-spacing:0.04em;text-transform:uppercase;">Recent rehearsals</h3>
+            <div id="history-list" style="font-size:12px;color:#888;"></div>
+            <div style="font-size:10px;color:#666;margin-top:4px;">Local demo. Cloud sync and trends planned.</div>
+        </section>
 
         <section class="demo-section">
             <h3>See it in action</h3>
@@ -89,7 +91,7 @@
                 <li>Watch the live word count and estimated speaking time update</li>
                 <li>Launch the player to experience adaptive pacing, Comfort mode, and the hardware controls legend</li>
             </ul>
-            <p style="margin-top: 12px; color: var(--text-muted); font-size: 14px; line-height: 1.5;">The best demo is hands-on. Use the live tools above, or open <a href="app.html" style="color:var(--accent);">app.html</a> to start from a clean player.<br><br>Comfort mode uses spatial anchoring to reduce eye strain. On phone, tilt your device to feel the effect. On desktop, the player simulates head movement automatically.</p>
+            <p class="demo-note" style="margin-top:6px;font-size:12px;">Pro tip: In player, press <strong>B</strong> (or the sim button) to advance like the right-temple hardware button. For Comfort spatial: on desktop use DevTools → Sensors → Orientation; on phone tilt your device.</p>
             <p style="font-size:11px;color:#777;margin-top:4px;">Everything above (player, samples, Comfort, etc.) is live and ready to use today on phone. The form below is specifically for real-glasses hardware testing.</p>
 
             <!-- 
