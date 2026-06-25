@@ -1199,3 +1199,28 @@ body {
     background: linear-gradient(180deg, #191817 0%, #1a1918 50%, #191817 100%);
     overflow-x: hidden;
 }
+/* === LANDING POLISH === */
+.hero-visual { margin: 32px 0 28px; text-align: center; }
+.hero-visual img { width: 100%; max-width: 520px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 24px 60px rgba(0,0,0,0.35); display: block; margin: 0 auto; }
+.hero-visual p { font-size: 13px; color: #888; margin-top: 12px; }
+.library-section { margin-top: 40px; padding-top: 32px; }
+.comparison-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 14px; }
+.comparison-card { flex-direction: column; align-items: flex-start; gap: 14px; padding: 22px; }
+.comparison-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+.comparison-label.muted { color: #888; } .comparison-label.accent { color: var(--accent); }
+.comparison-list { list-style: none; padding: 0; margin: 0; color: #999; font-size: 13.5px; line-height: 1.9; }
+.comparison-list li { position: relative; padding-left: 16px; }
+.comparison-list li::before { content: ""; position: absolute; left: 0; top: 9px; width: 5px; height: 5px; border-radius: 50%; background: #555; }
+.spector-card { background: rgba(201, 100, 66, 0.04); border-left: 2px solid var(--accent); }
+.spector-card .comparison-list li::before { background: var(--accent); }
+.steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 16px; }
+.step { text-align: center; padding: 28px 16px; background: var(--bg-elevated); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; transition: all 0.2s ease; }
+.step:hover { border-color: rgba(201, 100, 66, 0.15); transform: translateY(-2px); }
+.step-number { font-size: 10px; font-weight: 700; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 12px; }
+.step-title { font-size: 14px; color: var(--text); font-weight: 500; margin-bottom: 8px; }
+.step-desc { font-size: 13px; color: #999; line-height: 1.5; }
+.library-item { transition: all 0.2s ease; }
+.library-item:hover { transform: translateY(-2px); border-color: rgba(201, 100, 66, 0.18); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+.homepage-cta .btn-primary { box-shadow: 0 4px 20px rgba(201, 100, 66, 0.12); transition: all 0.25s ease; }
+.homepage-cta .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201, 100, 66, 0.2); }
+body { overflow-x: hidden; }
