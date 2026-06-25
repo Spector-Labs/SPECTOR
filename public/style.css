@@ -1155,3 +1155,21 @@ body.mirror-mode .bookmarks {
 ::selection{background:rgba(124,58,237,0.3);color:var(--text)}
 .library-item:hover{border-color:rgba(124,58,237,0.25);background:rgba(124,58,237,0.04)}
 .glasses-future h3,.beta-section h3{color:#A78BFA}
+
+/* BRAND FIXES */
+.brand-lockup img { height: 48px !important; width: auto !important; max-width: 200px !important; }
+.hero-headline { font-size: clamp(48px, 8vw, 96px) !important; font-weight: 900 !important; letter-spacing: -0.03em !important; line-height: 1.0 !important; margin: 0 0 20px !important; text-align: center !important; color: #FFFFFF !important; display: block !important; }
+.text-purple { color: #7C3AED !important; }
+.hero-visual { max-width: 100% !important; overflow: hidden !important; }
+.hero-visual img { max-width: 100% !important; height: auto !important; }
+.trust-bar { gap: 16px !important; }
+.trust-bar span { display: inline-block !important; }
+body { overflow-x: hidden !important; font-family: 'Inter', -apple-system, sans-serif !important; }
+
+.landing .brand-lockup img { height:48px; width:auto; max-width:200px; display:block; }
+.landing h1.hero-headline { font-size:clamp(48px,8vw,96px); font-weight:900; letter-spacing:-0.03em; line-height:1.0; margin:0 0 20px; text-align:center; color:#FFFFFF; }
+.text-purple { color:#7C3AED; }
+.hero-visual { max-width:100%; overflow:hidden; }
+.hero-visual img { max-width:100%; height:auto; }
+.trust-bar { gap:16px; }
+.trust-bar span { display:inline-block; }
