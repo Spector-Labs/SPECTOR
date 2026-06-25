@@ -884,3 +884,7 @@ body.landing .btn-install:hover {
     margin-top: 60px;
   }
 }
+
+/* Claude vibe — landing font */
+.landing { font-family: "Spectral", Georgia, serif; }
+.landing .logo, .landing .tagline, .landing h3, .landing .btn-primary, .landing .btn-secondary, .landing .cue-btn, .landing .sample-btn, .landing .hero-badge, .landing .word-count { font-family: "Inter", -apple-system, sans-serif; }
