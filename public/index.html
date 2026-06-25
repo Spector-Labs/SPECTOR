@@ -23,18 +23,56 @@
             <p style="font-size:11px;color:#666;text-align:center;margin-top:-8px;">Live at www.spectorlabs.io</p>
         </header>
 
-        
+        <div class="input-section">
+            <label for="script-title">Script Title</label>
+            <input type="text" id="script-title" class="script-title-input" placeholder="e.g. Keynote opener, investor pitch…" maxlength="80">
 
-<div class="homepage-cta" style="text-align:center;margin:36px 0 44px;">
-    <a href="app.html" class="btn-primary" style="display:inline-block;min-width:240px;font-size:17px;">Open App</a>
-    <p style="margin-top:16px;color:var(--text-muted);font-size:15px;line-height:1.6;">
-        Rehearse on your phone today. Perform with confidence on glasses tomorrow.
-    </p>
-</div>
+            <label for="script-input">Your Script</label>
+            <div class="cue-toolbar" style="margin-bottom:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                <button type="button" class="cue-btn" data-insert="**">**Bold**</button>
+                <button type="button" class="cue-btn" data-insert="[pause]">[Pause]</button>
+                <button type="button" class="cue-btn" data-insert="[pause:3s]">[Pause 3s]</button>
+            </div>
+            <textarea id="script-input" placeholder="Paste your speech, presentation, or notes here…"></textarea>
 
-<h3>Practice Better</h3>
+            <div id="script-meta" style="font-size:12px;color:#888;margin-bottom:8px;display:flex;gap:8px;align-items:center;">
+                <span id="word-count">0 words</span>
+                <span>·</span>
+                <span>~<span id="est-minutes">0</span> min at speaking pace</span>
+            </div>
+
+            <div class="samples-row" style="margin-bottom:12px;">
+                <span class="samples-label">Or start with a sample script:</span>
+                <button type="button" class="sample-btn" data-sample="keynote">Keynote Opener</button>
+                <button type="button" class="sample-btn" data-sample="pitch">Investor Pitch</button>
+                <button type="button" class="sample-btn" data-sample="demo">Product Demo</button>
+                <button type="button" class="sample-btn" data-sample="ted">TEDx Opener</button>
+                <button type="button" class="sample-btn" data-sample="wedding">Wedding Toast</button>
+                <button type="button" class="sample-btn" data-sample="earnings">Earnings Call</button>
+            </div>
+
+            <div class="cue-legend" style="font-size:11px;color:#777;margin-bottom:12px;line-height:1.4;">
+                Supports <code>**emphasis**</code> (stronger hold) and <code>[pause]</code> / <code>[pause:3s]</code> markers.
+            </div>
+
+            <div id="input-error" style="color:#e88; font-size:12px; margin-bottom:8px; display:none;"></div>
+
+            <div class="file-upload" id="file-area">
+                Drop .txt file here or click to browse
+                <input type="file" id="file-input" accept=".txt" style="display:none;">
+            </div>
+
+            <div class="btn-row">
+                <button id="launch-btn" class="btn-primary">Launch Teleprompter</button>
+                <button id="save-btn" class="btn-secondary">Save</button>
+            </div>
+            <div style="font-size:11px;color:#777;margin-bottom:8px;">Optimized for phone rehearsal and future glasses use</div>
+        </div>
+
+        <section class="library-section" id="library-section">
+            <h3>Saved Scripts</h3>
             <ul class="library-list" id="library-list">
-                <li class="library-empty" id="library-empty">Review pace, hesitation points, and session history after every rehearsal.</li>
+                <li class="library-empty" id="library-empty">No saved scripts yet — save one to build your library.</li>
             </ul>
         </section>
 
@@ -45,7 +83,7 @@
         </section>
 
         <section class="demo-section">
-            <h3>See It In Action</h3>
+            <h3>See it in action</h3>
             <p class="demo-note">The best demo is hands-on. Use the live tools above:</p>
             <ul style="font-size:13px; color:#999; line-height:1.6; margin:8px 0 12px; padding-left:20px;">
                 <li>Click any sample script to load a real example with cues</li>
@@ -197,7 +235,7 @@
             let runs = [];
             try { runs = JSON.parse(localStorage.getItem('spector_runs_v1')) || []; } catch {}
             if (!runs.length) {
-                container.innerHTML = '<div style="font-size:11px;color:#666;">Track your progress across rehearsals. Cloud sync and trends planned.</div>';
+                container.innerHTML = '<div style="font-size:11px;color:#666;">No runs yet — finish a rehearsal in the player to see history here.</div>';
                 return;
             }
             container.innerHTML = runs.map(r => {
