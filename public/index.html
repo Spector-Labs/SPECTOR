@@ -3,51 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Spector: premium auto-paced teleprompter PWA with Comfort mode spatial effects, cue markers, script library, and rehearsal analytics. Rehearse on phone, perform on smart glasses.">
+    <meta name="description" content="Spector: the auto-paced teleprompter built for smart glasses. Adaptive pacing, Comfort mode spatial anchoring, rehearsal analytics. Rehearse on phone, perform on glasses.">
     <meta name="theme-color" content="#000000">
-    <title>Spector™ • Eyes Forward</title>
+    <meta property="og:title" content="Spector — Eyes Forward">
+    <meta property="og:description" content="The auto-paced teleprompter built for smart glasses. Rehearse on phone, perform on glasses.">
+    <meta property="og:image" content="images/hero-glasses.png">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://spectorlabs.io">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Spector — Eyes Forward">
+    <meta name="twitter:description" content="Auto-paced teleprompter for smart glasses. Rehearse on phone, perform on glasses.">
+    <meta name="twitter:image" content="images/hero-glasses.png">
+    <title>Spector™ — Eyes Forward</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="images/app-icon.png">
 </head>
 <body class="landing">
 
     <!-- NAV -->
     <nav class="site-nav">
-        <div class="nav-brand">
+        <a href="#" class="nav-brand">
             <div class="nav-logo">
-                <svg width="20" height="20" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M50 5 L89 27.5 V72.5 L50 95 L11 72.5 V27.5 Z" stroke="white" stroke-width="10"/>
-                    <path d="M50 5 L50 35 M89 27.5 L63 42 M89 72.5 L63 58 M50 95 L50 65 M11 72.5 L37 58 M11 27.5 L37 42" stroke="white" stroke-width="6"/>
+                <svg width="18" height="18" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 5 L89 27.5 V72.5 L50 95 L11 72.5 V27.5 Z" stroke="white" stroke-width="8"/>
+                    <path d="M50 5 L50 35 M89 27.5 L63 42 M89 72.5 L63 58 M50 95 L50 65 M11 72.5 L37 58 M11 27.5 L37 42" stroke="white" stroke-width="5"/>
                 </svg>
             </div>
             <span class="nav-wordmark">SPECTOR</span>
-        </div>
-        <div class="nav-links">
+        </a>
+        <div class="nav-links" id="nav-links">
+            <a href="#features">Features</a>
             <a href="#how-it-works">How it works</a>
-            <a href="#try">Editor</a>
+            <a href="#try">Try it</a>
             <a href="https://github.com/hydrogenbondss/SPECTOR" target="_blank">GitHub</a>
             <a href="#beta" class="nav-cta">Join beta</a>
         </div>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </button>
     </nav>
 
     <div class="container">
 
         <!-- HERO -->
         <section class="hero-section">
-            <p class="hero-eyebrow">Teleprompter for smart glasses</p>
+            <div class="hero-badge">Teleprompter for smart glasses</div>
             <h1 class="hero-headline">Eyes <span class="text-purple">Forward.</span></h1>
             <p class="hero-subhead">Rehearse on your phone. Perform on smart glasses — without glancing down or sounding scripted.</p>
-            <div class="hero-cta">
+            <div class="hero-cta-group">
                 <a href="#try" class="btn-primary">Try it free</a>
                 <a href="#beta" class="btn-secondary">Join glasses beta →</a>
             </div>
             <p class="hero-note">No account required · Works on Ray-Ban Meta, XREAL, Viture · Install as PWA</p>
         </section>
 
-        <!-- HERO IMAGE -->
+        <!-- HERO VISUAL -->
         <div class="hero-visual">
-            <img src="images/hero-glasses.png" alt="Spector teleprompter running on smart glasses HUD">
+            <img src="images/hero-glasses.png" alt="Spector teleprompter HUD running on Ray-Ban Meta smart glasses" loading="eager">
         </div>
 
         <!-- TRUST BAR -->
@@ -59,85 +73,149 @@
             <span>Open source</span>
         </div>
 
-        <!-- FEATURE CARDS -->
-        <div class="feature-grid">
-            <div class="feature-card">
-                <p class="feature-label">Pacing</p>
-                <h3>Adaptive speed</h3>
-                <p>Speeds up and slows with your natural rhythm. No manual scroll.</p>
+        <!-- FEATURES -->
+        <section class="features-section reveal" id="features">
+            <div class="section-header">
+                <p class="section-eyebrow">Core Features</p>
+                <h2>Not just another teleprompter.</h2>
             </div>
-            <div class="feature-card">
-                <p class="feature-label">Comfort</p>
-                <h3>Spatial anchoring</h3>
-                <p>Kalman-filtered head-tilt keeps text stable. Reduces eye strain over long rehearsals.</p>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                        </svg>
+                    </div>
+                    <p class="feature-label">Pacing</p>
+                    <h3>Adaptive speed</h3>
+                    <p>Speeds up and slows with your natural rhythm. Punctuation-aware timing, emphasis holds. No manual scroll ever.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </div>
+                    <p class="feature-label">Comfort</p>
+                    <h3>Spatial anchoring</h3>
+                    <p>Kalman-filtered head-tilt stabilizes text to reduce eye strain. Breathing animations create natural, immersive flow.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                            <path d="M18 20V10M12 20V4M6 20v-6"/>
+                        </svg>
+                    </div>
+                    <p class="feature-label">Analytics</p>
+                    <h3>Post-run intelligence</h3>
+                    <p>Avg WPM, pacing consistency, hesitation detection, and slowest-moment analysis after every rehearsal run.</p>
+                </div>
             </div>
-            <div class="feature-card">
-                <p class="feature-label">Glasses</p>
-                <h3>HUD-ready</h3>
-                <p>Right-temple button controls. Works with Ray-Ban Meta, XREAL, Viture, and Brilliant Labs.</p>
+        </section>
+
+        <!-- ECOSYSTEM SHOWCASE -->
+        <section class="showcase-section reveal">
+            <div class="showcase-card">
+                <img src="images/ui-showcase.png" alt="Spector ecosystem: rehearsal analytics dashboard, mobile player, and Ray-Ban Meta glasses integration" loading="lazy">
+                <div class="showcase-label">
+                    <p class="showcase-title">Rehearse. Refine. Perform.</p>
+                    <p class="showcase-desc">Cross-platform rehearsal analytics, mobile player, and Ray-Ban Meta integration — one unified system.</p>
+                </div>
             </div>
-        </div>
+        </section>
 
         <!-- HOW IT WORKS -->
-        <section id="how-it-works" class="steps-section">
-            <p class="section-eyebrow">How it works</p>
-            <h2>From script to stage in three steps.</h2>
-            <div class="steps">
-                <div class="step">
+        <section id="how-it-works" class="steps-section reveal">
+            <div class="section-header">
+                <p class="section-eyebrow">How it works</p>
+                <h2>From script to stage in three steps.</h2>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card">
                     <div class="step-number">01</div>
                     <h4>Paste your script</h4>
                     <p>Drop a .txt file or type directly. Add emphasis and pause markers with one tap.</p>
                 </div>
-                <div class="step">
+                <div class="step-card">
                     <div class="step-number">02</div>
                     <h4>Rehearse on your phone</h4>
                     <p>Adaptive pacing, Comfort spatial mode, and end-of-run analytics. Install as PWA for offline use.</p>
                 </div>
-                <div class="step">
+                <div class="step-card">
                     <div class="step-number">03</div>
                     <h4>Perform on glasses</h4>
-                    <p>Right-temple button controls advance, pause, and rewind. HUD-ready for Ray-Ban Meta, XREAL, Viture, and Brilliant Labs.</p>
+                    <p>Temple button controls advance, pause, and rewind. HUD-ready for Ray-Ban Meta, XREAL, Viture, and Brilliant Labs.</p>
                 </div>
             </div>
             <div class="screenshots">
                 <figure>
-                    <img src="images/demo-phone-ui.jpg" alt="Spector teleprompter running on iPhone with Comfort mode active">
+                    <img src="images/demo-phone-ui.jpg" alt="Spector teleprompter running on iPhone with Comfort mode active" loading="lazy">
                     <figcaption>Phone — Comfort mode, cues, adaptive speed</figcaption>
                 </figure>
                 <figure>
-                    <img src="images/demo-usage.jpg" alt="Presenter on stage using Spector on smart glasses">
+                    <img src="images/demo-usage.jpg" alt="Presenter rehearsing with Spector on smart glasses" loading="lazy">
                     <figcaption>Rehearse on phone, perform on glasses</figcaption>
                 </figure>
             </div>
+        </section>
+
+        <!-- HUD VIEW -->
+        <section class="hud-section reveal">
+            <div class="showcase-card">
+                <img src="images/hud-view.png" alt="Spector first-person HUD view through smart glasses showing script, progress, and controls" loading="lazy">
+                <div class="showcase-label">
+                    <p class="showcase-title">First-Person HUD</p>
+                    <p class="showcase-desc">Your script anchored in space. Progress tracking, microphone, camera, and translate — all in your field of view.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- COMFORT COMPARISON -->
+        <section class="comfort-section reveal">
+            <div class="section-header">
+                <p class="section-eyebrow">The difference</p>
+                <h2>Stability you can feel.</h2>
+            </div>
+            <div class="showcase-card">
+                <img src="images/comfort-comparison.png" alt="Standard teleprompter vs Spector Comfort Mode: spatially anchored, reduces eye strain" loading="lazy">
+            </div>
+        </section>
+
+        <!-- HARDWARE -->
+        <div class="hardware-section reveal">
+            <p class="section-eyebrow" style="text-align:center">Compatible hardware</p>
             <div class="glasses-badges">
                 <span>Ray-Ban Meta</span>
                 <span>XREAL</span>
                 <span>Viture</span>
                 <span>Brilliant Labs</span>
             </div>
-        </section>
+        </div>
 
         <!-- COMPARISON -->
-        <section class="comparison-section">
-            <p class="section-eyebrow">Why Spector</p>
-            <h2>Not just another teleprompter.</h2>
+        <section class="comparison-section reveal">
+            <div class="section-header">
+                <p class="section-eyebrow">Why Spector</p>
+                <h2>Built different.</h2>
+            </div>
             <div class="comparison-grid">
-                <div class="comparison-card">
+                <div class="comparison-card basic">
                     <h4>Basic teleprompter</h4>
                     <ul>
-                        <li>Fixed scrolling speed</li>
-                        <li>Easy to lose your place</li>
-                        <li>Designed for phones only</li>
-                        <li>No rehearsal analytics</li>
+                        <li><span class="x-mark">&#x2715;</span> Fixed scrolling speed</li>
+                        <li><span class="x-mark">&#x2715;</span> Easy to lose your place</li>
+                        <li><span class="x-mark">&#x2715;</span> Designed for phones only</li>
+                        <li><span class="x-mark">&#x2715;</span> No rehearsal analytics</li>
                     </ul>
                 </div>
                 <div class="comparison-card spector">
                     <h4>Spector</h4>
                     <ul>
-                        <li>Adaptive auto-pacing</li>
-                        <li>Comfort mode + cue markers</li>
-                        <li>Built for smart glasses HUD</li>
-                        <li>Post-run pacing analytics</li>
+                        <li><span class="check-mark">&#x2713;</span> Adaptive auto-pacing</li>
+                        <li><span class="check-mark">&#x2713;</span> Comfort mode + cue markers</li>
+                        <li><span class="check-mark">&#x2713;</span> Built for smart glasses HUD</li>
+                        <li><span class="check-mark">&#x2713;</span> Post-run pacing analytics</li>
                     </ul>
                 </div>
             </div>
@@ -145,15 +223,17 @@
 
         <!-- EDITOR -->
         <section class="editor-section" id="try">
-            <p class="section-eyebrow">Live editor</p>
-            <h2>Try it now.</h2>
+            <div class="section-header">
+                <p class="section-eyebrow">Live editor</p>
+                <h2>Try it now.</h2>
+            </div>
 
             <div class="editor-card">
                 <label for="script-title">Script title</label>
                 <input type="text" id="script-title" class="script-title-input" placeholder="e.g. Keynote opener, investor pitch…" maxlength="80">
 
                 <label for="script-input">Your script</label>
-                <div class="cue-toolbar" style="margin-bottom:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                <div class="cue-toolbar">
                     <button type="button" class="cue-btn" data-insert="**">**Bold**</button>
                     <button type="button" class="cue-btn" data-insert="[pause]">[Pause]</button>
                     <button type="button" class="cue-btn" data-insert="[pause:3s]">[Pause 3s]</button>
@@ -166,7 +246,7 @@
                     <span>~<span id="est-minutes">0</span> min at speaking pace</span>
                 </div>
 
-                <div class="samples-row" style="margin-bottom:12px;">
+                <div class="samples-row">
                     <span class="samples-label">Start with a sample:</span>
                     <button type="button" class="sample-btn" data-sample="keynote">Keynote Opener</button>
                     <button type="button" class="sample-btn" data-sample="pitch">Investor Pitch</button>
@@ -176,8 +256,8 @@
                     <button type="button" class="sample-btn" data-sample="earnings">Earnings Call</button>
                 </div>
 
-                <div class="cue-legend" style="font-size:11px;color:#777;margin-bottom:12px;line-height:1.4;">
-                    Supports <code>**emphasis**</code> (stronger hold) and <code>[pause]</code> / <code>[pause:3s]</code> markers.
+                <div style="font-size:11px;color:#555;margin-bottom:12px;line-height:1.4;">
+                    Supports <code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;">**emphasis**</code> and <code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;">[pause]</code> / <code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;">[pause:3s]</code> markers.
                 </div>
 
                 <div id="input-error" style="color:#e88; font-size:12px; margin-bottom:8px; display:none;"></div>
@@ -188,7 +268,7 @@
                 </div>
 
                 <div class="btn-row">
-                    <button id="launch-btn" class="btn-primary">Launch Teleprompter</button>
+                    <button id="launch-btn" class="btn-primary" style="flex:1;">Launch Teleprompter</button>
                     <button id="save-btn" class="btn-secondary">Save</button>
                 </div>
             </div>
@@ -203,10 +283,10 @@
         </section>
 
         <!-- HISTORY -->
-        <section class="history-section" id="history-section" style="margin-top:16px;">
-            <h3 style="font-size:14px;font-weight:600;color:#999;margin:0 0 8px;letter-spacing:0.04em;text-transform:uppercase;">Recent rehearsals</h3>
+        <section class="history-section" id="history-section" style="margin-top:8px;">
+            <h3 style="font-size:14px;font-weight:600;color:#71717A;margin:0 0 8px;letter-spacing:0.04em;text-transform:uppercase;">Recent rehearsals</h3>
             <div id="history-list" style="font-size:12px;color:#888;"></div>
-            <div style="font-size:10px;color:#666;margin-top:4px;">Local only. Cloud sync planned.</div>
+            <div style="font-size:10px;color:#555;margin-top:4px;">Local only. Cloud sync planned.</div>
         </section>
 
         <!-- BETA -->
@@ -225,7 +305,7 @@
                 <textarea name="message" placeholder="Any notes or hardware details (optional)" rows="2"></textarea>
                 <button type="submit">Join hardware beta</button>
             </form>
-            <div id="beta-success" style="display:none;">Thanks! We'll reach out from hello@spectorlabs.io soon.</div>
+            <div id="beta-success" style="display:none;color:#22c55e;font-weight:600;margin-top:16px;">Thanks! We'll reach out from hello@spectorlabs.io soon.</div>
             <p class="beta-footer-note">
                 Or email <a href="mailto:hello@spectorlabs.io">hello@spectorlabs.io</a> directly.<br>
                 Source: <a href="https://github.com/hydrogenbondss/SPECTOR" target="_blank">github.com/hydrogenbondss/SPECTOR</a> (open source).
@@ -234,7 +314,7 @@
 
         <!-- FOOTER -->
         <footer class="site-footer">
-            <span>© 2026 Spector Labs · MIT License</span>
+            <span>&copy; 2026 Spector Labs &middot; MIT License</span>
             <div class="footer-links">
                 <a href="https://github.com/hydrogenbondss/SPECTOR" target="_blank">GitHub</a>
                 <a href="mailto:hello@spectorlabs.io">hello@spectorlabs.io</a>
@@ -595,6 +675,34 @@
             window.location.href = `mailto:hello@spectorlabs.io?subject=${subject}&body=${body}`;
         }
 
+        function initScrollReveal() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        }
+
+        function initMobileNav() {
+            const toggle = document.getElementById('nav-toggle');
+            const links = document.getElementById('nav-links');
+            if (!toggle || !links) return;
+            toggle.addEventListener('click', () => {
+                links.classList.toggle('open');
+                toggle.classList.toggle('open');
+            });
+            links.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    links.classList.remove('open');
+                    toggle.classList.remove('open');
+                });
+            });
+        }
+
         function init() {
             initFileUpload();
             initButtons();
@@ -605,6 +713,8 @@
             registerServiceWorker();
             initInstallPrompt();
             wireGlassButtons();
+            initScrollReveal();
+            initMobileNav();
 
             const textarea = document.getElementById('script-input');
             if (textarea) textarea.addEventListener('input', updateScriptMeta);
