@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Spector: the auto-paced teleprompter built for smart glasses. Adaptive pacing, Comfort mode spatial anchoring, rehearsal analytics. Rehearse on phone, perform on glasses.">
+    <meta name="description" content="Spector: the auto-paced teleprompter built for smart glasses. Rehearse on phone, perform on glasses — eyes up, no script-face. Built for the Ray-Ban Meta / Android XR era.">
     <meta name="theme-color" content="#000000">
     <meta property="og:title" content="Spector — Eyes Forward">
     <meta property="og:description" content="The auto-paced teleprompter built for smart glasses. Rehearse on phone, perform on glasses.">
@@ -34,10 +34,11 @@
             <span class="nav-wordmark">SPECTOR</span>
         </a>
         <div class="nav-links" id="nav-links">
-            <a href="#features">Features</a>
-            <a href="#how-it-works">How it works</a>
+            <a href="#why-now">Why now</a>
+            <a href="#features">Product</a>
+            <a href="#vision">Vision</a>
             <a href="#try">Try it</a>
-            <a href="https://github.com/hydrogenbondss/SPECTOR" target="_blank">GitHub</a>
+            <a href="#investors">Investors</a>
             <a href="#beta" class="nav-cta">Join beta</a>
         </div>
         <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
@@ -49,19 +50,22 @@
 
         <!-- HERO -->
         <section class="hero-section">
-            <div class="hero-badge">Teleprompter for smart glasses</div>
+            <div class="hero-badge">Teleprompter for the smart-glasses era</div>
             <h1 class="hero-headline">Eyes <span class="text-purple">Forward.</span></h1>
-            <p class="hero-subhead">The auto-paced teleprompter built for the smart glasses era. Rehearse on phone, perform on glasses — without glancing down or sounding scripted.</p>
+            <p class="hero-subhead">Spector is the auto-paced teleprompter built for smart glasses. Rehearse on your phone, then deliver flawlessly on Ray-Ban Meta, XREAL, or Viture — eyes up, no glancing down, no script-face.</p>
             <div class="hero-cta-group">
                 <a href="#try" class="btn-primary">Try it free</a>
-                <a href="#beta" class="btn-secondary">Join glasses beta →</a>
+                <a href="#investors" class="btn-secondary">For investors →</a>
             </div>
-            <p class="hero-note">No account required · Works on Ray-Ban Meta, XREAL, Viture · Install as PWA</p>
+            <p class="hero-note">No account required · Works today on phone · Built for the glasses HUD · Open source</p>
         </section>
 
-        <!-- HERO VISUAL -->
+        <!-- HERO VISUAL (demo video) -->
         <div class="hero-visual">
-            <img src="images/hero-glasses.png" alt="Spector teleprompter HUD running on Ray-Ban Meta smart glasses" loading="eager" fetchpriority="high" width="2560" height="1440">
+            <video class="hero-media" autoplay muted loop playsinline poster="images/hero-glasses.png" aria-label="Spector teleprompter running on smart glasses">
+                <source src="spector-demo.mp4" type="video/mp4">
+                <img src="images/hero-glasses.png" alt="Spector teleprompter HUD running on Ray-Ban Meta smart glasses" width="2560" height="1440">
+            </video>
         </div>
 
         <!-- TRUST BAR -->
@@ -73,32 +77,49 @@
             <span>Open source on GitHub</span>
         </div>
 
-        <!-- METRICS -->
-        <section class="metrics-section reveal">
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-value">4</div>
-                    <div class="metric-label">Hardware platforms supported</div>
+        <!-- WHY NOW -->
+        <section class="whynow-section reveal" id="why-now">
+            <div class="section-header">
+                <p class="section-eyebrow">Why now</p>
+                <h2>The glasses era is arriving — fast.</h2>
+            </div>
+            <p class="problem-statement" style="margin-bottom:48px;">
+                Meta's Ray-Ban smart glasses became the category's first mainstream hit. Google (Android XR), Samsung, and Apple are racing in behind them. For the first time, <strong>hundreds of millions of people are about to have a display in their field of view</strong> — and almost none of today's software was designed for it.
+            </p>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <p class="feature-label">Hardware</p>
+                    <h3>It has shipped</h3>
+                    <p>Smart glasses left the lab. Ray-Ban Meta, XREAL, Viture and Brilliant Labs are in real customers' hands today — selling faster than anyone predicted.</p>
                 </div>
-                <div class="metric-card">
-                    <div class="metric-value">&lt;200ms</div>
-                    <div class="metric-label">Adaptive pacing latency</div>
+                <div class="feature-card">
+                    <p class="feature-label">Platforms</p>
+                    <h3>Big tech is all-in</h3>
+                    <p>Android XR, Samsung, and Apple are pouring resources into head-worn computing. The platform war for your field of view has officially started.</p>
                 </div>
-                <div class="metric-card">
-                    <div class="metric-value">PWA</div>
-                    <div class="metric-label">Installable, works offline</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value">0</div>
-                    <div class="metric-label">Accounts required</div>
+                <div class="feature-card">
+                    <p class="feature-label">Software</p>
+                    <h3>It hasn't caught up</h3>
+                    <p>The apps are still phone apps. Whoever builds the native communication tools for glasses gets to define the category. That's the opening.</p>
                 </div>
             </div>
+        </section>
+
+        <!-- PROBLEM -->
+        <section class="problem-section reveal">
+            <div class="section-header">
+                <p class="section-eyebrow">The problem</p>
+                <h2>Reading a script still means looking away.</h2>
+            </div>
+            <p class="problem-statement">
+                Every teleprompter today assumes a screen you stare at. On stage, on camera, or on a sales call, that means <strong>broken eye contact, a frozen "reading" voice, and notes you can't glance at without it being obvious.</strong> The hardware to fix this finally exists. The software didn't — until Spector.
+            </p>
         </section>
 
         <!-- FEATURES -->
         <section class="features-section reveal" id="features">
             <div class="section-header">
-                <p class="section-eyebrow">Core Features</p>
+                <p class="section-eyebrow">The product</p>
                 <h2>Not just another teleprompter.</h2>
             </div>
             <div class="feature-grid">
@@ -193,27 +214,89 @@
             </div>
         </section>
 
-        <!-- COMFORT COMPARISON -->
-        <section class="comfort-section reveal">
+        <!-- TRACTION -->
+        <section class="traction-section reveal" id="traction">
             <div class="section-header">
-                <p class="section-eyebrow">The difference</p>
-                <h2>Stability you can feel.</h2>
+                <p class="section-eyebrow">Traction</p>
+                <h2>People want this on their face.</h2>
             </div>
-            <div class="showcase-card">
-                <img src="images/comfort-comparison.png" alt="Standard teleprompter vs Spector Comfort Mode: spatially anchored, reduces eye strain" loading="lazy" width="2560" height="1440">
+            <div class="traction-hero">
+                <!-- TODO: replace 150 with your real hardware-beta waitlist count -->
+                <span class="traction-num">150+</span>
+                <p class="traction-num-label">on the hardware beta waitlist — and growing every week</p>
+            </div>
+            <div class="traction-support">
+                <span class="traction-pill"><strong>Live product</strong> · working today on phone</span>
+                <span class="traction-pill"><strong>4 platforms</strong> · Ray-Ban Meta, XREAL, Viture, Brilliant Labs</span>
+                <span class="traction-pill"><strong>Open source</strong> · public on GitHub</span>
             </div>
         </section>
 
-        <!-- HARDWARE -->
-        <div class="hardware-section reveal">
-            <p class="section-eyebrow" style="text-align:center">Compatible hardware</p>
-            <div class="glasses-badges">
-                <span>Ray-Ban Meta</span>
-                <span>XREAL</span>
-                <span>Viture</span>
-                <span>Brilliant Labs</span>
+        <!-- VISION / ROADMAP -->
+        <section class="vision-section reveal" id="vision">
+            <div class="section-header">
+                <p class="section-eyebrow">Vision</p>
+                <h2>Teleprompter is the wedge — not the destination.</h2>
             </div>
-        </div>
+            <p class="problem-statement" style="margin-bottom:48px;">
+                We start where the pain is sharpest: rehearsing and delivering scripted speech. From that beachhead, Spector becomes <strong>the communication layer for the glasses era</strong> — the default app you open before you speak.
+            </p>
+            <div class="roadmap">
+                <div class="roadmap-item">
+                    <div class="roadmap-phase">Now</div>
+                    <div class="roadmap-body">
+                        <h4>Auto-paced teleprompter</h4>
+                        <p>Rehearse on phone, perform on glasses. Live today.</p>
+                    </div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-phase">Next</div>
+                    <div class="roadmap-body">
+                        <h4>Live delivery coaching</h4>
+                        <p>Real-time pacing, filler-word, and confidence feedback delivered on-lens as you speak.</p>
+                    </div>
+                </div>
+                <div class="roadmap-item future">
+                    <div class="roadmap-phase">Later</div>
+                    <div class="roadmap-body">
+                        <h4>Translation & live captioning</h4>
+                        <p>Real-time translation and captions in your field of view — speak to anyone, anywhere.</p>
+                    </div>
+                </div>
+                <div class="roadmap-item future">
+                    <div class="roadmap-phase">Vision</div>
+                    <div class="roadmap-body">
+                        <h4>The communication platform for glasses</h4>
+                        <p>The presentation and communication layer every smart-glasses user reaches for.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BUSINESS MODEL -->
+        <section class="features-section reveal" id="model" style="padding-top:40px;">
+            <div class="section-header">
+                <p class="section-eyebrow">Business model</p>
+                <h2>Free to start. Pro when it matters.</h2>
+            </div>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <p class="feature-label">Free</p>
+                    <h3>Land</h3>
+                    <p>Core teleprompter on phone and glasses, no account required. Open source builds trust and distribution.</p>
+                </div>
+                <div class="feature-card">
+                    <p class="feature-label">Pro · subscription</p>
+                    <h3>Expand</h3>
+                    <p>Analytics, live coaching, cloud sync, and team script libraries for power users and professionals.</p>
+                </div>
+                <div class="feature-card">
+                    <p class="feature-label">Teams &amp; partners</p>
+                    <h3>Monetize</h3>
+                    <p>B2B for sales orgs and creators, plus hardware-bundle partnerships with glasses makers.</p>
+                </div>
+            </div>
+        </section>
 
         <!-- COMPARISON -->
         <section class="comparison-section reveal">
@@ -240,6 +323,24 @@
                         <li><span class="check-mark">&#x2713;</span> Post-run pacing analytics</li>
                     </ul>
                 </div>
+            </div>
+        </section>
+
+        <!-- TEAM -->
+        <section class="team-section reveal" id="team">
+            <div class="section-header">
+                <p class="section-eyebrow">Team</p>
+                <h2>Who's building Spector.</h2>
+            </div>
+            <div class="team-grid">
+                <!-- TODO: replace with real founder details + photo (drop a square image in /images and set src on .team-photo img) -->
+                <div class="team-card">
+                    <div class="team-photo">JT</div>
+                    <p class="team-name">Jeffrey Tse</p>
+                    <p class="team-role">Founder</p>
+                    <p class="team-bio">One line on your background and why you're the person to build the communication layer for smart glasses. (Replace this.)</p>
+                </div>
+                <!-- Add more .team-card blocks here for co-founders / advisors -->
             </div>
         </section>
 
@@ -334,11 +435,24 @@
             </p>
         </section>
 
+        <!-- INVESTOR CTA -->
+        <section class="investor-section reveal" id="investors">
+            <p class="section-eyebrow">For investors &amp; partners</p>
+            <h2>Get in early on the glasses era.</h2>
+            <p>We're building the communication layer for smart glasses, starting with the teleprompter wedge. If you invest in spatial computing or the future of how people speak and present, let's talk.</p>
+            <div class="investor-cta-group">
+                <!-- TODO: point "Request the deck" at your deck link or keep the mailto -->
+                <a href="mailto:invest@spectorlabs.io?subject=Spector%20%E2%80%94%20Investor%20interest" class="btn-primary">Request the deck</a>
+                <a href="mailto:invest@spectorlabs.io" class="btn-secondary">Email the founders →</a>
+            </div>
+        </section>
+
         <!-- FOOTER -->
         <footer class="site-footer">
             <span>&copy; 2026 Spector Labs</span>
             <div class="footer-links">
                 <a href="https://github.com/hydrogenbondss/SPECTOR" target="_blank">GitHub</a>
+                <a href="#investors">Investors</a>
                 <a href="mailto:hello@spectorlabs.io">Contact</a>
                 <a href="https://spectorlabs.io">spectorlabs.io</a>
             </div>
