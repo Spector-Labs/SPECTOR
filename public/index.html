@@ -7,14 +7,16 @@
     <meta name="theme-color" content="#000000">
     <meta property="og:title" content="Spector — Eyes Forward">
     <meta property="og:description" content="The auto-paced teleprompter built for smart glasses. Rehearse on phone, perform on glasses.">
-    <meta property="og:image" content="images/hero-glasses.png">
+    <meta property="og:image" content="https://spectorlabs.io/images/og-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://spectorlabs.io">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Spector — Eyes Forward">
     <meta name="twitter:description" content="Auto-paced teleprompter for smart glasses. Rehearse on phone, perform on glasses.">
-    <meta name="twitter:image" content="images/hero-glasses.png">
-    <title>Spector™ — Eyes Forward</title>
+    <meta name="twitter:image" content="https://spectorlabs.io/images/og-card.png">
+    <title>Spector — Eyes Forward</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
@@ -58,9 +60,9 @@
 
         <!-- HERO VISUAL (demo video) -->
         <div class="hero-visual">
-            <video class="hero-media" autoplay muted loop playsinline poster="images/hero-glasses.png" aria-label="Spector teleprompter running on smart glasses">
+            <video class="hero-media" autoplay muted loop playsinline poster="images/hero-glasses.webp" aria-label="Spector teleprompter running on smart glasses">
                 <source src="spector-demo.mp4" type="video/mp4">
-                <img src="images/hero-glasses.png" alt="Spector teleprompter HUD running on Ray-Ban Meta smart glasses" width="2560" height="1440">
+                <img src="images/hero-glasses.webp" alt="Spector teleprompter HUD running on Ray-Ban Meta smart glasses" width="1600" height="900">
             </video>
         </div>
 
@@ -156,7 +158,7 @@
         <!-- ECOSYSTEM SHOWCASE -->
         <section class="showcase-section reveal">
             <div class="showcase-card">
-                <img src="images/ui-showcase.png" alt="Spector ecosystem: rehearsal analytics dashboard, mobile player, and Ray-Ban Meta glasses integration" loading="lazy" width="2560" height="1440">
+                <img src="images/ui-showcase.webp" alt="Spector ecosystem: rehearsal analytics dashboard, mobile player, and Ray-Ban Meta glasses integration" loading="lazy" width="1600" height="900">
                 <div class="showcase-label">
                     <p class="showcase-title">Rehearse. Refine. Perform.</p>
                     <p class="showcase-desc">Cross-platform rehearsal analytics, mobile player, and Ray-Ban Meta integration — one unified system.</p>
@@ -171,7 +173,7 @@
                 <h2>Text that holds still while you don't.</h2>
             </div>
             <div class="showcase-card">
-                <img src="images/comfort-comparison.png" alt="Standard mode vs Spector Comfort mode: standard teleprompter text jitters with head movement, Comfort mode keeps the script spatially anchored and stable" loading="lazy" width="2560" height="1440">
+                <img src="images/comfort-comparison.webp" alt="Standard mode vs Spector Comfort mode: standard teleprompter text jitters with head movement, Comfort mode keeps the script spatially anchored and stable" loading="lazy" width="1600" height="900">
                 <div class="showcase-label">
                     <p class="showcase-title">Spatially anchored. Calm by design.</p>
                     <p class="showcase-desc">Standard teleprompters shake with every head movement — causing eye strain and that frozen "reading" look. Comfort mode locks your script in space so it stays stable and readable through an entire rehearsal.</p>
@@ -217,7 +219,7 @@
         <!-- HUD VIEW -->
         <section class="hud-section reveal">
             <div class="showcase-card">
-                <img src="images/hud-view.png" alt="Spector first-person HUD view through smart glasses showing script, progress, and controls" loading="lazy" width="2560" height="1440">
+                <img src="images/hud-view.webp" alt="Spector first-person HUD view through smart glasses showing script, progress, and controls" loading="lazy" width="1600" height="900">
                 <div class="showcase-label">
                     <p class="showcase-title">First-Person HUD</p>
                     <p class="showcase-desc">Your script anchored in space. Progress tracking, microphone, camera, and translate — all in your field of view.</p>
@@ -234,7 +236,7 @@
             <div class="traction-hero">
                 <!-- TODO: replace 150 with your real hardware-beta waitlist count -->
                 <span class="traction-num">150+</span>
-                <p class="traction-num-label">on the hardware beta waitlist — and growing every week</p>
+                <p class="traction-num-label">people on the hardware beta waitlist</p>
             </div>
             <div class="traction-support">
                 <span class="traction-pill"><strong>Live product</strong> · working today on phone</span>
@@ -901,5 +903,11 @@
 
         window.onload = init;
     </script>
+
+    <!-- Vercel Web Analytics (enable "Web Analytics" in the Vercel project dashboard for data to flow) -->
+    <script>
+        window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
