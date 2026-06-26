@@ -86,13 +86,10 @@ body.landing {
 }
 
 .nav-logo {
-    width: 32px;
-    height: 32px;
-    background: var(--accent);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 30px;
+    height: 30px;
+    display: block;
+    object-fit: contain;
     flex-shrink: 0;
 }
 

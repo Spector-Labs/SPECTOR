@@ -4,21 +4,27 @@
   "description": "The superior teleprompter for Ray-Ban Meta and smart glasses. Auto-paced, comfort-tuned, installable for daily rehearsal.",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0A0A0A",
-  "theme_color": "#0A0A0A",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "orientation": "any",
   "icons": [
     {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect fill='%230A0A0A' width='192' height='192' rx='32'/%3E%3Ctext x='96' y='118' font-family='system-ui,sans-serif' font-size='72' font-weight='700' fill='%23E8D5B7' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E",
+      "src": "images/app-icon.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect fill='%230A0A0A' width='512' height='512' rx='80'/%3E%3Ctext x='256' y='310' font-family='system-ui,sans-serif' font-size='200' font-weight='700' fill='%23E8D5B7' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E",
+      "src": "images/app-icon.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "images/app-icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
   "categories": ["productivity", "utilities"],
