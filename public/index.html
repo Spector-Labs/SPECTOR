@@ -51,7 +51,7 @@
         <section class="hero-section">
             <div class="hero-badge">Teleprompter for smart glasses</div>
             <h1 class="hero-headline">Eyes <span class="text-purple">Forward.</span></h1>
-            <p class="hero-subhead">Rehearse on your phone. Perform on smart glasses — without glancing down or sounding scripted.</p>
+            <p class="hero-subhead">The auto-paced teleprompter built for the smart glasses era. Rehearse on phone, perform on glasses — without glancing down or sounding scripted.</p>
             <div class="hero-cta-group">
                 <a href="#try" class="btn-primary">Try it free</a>
                 <a href="#beta" class="btn-secondary">Join glasses beta →</a>
@@ -61,7 +61,7 @@
 
         <!-- HERO VISUAL -->
         <div class="hero-visual">
-            <img src="images/hero-glasses.png" alt="Spector teleprompter HUD running on Ray-Ban Meta smart glasses" loading="eager">
+            <img src="images/hero-glasses.png" alt="Spector teleprompter HUD running on Ray-Ban Meta smart glasses" loading="eager" fetchpriority="high" width="2560" height="1440">
         </div>
 
         <!-- TRUST BAR -->
@@ -70,8 +70,30 @@
             <span class="trust-dot"></span>
             <span>Built for glasses HUD</span>
             <span class="trust-dot"></span>
-            <span>Open source</span>
+            <span>Open source on GitHub</span>
         </div>
+
+        <!-- METRICS -->
+        <section class="metrics-section reveal">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">4</div>
+                    <div class="metric-label">Hardware platforms supported</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">&lt;200ms</div>
+                    <div class="metric-label">Adaptive pacing latency</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">PWA</div>
+                    <div class="metric-label">Installable, works offline</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">0</div>
+                    <div class="metric-label">Accounts required</div>
+                </div>
+            </div>
+        </section>
 
         <!-- FEATURES -->
         <section class="features-section reveal" id="features">
@@ -117,7 +139,7 @@
         <!-- ECOSYSTEM SHOWCASE -->
         <section class="showcase-section reveal">
             <div class="showcase-card">
-                <img src="images/ui-showcase.png" alt="Spector ecosystem: rehearsal analytics dashboard, mobile player, and Ray-Ban Meta glasses integration" loading="lazy">
+                <img src="images/ui-showcase.png" alt="Spector ecosystem: rehearsal analytics dashboard, mobile player, and Ray-Ban Meta glasses integration" loading="lazy" width="2560" height="1440">
                 <div class="showcase-label">
                     <p class="showcase-title">Rehearse. Refine. Perform.</p>
                     <p class="showcase-desc">Cross-platform rehearsal analytics, mobile player, and Ray-Ban Meta integration — one unified system.</p>
@@ -150,11 +172,11 @@
             </div>
             <div class="screenshots">
                 <figure>
-                    <img src="images/demo-phone-ui.jpg" alt="Spector teleprompter running on iPhone with Comfort mode active" loading="lazy">
+                    <img src="images/demo-phone-ui.jpg" alt="Spector teleprompter running on iPhone with Comfort mode active" loading="lazy" width="720" height="1280">
                     <figcaption>Phone — Comfort mode, cues, adaptive speed</figcaption>
                 </figure>
                 <figure>
-                    <img src="images/demo-usage.jpg" alt="Presenter rehearsing with Spector on smart glasses" loading="lazy">
+                    <img src="images/demo-usage.jpg" alt="Presenter rehearsing with Spector on smart glasses" loading="lazy" width="1280" height="720">
                     <figcaption>Rehearse on phone, perform on glasses</figcaption>
                 </figure>
             </div>
@@ -163,7 +185,7 @@
         <!-- HUD VIEW -->
         <section class="hud-section reveal">
             <div class="showcase-card">
-                <img src="images/hud-view.png" alt="Spector first-person HUD view through smart glasses showing script, progress, and controls" loading="lazy">
+                <img src="images/hud-view.png" alt="Spector first-person HUD view through smart glasses showing script, progress, and controls" loading="lazy" width="2560" height="1440">
                 <div class="showcase-label">
                     <p class="showcase-title">First-Person HUD</p>
                     <p class="showcase-desc">Your script anchored in space. Progress tracking, microphone, camera, and translate — all in your field of view.</p>
@@ -178,7 +200,7 @@
                 <h2>Stability you can feel.</h2>
             </div>
             <div class="showcase-card">
-                <img src="images/comfort-comparison.png" alt="Standard teleprompter vs Spector Comfort Mode: spatially anchored, reduces eye strain" loading="lazy">
+                <img src="images/comfort-comparison.png" alt="Standard teleprompter vs Spector Comfort Mode: spatially anchored, reduces eye strain" loading="lazy" width="2560" height="1440">
             </div>
         </section>
 
@@ -275,7 +297,7 @@
         </section>
 
         <!-- LIBRARY -->
-        <section class="library-section" id="library-section">
+        <section class="library-section" id="library-section" style="display:none;">
             <h3>Saved scripts</h3>
             <ul class="library-list" id="library-list">
                 <li class="library-empty" id="library-empty">No saved scripts yet — save one to build your library.</li>
@@ -283,7 +305,7 @@
         </section>
 
         <!-- HISTORY -->
-        <section class="history-section" id="history-section" style="margin-top:8px;">
+        <section class="history-section" id="history-section" style="display:none;margin-top:8px;">
             <h3 style="font-size:14px;font-weight:600;color:#71717A;margin:0 0 8px;letter-spacing:0.04em;text-transform:uppercase;">Recent rehearsals</h3>
             <div id="history-list" style="font-size:12px;color:#888;"></div>
             <div style="font-size:10px;color:#555;margin-top:4px;">Local only. Cloud sync planned.</div>
@@ -292,8 +314,8 @@
         <!-- BETA -->
         <section class="beta-section" id="beta">
             <p class="section-eyebrow">Hardware beta — open now</p>
-            <h2>Testing on real glasses?</h2>
-            <p>The phone app is fully live today. We're recruiting people with Ray-Ban Meta, XREAL, Viture, or Brilliant Labs hardware to validate button controls, Comfort mode on actual HUD, and the end-to-end flow.</p>
+            <h2>Get early access on real glasses.</h2>
+            <p>The phone app is live today. We're recruiting testers with Ray-Ban Meta, XREAL, Viture, or Brilliant Labs hardware to validate temple button controls, Comfort mode on actual HUD, and the end-to-end rehearsal-to-performance flow.</p>
             <ul class="beta-benefits">
                 <li>Direct input on right-temple button and future Neural Band mappings</li>
                 <li>Early feedback on real-device HUD readability and Comfort mode</li>
@@ -314,10 +336,11 @@
 
         <!-- FOOTER -->
         <footer class="site-footer">
-            <span>&copy; 2026 Spector Labs &middot; MIT License</span>
+            <span>&copy; 2026 Spector Labs</span>
             <div class="footer-links">
                 <a href="https://github.com/hydrogenbondss/SPECTOR" target="_blank">GitHub</a>
-                <a href="mailto:hello@spectorlabs.io">hello@spectorlabs.io</a>
+                <a href="mailto:hello@spectorlabs.io">Contact</a>
+                <a href="https://spectorlabs.io">spectorlabs.io</a>
             </div>
         </footer>
 
@@ -364,13 +387,14 @@
         function renderLibrary() {
             const list = document.getElementById('library-list');
             const empty = document.getElementById('library-empty');
+            const section = document.getElementById('library-section');
             const scripts = getLibrary();
             list.innerHTML = '';
             if (!scripts.length) {
-                list.appendChild(empty);
-                empty.style.display = 'block';
+                if (section) section.style.display = 'none';
                 return;
             }
+            if (section) section.style.display = '';
             scripts.forEach(script => {
                 const li = document.createElement('li');
                 li.className = 'library-item';
@@ -394,13 +418,15 @@
 
         function renderHistory() {
             const container = document.getElementById('history-list');
+            const section = document.getElementById('history-section');
             if (!container) return;
             let runs = [];
             try { runs = JSON.parse(localStorage.getItem('spector_runs_v1')) || []; } catch {}
             if (!runs.length) {
-                container.innerHTML = '<div style="font-size:11px;color:#666;">No runs yet — finish a rehearsal in the player to see history here.</div>';
+                if (section) section.style.display = 'none';
                 return;
             }
+            if (section) section.style.display = '';
             container.innerHTML = runs.map(r => {
                 const d = new Date(r.ts).toLocaleDateString();
                 return `<div class="history-item">${d} · ${r.chunks} chunks · ${r.time} min · ${r.wpm} wpm · ${r.pacing} pacing<br><span style="font-size:10px;opacity:0.7;">${escapeHtml(r.scriptPreview)}</span></div>`;
