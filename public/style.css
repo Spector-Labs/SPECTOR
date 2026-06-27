@@ -524,7 +524,7 @@ a.nav-cta:hover {
     border-radius: var(--radius-lg);
     border: 1px solid var(--border);
     background: var(--bg-elevated);
-    max-width: 360px;
+    max-width: 280px;
     width: 100%;
 }
 
@@ -1266,6 +1266,10 @@ textarea:focus {
 }
 
 @media (max-width: 480px) {
+    .screenshots figure {
+        max-width: 240px;
+    }
+
     .hero-cta-group {
         flex-direction: column;
         align-items: stretch;
