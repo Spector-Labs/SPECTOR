@@ -1695,6 +1695,29 @@ body.comfort-mode .chunk.active {
     margin: 0;
 }
 
+/* ─── Investor / partner note (compact) ─── */
+.investor-note {
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 48px 24px 8px;
+}
+
+.investor-note p {
+    font-size: 15px;
+    color: var(--text-dim);
+    margin: 0;
+    line-height: 1.6;
+}
+
+.investor-note a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.investor-note a:hover { color: var(--accent-hover); }
+
 /* ─── Investor CTA ─── */
 .investor-section {
     text-align: center;
