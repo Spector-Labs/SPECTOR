@@ -36,6 +36,7 @@
             <span class="nav-wordmark">SPECTOR</span>
         </a>
         <div class="nav-links" id="nav-links">
+            <span class="nav-indicator" aria-hidden="true"></span>
             <a href="#why-now">Why now</a>
             <a href="#features">Product</a>
             <a href="#vision">Vision</a>
@@ -859,6 +860,63 @@
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         }
 
+        function initTubelightNav() {
+            const nav = document.getElementById('nav-links');
+            const indicator = nav && nav.querySelector('.nav-indicator');
+            if (!nav || !indicator) return;
+
+            const links = Array.from(nav.querySelectorAll('a:not(.nav-cta)'));
+            const targets = links
+                .map(a => {
+                    const id = (a.getAttribute('href') || '').replace('#', '');
+                    const section = id && document.getElementById(id);
+                    return section ? { link: a, section } : null;
+                })
+                .filter(Boolean);
+
+            let activeLink = null;
+            const isDesktop = () => window.matchMedia('(min-width: 769px)').matches;
+
+            function moveTo(link) {
+                if (!link) { indicator.style.opacity = '0'; return; }
+                indicator.style.left = link.offsetLeft + 'px';
+                indicator.style.top = link.offsetTop + 'px';
+                indicator.style.width = link.offsetWidth + 'px';
+                indicator.style.height = link.offsetHeight + 'px';
+                indicator.style.opacity = '1';
+            }
+
+            function setActive(link) {
+                activeLink = link;
+                links.forEach(l => l.classList.toggle('active', l === link));
+                if (isDesktop()) moveTo(link);
+            }
+
+            // Scroll-spy: highlight the section currently in the viewport band
+            const spy = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const match = targets.find(t => t.section === entry.target);
+                        if (match) setActive(match.link);
+                    }
+                });
+            }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+            targets.forEach(t => spy.observe(t.section));
+
+            // Hover preview — glide to hovered item, snap back to active on leave
+            if (isDesktop()) {
+                links.forEach(link => {
+                    link.addEventListener('mouseenter', () => moveTo(link));
+                });
+                nav.addEventListener('mouseleave', () => moveTo(activeLink));
+            }
+
+            window.addEventListener('resize', () => {
+                if (isDesktop()) moveTo(activeLink);
+                else indicator.style.opacity = '0';
+            });
+        }
+
         function initMobileNav() {
             const toggle = document.getElementById('nav-toggle');
             const links = document.getElementById('nav-links');
@@ -887,6 +945,7 @@
             wireGlassButtons();
             initScrollReveal();
             initMobileNav();
+            initTubelightNav();
 
             const textarea = document.getElementById('script-input');
             if (textarea) textarea.addEventListener('input', updateScriptMeta);

@@ -104,20 +104,55 @@ body.landing {
     display: flex;
     align-items: center;
     gap: 4px;
+    position: relative;
 }
 
 .nav-links a {
+    position: relative;
+    z-index: 1;
     padding: 8px 16px;
     font-size: 14px;
     font-weight: 500;
     color: var(--text-muted);
     border-radius: var(--radius-pill);
-    transition: color 0.2s, background 0.2s;
+    transition: color 0.25s var(--transition-smooth);
 }
 
-.nav-links a:hover {
-    color: var(--text);
-    background: rgba(255, 255, 255, 0.06);
+.nav-links a:not(.nav-cta):hover { color: var(--text); }
+
+.nav-links a.active { color: var(--text); }
+
+/* Tubelight indicator — slides under the active nav item */
+.nav-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 0;
+    width: 0;
+    border-radius: var(--radius-pill);
+    background: var(--accent-subtle);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 0;
+    transition: left 0.38s var(--transition-smooth),
+                width 0.38s var(--transition-smooth),
+                top 0.38s var(--transition-smooth),
+                height 0.38s var(--transition-smooth),
+                opacity 0.3s ease;
+}
+
+/* the glowing "tube" of light above the active item */
+.nav-indicator::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--accent);
+    box-shadow: 0 0 8px 1px var(--accent-glow), 0 0 18px 2px var(--accent-glow);
 }
 
 a.nav-cta {
