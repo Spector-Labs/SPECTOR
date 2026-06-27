@@ -200,16 +200,25 @@ a.nav-cta:hover {
 .hero-badge {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 20px;
-    background: var(--accent-subtle);
-    border: 1px solid rgba(124, 58, 237, 0.18);
-    border-radius: var(--radius-pill);
-    font-size: 13px;
+    gap: 10px;
+    padding: 0;
+    background: none;
+    border: none;
+    font-size: 12.5px;
     font-weight: 600;
-    color: var(--accent);
-    margin-bottom: 28px;
-    letter-spacing: 0.02em;
+    color: var(--text-muted);
+    margin-bottom: 26px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.hero-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent-glow);
 }
 
 .hero-headline {
@@ -470,6 +479,31 @@ a.nav-cta:hover {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
+}
+
+/* How-it-works: steps beside the phone photo (no lonely centered image) */
+.steps-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 48px;
+    align-items: center;
+    margin-top: 44px;
+}
+
+.steps-layout .steps-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+}
+
+.steps-layout .screenshots {
+    margin-top: 0;
+}
+
+@media (max-width: 860px) {
+    .steps-layout {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
 }
 
 .step-card,
@@ -1030,7 +1064,7 @@ textarea:focus {
 .beta-footer-note {
     font-size: 13px;
     color: var(--text-dim);
-    margin-top: 32px;
+    margin-top: 48px;
     line-height: 1.7;
 }
 
