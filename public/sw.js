@@ -1,5 +1,5 @@
 /* Spector service worker — offline shell for installed PWA rehearsal */
-const CACHE = 'spector-v4';
+const CACHE = 'spector-v5';
 const ORIGIN = self.location.origin; 
 
 function assetUrl(path) {
@@ -43,6 +43,13 @@ function shellPathFor(pathname) {
     return null;
 }
 
+/* Stable-URL, mutable-content assets (style.css, manifest.json, any js) must stay
+   in lock-step with the freshly-fetched HTML, so serve them network-first too.
+   Otherwise a fresh HTML page can paint against a stale cached stylesheet (FOUC). */
+function isNetworkFirstAsset(pathname) {
+    return /\.(css|js|json)$/.test(pathname);
+}
+
 async function matchCached(path) {
     const abs = assetUrl(path);
     return (await caches.match(abs))
@@ -50,8 +57,10 @@ async function matchCached(path) {
         || (await caches.match('./' + path.replace(/^\//, '')));
 }
 
-/** HTML shells: network-first when online so copy updates (e.g. landing text) propagate. */
-async function networkFirstShell(request, shellPath) {
+/** Network-first with cache fallback. Used for HTML shells AND css/js/json so
+   copy + style updates always propagate together and never skew (FOUC fix).
+   `fallbackPath` lets shells fall back to their cached app shell when offline. */
+async function networkFirst(request, fallbackPath) {
     try {
         const res = await fetch(request);
         if (res && res.status === 200 && res.type !== 'opaque') {
@@ -60,7 +69,7 @@ async function networkFirstShell(request, shellPath) {
         }
         return res;
     } catch (err) {
-        const fallback = await matchCached(shellPath);
+        const fallback = (await caches.match(request)) || (fallbackPath && await matchCached(fallbackPath));
         if (fallback) return fallback;
         return new Response('Offline — open Spector while online first.', { status: 503, statusText: 'Offline' });
     }
@@ -73,7 +82,12 @@ self.addEventListener('fetch', (e) => {
 
     e.respondWith((async () => {
         if (shellPath) {
-            return networkFirstShell(e.request, shellPath);
+            return networkFirst(e.request, shellPath);
+        }
+
+        // style.css / js / json: network-first so they never skew against fresh HTML
+        if (url.origin === ORIGIN && isNetworkFirstAsset(url.pathname)) {
+            return networkFirst(e.request, null);
         }
 
         const exact = await caches.match(e.request);

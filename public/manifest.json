@@ -1,7 +1,7 @@
 {
-  "name": "Spector — Superior Teleprompter",
+  "name": "Spector — Teleprompter for Smart Glasses",
   "short_name": "Spector",
-  "description": "The superior teleprompter for Ray-Ban Meta and smart glasses. Auto-paced, comfort-tuned, installable for daily rehearsal.",
+  "description": "The auto-paced teleprompter built for smart glasses. Rehearse on phone, perform on glasses. Comfort-tuned and installable for daily rehearsal.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#000000",
