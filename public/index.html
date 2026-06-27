@@ -40,6 +40,7 @@
             <a href="#features">Product</a>
             <a href="#vision">Vision</a>
             <a href="#try">Try it</a>
+            <a href="#faq">FAQ</a>
             <a href="#investors">Investors</a>
             <a href="#beta" class="nav-cta">Join beta</a>
         </div>
@@ -85,9 +86,24 @@
                 <p class="section-eyebrow">Why now</p>
                 <h2>The glasses era is arriving — fast.</h2>
             </div>
-            <p class="problem-statement" style="margin-bottom:48px;">
-                Meta's Ray-Ban smart glasses became the category's first mainstream hit. Google (Android XR), Samsung, and Apple are racing in behind them. For the first time, <strong>hundreds of millions of people are about to have a display in their field of view</strong> — and almost none of today's software was designed for it.
+            <p class="problem-statement" style="margin-bottom:40px;">
+                Meta's Ray-Ban smart glasses became the category's first mainstream hit. Google (Android XR), Samsung, and Apple are racing in behind them. For the first time, <strong>millions of people now have a display in their field of view</strong> — and almost none of today's software was designed for it.
             </p>
+            <div class="stat-strip">
+                <div class="stat">
+                    <span class="stat-num">7M+</span>
+                    <span class="stat-label">Ray-Ban Meta AI glasses sold in 2025 — 3&times; the prior two years combined</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-num">110%+</span>
+                    <span class="stat-label">year-over-year growth in smart-glasses shipments in 2025</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-num">73%</span>
+                    <span class="stat-label">of the smart-glasses market is already Meta — a platform forming in real time</span>
+                </div>
+            </div>
+            <p class="stat-source">Sources: <a href="https://www.cnbc.com/2026/02/11/ray-ban-maker-essilorluxottica-triples-sales-of-meta-ai-glasses.html" target="_blank" rel="noopener">EssilorLuxottica / CNBC</a> · <a href="https://counterpointresearch.com/en/insights/post-insight-research-briefs-blogs-global-smart-glasses-shipments-soared-110-yoy-in-h1-2025-with-meta-capturing-over-70-share" target="_blank" rel="noopener">Counterpoint Research, 2025</a></p>
             <div class="feature-grid">
                 <div class="feature-card">
                     <p class="feature-label">Hardware</p>
@@ -341,6 +357,52 @@
             </div>
         </section>
 
+        <!-- FAQ -->
+        <section class="faq-section reveal" id="faq">
+            <div class="section-header">
+                <p class="section-eyebrow">FAQ</p>
+                <h2>The honest answers.</h2>
+            </div>
+            <div class="faq-list">
+                <details class="faq-item">
+                    <summary>Which devices actually work today?</summary>
+                    <div class="faq-answer">
+                        <p>Any phone or desktop browser works right now — adaptive pacing, Comfort mode (using your device's real orientation sensors), and all controls. On smart glasses that display web content (like Ray-Ban Meta Display), the HUD runs and Comfort's spatial effects use the glasses' real sensors. Right-temple-button advance is built and ready; validating it on real hardware is exactly what our current beta is for.</p>
+                    </div>
+                </details>
+                <details class="faq-item">
+                    <summary>Why won't Meta or Google just build this themselves?</summary>
+                    <div class="faq-answer">
+                        <p>Platform owners build for the average user; they don't go deep on a single workflow. Spector is <strong>cross-platform and neutral</strong> — one rehearsal experience across Ray-Ban Meta, XREAL, Viture, and Brilliant Labs, not locked to one maker's roadmap. Being <strong>open source</strong> lets us move faster than any platform team and build a community moat. We win the communication-layer wedge by caring about it more than a trillion-dollar company ever will.</p>
+                    </div>
+                </details>
+                <details class="faq-item">
+                    <summary>Is my script and rehearsal data private?</summary>
+                    <div class="faq-answer">
+                        <p>Yes. Your scripts and rehearsal history are stored <strong>locally in your own browser</strong> — no account, no sign-up, and nothing is uploaded to a server. Because the whole app is open source, you can verify exactly what it does. The only time you share anything is if you choose to email us or join the beta.</p>
+                    </div>
+                </details>
+                <details class="faq-item">
+                    <summary>What does it cost?</summary>
+                    <div class="faq-answer">
+                        <p>The core teleprompter — on phone and glasses — is <strong>free, today</strong>, and the open-source core stays free. A future Pro tier will add analytics, live coaching, cloud sync, and team libraries for professionals. Founding beta testers get Pro free for life (see below).</p>
+                    </div>
+                </details>
+                <details class="faq-item">
+                    <summary>How do I become a beta tester?</summary>
+                    <div class="faq-answer">
+                        <p>No glasses needed to start — <a href="#try">try the full rehearsal experience in your browser right now</a>. If you own Ray-Ban Meta, XREAL, Viture, or Brilliant Labs hardware, <a href="#beta">join the hardware beta</a> to help validate temple controls and the HUD on real devices. Founding testers get Spector Pro free for life and a credit.</p>
+                    </div>
+                </details>
+                <details class="faq-item">
+                    <summary>Is it really open source?</summary>
+                    <div class="faq-answer">
+                        <p>Yes — the project is public on <a href="https://github.com/hydrogenbondss/SPECTOR" target="_blank" rel="noopener">GitHub</a>. Read the code, file issues, or build on it.</p>
+                    </div>
+                </details>
+            </div>
+        </section>
+
         <!-- TEAM -->
         <section class="team-section reveal" id="team">
             <div class="section-header">
@@ -348,14 +410,15 @@
                 <h2>Who's building Spector.</h2>
             </div>
             <div class="team-grid">
-                <!-- TODO: replace with real founder details + photo (drop a square image in /images and set src on .team-photo img) -->
                 <div class="team-card">
                     <div class="team-photo">JT</div>
                     <p class="team-name">Jeffrey Tse</p>
                     <p class="team-role">Founder</p>
                     <p class="team-bio">Interdisciplinary artist and creative technologist working across interactive media, narrative systems, and digital culture. He builds tools and interfaces that explore how technology observes, stores, and responds to human presence. Spector continues this inquiry through wearable UX — designing micro-interactions that support clarity, confidence, and connection in real time.</p>
+                    <p class="team-links">
+                        <a href="https://github.com/hydrogenbondss" target="_blank" rel="noopener">GitHub →</a>
+                    </p>
                 </div>
-                <!-- Add more .team-card blocks here for co-founders / advisors -->
             </div>
         </section>
 
@@ -429,9 +492,13 @@
 
         <!-- BETA -->
         <section class="beta-section" id="beta">
-            <p class="section-eyebrow">Hardware beta — open now</p>
-            <h2>Get early access on real glasses.</h2>
-            <p>The phone app is live today. We're recruiting testers with Ray-Ban Meta, XREAL, Viture, or Brilliant Labs hardware to validate temple button controls, Comfort mode on actual HUD, and the end-to-end rehearsal-to-performance flow.</p>
+            <p class="section-eyebrow">Founding beta — open now</p>
+            <h2>Become a founding tester.</h2>
+            <p><strong>No glasses? Start in 10 seconds</strong> — <a href="#try">try the full rehearsal experience in your browser</a>, no sign-up needed. Own smart glasses? Help validate Spector on real hardware and shape the product.</p>
+            <div class="beta-offer">
+                <p class="beta-offer-perk">Founding testers get <strong>Spector Pro free for life</strong> + a credit.</p>
+                <p class="beta-offer-ask"><strong>The ask:</strong> ~30 minutes testing temple-button controls and Comfort mode on your Ray-Ban Meta, XREAL, Viture, or Brilliant Labs glasses, plus a few notes on how it felt.</p>
+            </div>
             <ul class="beta-benefits">
                 <li>Direct input on right-temple button and future Neural Band mappings</li>
                 <li>Early feedback on real-device HUD readability and Comfort mode</li>
@@ -439,9 +506,9 @@
             </ul>
             <form id="beta-form" action="https://formspree.io/f/mzdlddkp" method="POST">
                 <input type="email" name="email" placeholder="your@email.com" required>
-                <input type="text" name="glasses" placeholder="Glasses model (e.g. Ray-Ban Meta Display, XREAL One)">
+                <input type="text" name="glasses" placeholder="Glasses model — or 'none yet', browser testers welcome">
                 <textarea name="message" placeholder="Any notes or hardware details (optional)" rows="2"></textarea>
-                <button type="submit">Join hardware beta</button>
+                <button type="submit">Join the founding beta</button>
             </form>
             <div id="beta-success" style="display:none;color:#22c55e;font-weight:600;margin-top:16px;">Thanks! We'll reach out from hello@spectorlabs.io soon.</div>
             <p class="beta-footer-note">
@@ -454,11 +521,10 @@
         <section class="investor-section reveal" id="investors">
             <p class="section-eyebrow">For investors &amp; partners</p>
             <h2>Get in early on the glasses era.</h2>
-            <p>We're building the communication layer for smart glasses, starting with the teleprompter wedge. If you invest in spatial computing or the future of how people speak and present, let's talk.</p>
+            <p>A live product, an open-source community, and a clear wedge into the communication layer for smart glasses. If you invest in spatial computing — or in how people will speak, present, and connect in the glasses era — I'd love to talk.</p>
             <div class="investor-cta-group">
-                <!-- TODO: point "Request the deck" at your deck link or keep the mailto -->
-                <a href="mailto:hello@spectorlabs.io?subject=Spector%20%E2%80%94%20Investor%20interest" class="btn-primary">Request the deck</a>
-                <a href="mailto:hello@spectorlabs.io" class="btn-secondary">Email the founders →</a>
+                <a href="mailto:hello@spectorlabs.io?subject=Spector%20%E2%80%94%20Investor%20interest" class="btn-primary">Start a conversation</a>
+                <a href="https://github.com/hydrogenbondss/SPECTOR" target="_blank" rel="noopener" class="btn-secondary">See the code →</a>
             </div>
         </section>
 
