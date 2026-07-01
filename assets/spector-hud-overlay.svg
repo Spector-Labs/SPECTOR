@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" fill="none">
+  <!--
+    Spector HUD overlay — transparent background, drop over glasses/stage footage
+    in any editor to brand a clip as Spector. Mirrors the real player: dimmed
+    lines, glowing white active line with a purple **emphasis** word, progress
+    bar + timer, and the wordmark. Colors match the app's :root tokens.
+  -->
+  <defs>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="10" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="fill" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7C3AED"/>
+      <stop offset="1" stop-color="#A78BFA"/>
+    </linearGradient>
+    <radialGradient id="scrim" cx="50%" cy="52%" r="55%">
+      <stop offset="0" stop-color="#000000" stop-opacity="0.42"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      text { font-family: 'Inter', system-ui, -apple-system, Arial, sans-serif; }
+    </style>
+  </defs>
+
+  <!-- soft legibility scrim behind the text (subtle; remove if footage is already dark) -->
+  <rect width="1920" height="1080" fill="url(#scrim)"/>
+
+  <!-- dimmed context lines -->
+  <text x="960" y="392" text-anchor="middle" font-size="46" font-weight="500" fill="#FFFFFF" opacity="0.16">Rehearse on your phone.</text>
+
+  <!-- active reading line (glowing white, one purple emphasis word) -->
+  <g filter="url(#glow)">
+    <text x="960" y="556" text-anchor="middle" font-size="72" font-weight="600" letter-spacing="-1" fill="#FFFFFF">
+      The teleprompter for <tspan fill="#A78BFA">any</tspan> smart glasses.
+    </text>
+  </g>
+
+  <!-- dimmed context line -->
+  <text x="960" y="712" text-anchor="middle" font-size="46" font-weight="500" fill="#FFFFFF" opacity="0.16">Perform eyes-up on glasses.</text>
+
+  <!-- progress bar -->
+  <rect x="650" y="928" width="620" height="6" rx="3" fill="#FFFFFF" opacity="0.12"/>
+  <rect x="650" y="928" width="250" height="6" rx="3" fill="url(#fill)" filter="url(#glow)"/>
+
+  <!-- timer -->
+  <text x="650" y="912" font-size="26" font-weight="500" fill="#A1A1AA">0:18</text>
+  <text x="1270" y="912" text-anchor="end" font-size="26" font-weight="500" fill="#A1A1AA">0:41 remaining</text>
+
+  <!-- wordmark (top-left lockup) -->
+  <g transform="translate(96, 92)">
+    <circle cx="16" cy="0" r="15" fill="none" stroke="#7C3AED" stroke-width="3.5"/>
+    <circle cx="16" cy="0" r="5" fill="#A78BFA"/>
+    <text x="44" y="9" font-size="30" font-weight="700" letter-spacing="6" fill="#FFFFFF">SPECTOR</text>
+  </g>
+</svg>
