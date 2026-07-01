@@ -32,6 +32,8 @@
 </head>
 <body class="landing">
 
+    <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+
     <!-- NAV -->
     <nav class="site-nav">
         <a href="#" class="nav-brand">
@@ -42,7 +44,6 @@
             <span class="nav-indicator" aria-hidden="true"></span>
             <a href="#why-now">Why now</a>
             <a href="#features">Product</a>
-            <a href="#vision">Vision</a>
             <a href="#try">Try it</a>
             <a href="#faq">FAQ</a>
             <a href="#beta" class="nav-cta">Join beta</a>
@@ -217,76 +218,6 @@
                     <p>Temple button controls advance, pause, and rewind. HUD-ready for Ray-Ban Meta, XREAL, Viture, and Brilliant Labs.</p>
                 </div>
             </div>
-            </div>
-        </section>
-
-        <!-- SEE IT IN ACTION -->
-        <section class="demo-section reveal" id="see-it">
-            <div class="section-header">
-                <p class="section-eyebrow">See it in action</p>
-                <h2>The real app, running.</h2>
-            </div>
-            <p class="problem-statement" style="margin-bottom:32px;">No mockups — this is Spector actually playing a script: adaptive pacing, cue emphasis, and the eyes-up HUD. <a href="#try">Try it yourself →</a></p>
-            <div class="demo-player">
-                <video class="demo-media" autoplay muted loop playsinline preload="none" width="606" height="920" poster="images/demo-poster.jpg" aria-label="Screen recording of the Spector teleprompter playing a script with adaptive pacing and cue emphasis">
-                    <source src="spector-real-demo.webm" type="video/webm">
-                    <img src="images/demo-poster.jpg" alt="Spector teleprompter playing a script, with a highlighted line" width="606" height="920">
-                </video>
-            </div>
-        </section>
-
-        <!-- TRACTION -->
-        <section class="traction-section reveal" id="traction">
-            <div class="section-header">
-                <p class="section-eyebrow">Status</p>
-                <h2>Early, live, and open.</h2>
-            </div>
-            <p class="problem-statement" style="margin-bottom:36px;">No vanity metrics — just a working product. Spector runs today, the code is fully open source, and the founding beta just opened. Try it right now and be one of the first to shape it.</p>
-            <div class="traction-support">
-                <span class="traction-pill"><strong>Live today</strong> · try it in your browser now</span>
-                <span class="traction-pill"><strong>4 platforms</strong> · Ray-Ban Meta, XREAL, Viture, Brilliant Labs</span>
-                <span class="traction-pill"><strong>Open source</strong> · public on GitHub</span>
-            </div>
-        </section>
-
-        <!-- VISION / ROADMAP -->
-        <section class="vision-section reveal" id="vision">
-            <div class="section-header">
-                <p class="section-eyebrow">Vision</p>
-                <h2>We start with teleprompter. We don't stop there.</h2>
-            </div>
-            <p class="problem-statement" style="margin-bottom:48px;">
-                Rehearsing and delivering scripted speech is where the pain is sharpest — so that's where we start. From there, the goal is simple: <strong>become the app you open before you speak</strong> on glasses.
-            </p>
-            <div class="roadmap">
-                <div class="roadmap-item">
-                    <div class="roadmap-phase">Now</div>
-                    <div class="roadmap-body">
-                        <h4>Auto-paced teleprompter</h4>
-                        <p>Rehearse on phone, perform on glasses. Live today.</p>
-                    </div>
-                </div>
-                <div class="roadmap-item">
-                    <div class="roadmap-phase">Next</div>
-                    <div class="roadmap-body">
-                        <h4>Live delivery coaching</h4>
-                        <p>Real-time pacing, filler-word, and confidence feedback delivered on-lens as you speak.</p>
-                    </div>
-                </div>
-                <div class="roadmap-item future">
-                    <div class="roadmap-phase">Later</div>
-                    <div class="roadmap-body">
-                        <h4>Translation & live captioning</h4>
-                        <p>Real-time translation and captions in your field of view — speak to anyone, anywhere.</p>
-                    </div>
-                </div>
-                <div class="roadmap-item future">
-                    <div class="roadmap-phase">Vision</div>
-                    <div class="roadmap-body">
-                        <h4>The go-to app for speaking on glasses</h4>
-                        <p>Where you turn to prepare and deliver any talk, pitch, or presentation.</p>
-                    </div>
-                </div>
             </div>
         </section>
 
@@ -995,6 +926,64 @@
             });
         }
 
+        function initMotion() {
+            const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            // Scroll progress bar (kept even for reduced motion — it's a position indicator)
+            const bar = document.getElementById('scroll-progress');
+            if (bar) {
+                let ticking = false;
+                const update = () => {
+                    const h = document.documentElement;
+                    const max = h.scrollHeight - h.clientHeight;
+                    bar.style.width = (max > 0 ? (window.pageYOffset / max) * 100 : 0) + '%';
+                    ticking = false;
+                };
+                window.addEventListener('scroll', () => {
+                    if (!ticking) { ticking = true; requestAnimationFrame(update); }
+                }, { passive: true });
+                update();
+            }
+
+            if (reduce) return; // no count-up / parallax when reduced motion is requested
+
+            // Count-up the market stats when they scroll into view
+            const countObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    countObserver.unobserve(entry.target);
+                    const el = entry.target;
+                    const m = el.textContent.trim().match(/^(\d+(?:\.\d+)?)(.*)$/);
+                    if (!m) return;
+                    const target = parseFloat(m[1]), suffix = m[2], start = performance.now(), dur = 1100;
+                    const tick = (now) => {
+                        const p = Math.min(1, (now - start) / dur);
+                        const eased = 1 - Math.pow(1 - p, 3);
+                        el.textContent = Math.round(target * eased) + suffix;
+                        if (p < 1) requestAnimationFrame(tick);
+                        else el.textContent = m[1] + suffix;
+                    };
+                    requestAnimationFrame(tick);
+                });
+            }, { threshold: 0.6 });
+            document.querySelectorAll('.stat-num').forEach(s => countObserver.observe(s));
+
+            // Subtle hero parallax — the visual lags the scroll a touch
+            const hero = document.querySelector('.hero-visual');
+            if (hero) {
+                let ticking2 = false;
+                const move = () => {
+                    const shift = Math.max(-44, Math.min(44, window.pageYOffset * 0.06));
+                    hero.style.transform = `translateY(${shift}px)`;
+                    ticking2 = false;
+                };
+                window.addEventListener('scroll', () => {
+                    if (!ticking2) { ticking2 = true; requestAnimationFrame(move); }
+                }, { passive: true });
+                move();
+            }
+        }
+
         function init() {
             initFileUpload();
             initButtons();
@@ -1002,6 +991,7 @@
             initCueToolbar();
             renderLibrary();
             renderHistory();
+            initMotion();
             registerServiceWorker();
             initInstallPrompt();
             wireGlassButtons();
