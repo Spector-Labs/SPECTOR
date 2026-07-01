@@ -1,0 +1,11 @@
+# Local verifier / scratch artifacts (written to system temp; never committed)
+tests/.artifacts/
+*.log
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+NUL
+*.swp
+.idea/
+.vscode/

@@ -7,10 +7,12 @@ from __future__ import annotations
 
 import html
 import json
+import os
 import re
 import shutil
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 import urllib.parse
@@ -20,17 +22,16 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 PUBLIC = ROOT / "public"
-SCRATCH = Path(r"C:\Users\USER\AppData\Local\Temp\grok-goal-ee54e3f7c3b7\implementer")
-GOAL_DIR = Path(
-    r"C:\Users\USER\.grok\sessions\C%3A%5CUsers%5CUSER"
-    r"\019ef54a-4da6-7671-89c9-d521e4d96056\goal"
-)
+# All verifier artifacts go to a portable temp dir — never into the repo tree.
+SCRATCH = Path(tempfile.gettempdir()) / "spector-verify"
+GOAL_DIR = SCRATCH / "goal"
 SESSION_DIR = GOAL_DIR.parent
 EVENTS_JSONL = SESSION_DIR / "events.jsonl"
-GOAL_PATCH = SCRATCH.parent / "goal-classifier-ee54e3f7c3b7-9.patch"
-GROK_CONFIG = Path(r"C:\Users\USER\.grok\config.toml")
+GOAL_PATCH = SCRATCH / "verify.patch"
+GROK_CONFIG = SCRATCH / "config.toml"  # absent in normal runs → related step no-ops
 PORT = 8088
 BASE_URL = f"http://127.0.0.1:{PORT}"
+# Optional local browser for live SW checks; falls back to a static audit when absent.
 EDGE = Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 EDGE_PROFILE = SCRATCH / "edge-profile"
 
@@ -166,7 +167,7 @@ def external_curl_get(path: str) -> tuple[int, str]:
     """External client (curl subprocess) — not in-process urllib."""
     url = f"{BASE_URL}/{path}"
     proc = subprocess.run(
-        ["curl", "-s", "-o", "NUL", "-w", "%{http_code}", url],
+        ["curl", "-s", "-o", os.devnull, "-w", "%{http_code}", url],
         capture_output=True, text=True, timeout=15,
     )
     code = (proc.stdout or "").strip() or "000"
