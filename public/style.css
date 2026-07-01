@@ -2462,6 +2462,25 @@ body.mirror-mode .bookmarks {
     margin-top: 16px;
 }
 
+/* ─── SEO device landing pages ─── */
+.seo-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 20px 24px;
+}
+.seo-nav-cta { padding: 10px 18px; }
+.seo-crosslinks {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-dim);
+    padding: 12px 0;
+}
+.seo-crosslinks a { color: var(--text-muted); }
+.seo-crosslinks a:hover { color: var(--accent); }
+
 /* ─── See it in action (real app demo) ─── */
 .demo-section {
     text-align: center;

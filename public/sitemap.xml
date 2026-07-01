@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://spectorlabs.io/</loc>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://spectorlabs.io/teleprompter-for-xreal</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://spectorlabs.io/teleprompter-for-viture</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://spectorlabs.io/ray-ban-meta-teleprompter</loc>
+    <priority>0.8</priority>
+  </url>
+</urlset>
