@@ -19,8 +19,11 @@
     <title>Spector — Eyes Forward</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <link rel="preload" as="image" href="images/hero-glasses.webp" type="image/webp">
+    <!-- Load fonts without blocking first paint (Lighthouse: render-blocking resources) -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap"></noscript>
+    <link rel="preload" as="image" href="images/hero-glasses.webp" type="image/webp" fetchpriority="high">
     <link rel="stylesheet" href="style.css?v=2">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="favicon.ico" sizes="48x48">
@@ -66,7 +69,7 @@
 
         <!-- HERO VISUAL (demo video) -->
         <div class="hero-visual">
-            <video class="hero-media" autoplay muted loop playsinline poster="images/hero-glasses.webp" aria-label="Spector teleprompter running on smart glasses">
+            <video class="hero-media" autoplay muted loop playsinline preload="none" width="1600" height="900" poster="images/hero-glasses.webp" aria-label="Spector teleprompter running on smart glasses">
                 <source src="spector-demo.mp4" type="video/mp4">
                 <img src="images/hero-glasses.webp" alt="Spector teleprompter HUD running on Ray-Ban Meta smart glasses" width="1600" height="900">
             </video>
@@ -414,6 +417,24 @@
             <div style="font-size:10px;color:#555;margin-top:4px;">Local only. Cloud sync planned.</div>
         </section>
 
+        <!-- SUPPORT / PRO -->
+        <section class="support-section" id="support">
+            <p class="section-eyebrow">Support the build</p>
+            <h2>Back Spector, get Pro for life.</h2>
+            <p>The core teleprompter is <strong>free forever</strong>. If Spector earns a place in how you prepare, become a founding supporter — a one-time unlock that funds development and gives you every Pro feature as it ships: cloud sync across devices, rehearsal history &amp; pacing trends, and script export.</p>
+            <div class="support-cta">
+                <a href="#" id="go-pro-btn" class="btn-primary">Become a founding supporter — $34</a>
+                <a href="#" id="sponsor-btn" class="btn-secondary">Sponsor instead</a>
+            </div>
+            <div class="license-box">
+                <span class="license-label">Already a supporter?</span>
+                <input type="text" id="license-key" placeholder="Paste your license key" autocomplete="off" spellcheck="false">
+                <button type="button" id="activate-pro" class="btn-secondary">Activate Pro</button>
+            </div>
+            <p id="pro-status" class="pro-status" role="status"></p>
+            <p class="support-note">One-time payment, no subscription. Founding beta hardware testers get Pro free — <a href="#beta">see the beta</a>.</p>
+        </section>
+
         <!-- BETA -->
         <section class="beta-section" id="beta">
             <p class="section-eyebrow">Founding beta — open now</p>
@@ -460,6 +481,65 @@
 
     <script>
         const STORAGE_KEY = 'spector_scripts_v1';
+
+        // ── Monetization (no backend) ─────────────────────────────────────────
+        // Paste your provider URLs to switch the buttons on. Until then they show
+        // a friendly "coming soon" note instead of navigating to a dead link.
+        // CHECKOUT_URL: your Lemon Squeezy / Gumroad / Stripe buy link.
+        // SPONSOR_URL:  e.g. https://github.com/sponsors/<you> or https://ko-fi.com/<you>
+        const CHECKOUT_URL = '';
+        const SPONSOR_URL = '';
+
+        function isPro() {
+            try { return !!localStorage.getItem('spector_pro'); } catch { return false; }
+        }
+
+        function reflectProState() {
+            const status = document.getElementById('pro-status');
+            const goPro = document.getElementById('go-pro-btn');
+            if (isPro()) {
+                if (goPro) { goPro.textContent = 'Founding supporter ✓'; goPro.classList.add('owned'); }
+                if (status) { status.textContent = 'Pro is active on this device ✓'; status.classList.add('active'); }
+                document.body.classList.add('is-pro');
+            }
+        }
+
+        function initSupport() {
+            const goPro = document.getElementById('go-pro-btn');
+            const sponsor = document.getElementById('sponsor-btn');
+            const activate = document.getElementById('activate-pro');
+            const keyInput = document.getElementById('license-key');
+            const status = document.getElementById('pro-status');
+
+            if (goPro) goPro.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (isPro()) return;
+                if (CHECKOUT_URL) window.location.href = CHECKOUT_URL;
+                else if (status) status.textContent = 'Checkout opens shortly — sponsor or join the beta in the meantime.';
+            });
+
+            if (sponsor) sponsor.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (SPONSOR_URL) window.open(SPONSOR_URL, '_blank', 'noopener');
+                else if (status) status.textContent = 'Sponsorship opens shortly — thank you for the interest!';
+            });
+
+            if (activate && keyInput) activate.addEventListener('click', () => {
+                const key = keyInput.value.trim();
+                // NOTE: local activation only. For real enforcement, validate the key
+                // against the Lemon Squeezy License API first (see MONETIZATION.md).
+                if (key.length < 8) {
+                    if (status) status.textContent = 'That key doesn’t look right — check the email from your purchase.';
+                    return;
+                }
+                try { localStorage.setItem('spector_pro', key); } catch {}
+                keyInput.value = '';
+                reflectProState();
+                if (status) status.textContent = 'Pro activated — thank you for backing Spector ✓';
+            });
+
+            reflectProState();
+        }
 
         function getLibrary() {
             try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
@@ -911,6 +991,7 @@
             initScrollReveal();
             initMobileNav();
             initTubelightNav();
+            initSupport();
 
             const textarea = document.getElementById('script-input');
             if (textarea) textarea.addEventListener('input', updateScriptMeta);

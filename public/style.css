@@ -2383,3 +2383,81 @@ body.mirror-mode .bookmarks {
         text-align: center;
     }
 }
+
+/* ─── Support / Pro ─── */
+.support-section {
+    text-align: center;
+    padding: 8px 0;
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+.support-section h2 {
+    margin-bottom: 12px;
+}
+
+.support-section > p {
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.support-cta {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 24px 0 18px;
+}
+
+.license-box {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 6px 0;
+}
+
+.license-label {
+    font-size: 13px;
+    color: var(--text-dim);
+}
+
+#license-key {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13px;
+    min-width: 220px;
+}
+
+#license-key:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.pro-status {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 12px 0 0;
+    min-height: 1.1em;
+}
+
+.pro-status.active {
+    color: #22c55e;
+    font-weight: 600;
+}
+
+#go-pro-btn.owned {
+    opacity: 0.85;
+    pointer-events: none;
+}
+
+.support-note {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 16px;
+}
