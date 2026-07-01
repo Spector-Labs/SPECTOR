@@ -1900,6 +1900,28 @@ body.mirror-mode .bookmarks {
     }
 }
 
+/* ─── Motion polish (subtle & classy) ─── */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0;
+    background: linear-gradient(90deg, var(--accent), #A78BFA);
+    box-shadow: 0 0 10px rgba(124, 58, 237, 0.45);
+    z-index: 1000;
+    pointer-events: none;
+}
+
+/* premium deceleration on section reveals (overrides the base ease) */
+.reveal {
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* hero visual: subtle scroll parallax (transform applied by JS per frame) */
+.hero-visual { will-change: transform; }
+
 /* ─── Market stat strip (Why now) ─── */
 .stat-strip {
     display: grid;
