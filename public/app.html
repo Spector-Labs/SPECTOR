@@ -691,6 +691,7 @@
         document.body.classList.add(`${mode}-mode`);
         document.querySelectorAll('.mode-btn').forEach(btn =>
             btn.classList.toggle('active', btn.dataset.mode === mode));
+        savePrefs({ mode });
         Haptics.modeChange();
 
         // Gentle first-run education for the killer Comfort spatial feature
@@ -732,6 +733,7 @@
                 document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 currentSpeed = btn.dataset.speed;
+                savePrefs({ speed: currentSpeed });
                 Haptics.preset();
             });
         });
@@ -947,6 +949,41 @@
         });
     }
 
+    // ─── Player preferences (text size, leading, speed, mode) persist per device ───
+    const PREFS_KEY = 'spector_prefs_v1';
+    function loadPrefs() {
+        try { return JSON.parse(localStorage.getItem(PREFS_KEY)) || {}; } catch { return {}; }
+    }
+    function savePrefs(patch) {
+        try { localStorage.setItem(PREFS_KEY, JSON.stringify({ ...loadPrefs(), ...patch })); } catch {}
+    }
+
+    function restorePlayerPrefs() {
+        const p = loadPrefs();
+        const root = document.documentElement;
+        if (p.textSize) {
+            root.style.setProperty('--chunk-size', p.textSize + 'px');
+            const s = document.getElementById('text-size'); if (s) s.value = p.textSize;
+            const v = document.getElementById('text-size-val'); if (v) v.textContent = p.textSize + 'px';
+        }
+        if (p.leading) {
+            root.style.setProperty('--chunk-leading', p.leading);
+            const s = document.getElementById('line-spacing'); if (s) s.value = p.leading;
+            const v = document.getElementById('line-spacing-val'); if (v) v.textContent = p.leading;
+        }
+        if (p.compact) document.getElementById('compact-toggle')?.classList.add('active');
+        if (p.mirror) {
+            mirrorEnabled = true;
+            document.getElementById('mirror-toggle')?.classList.add('active');
+            document.body.classList.add('mirror-mode');
+        }
+        if (p.speed) {
+            currentSpeed = p.speed;
+            document.querySelectorAll('.preset-btn').forEach(b => b.classList.toggle('active', b.dataset.speed === p.speed));
+        }
+        return p.mode || 'focus';
+    }
+
     function setupCustomization() {
         const root = document.documentElement;
         const textSize = document.getElementById('text-size');
@@ -956,10 +993,13 @@
         textSize.addEventListener('input', () => {
             root.style.setProperty('--chunk-size', textSize.value + 'px');
             document.getElementById('text-size-val').textContent = textSize.value + 'px';
+            compactToggle.classList.remove('active');
+            savePrefs({ textSize: textSize.value, compact: false });
         });
         lineSpacing.addEventListener('input', () => {
             root.style.setProperty('--chunk-leading', lineSpacing.value);
             document.getElementById('line-spacing-val').textContent = lineSpacing.value;
+            savePrefs({ leading: lineSpacing.value });
         });
         compactToggle.addEventListener('click', () => {
             compactToggle.classList.toggle('active');
@@ -967,6 +1007,9 @@
                 root.style.setProperty('--chunk-size', '26px');
                 textSize.value = 26;
                 document.getElementById('text-size-val').textContent = '26px';
+                savePrefs({ textSize: '26', compact: true });
+            } else {
+                savePrefs({ compact: false });
             }
         });
         const mirrorToggle = document.getElementById('mirror-toggle');
@@ -974,6 +1017,7 @@
             mirrorEnabled = !mirrorEnabled;
             mirrorToggle.classList.toggle('active', mirrorEnabled);
             document.body.classList.toggle('mirror-mode', mirrorEnabled);
+            savePrefs({ mirror: mirrorEnabled });
             Haptics.preset();
         });
     }
@@ -1097,7 +1141,7 @@
             if (firstRun) localStorage.setItem('spector_player_first_run', '1');
         } catch (e) {}
 
-        applyMode('focus');
+        applyMode(restorePlayerPrefs());
         updateDisplay();
 
         if (firstRun) {
