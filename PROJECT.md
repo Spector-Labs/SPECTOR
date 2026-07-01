@@ -1,7 +1,7 @@
 # SPECTOR — Project Status & Roadmap 
 
 **Last updated:** June 24, 2026 (thorough pre-domain pass: punchier Glasses & Future, actionable beta form with mailto + model field, added TEDx preset, history note, consistent domain language across docs)
-**Repository:** [github.com/Spector-Labs/SPECTOR](https://github.com/Spector-Labs/SPECTOR)  
+**Repository:** [github.com/hydrogenbondss/SPECTOR](https://github.com/hydrogenbondss/SPECTOR)  
 **Live URL:** https://spectorlabs.io
 **Latest commit:** current (see git log)
 
@@ -29,7 +29,7 @@ As smart glasses become more common, more people will need rehearsal tools *befo
 | **Mirror mode** | Done | Toggle for camera/mirror-facing setups |
 | **Cue markers** | Done | `**emphasis**`, `[pause]`, `[pause:3s]` inline syntax |
 | **Rehearsal analytics** | Done | End-screen pacing %, hesitations, slowest chunk |
-| **PWA / offline** | Done | `manifest.json`, `sw.js` v3, offline shell verified |
+| **PWA / offline** | Done | `manifest.json`, `sw.js` v6, offline shell verified |
 | **iOS motion fix** | Done | `ensureMotionForPlayback()` skips motion setup when already bound |
 | **Meta positioning** | Done | Landing “Glasses & Future” section; compatibility notes, not hardware sales |
 | **Modular core** | Done | `window.SpectorCore` — chunk registry, hooks, `createMotion()` |
@@ -138,7 +138,7 @@ SPECTOR/
 │   ├── app.html        # Player + SpectorCore + ?test harness
 │   ├── style.css       # Canonical styles (landing + glasses mode)
 │   ├── manifest.json   # PWA manifest
-│   ├── sw.js           # Service worker v3
+│   ├── sw.js           # Service worker v6
 │   └── sw-prime.html   # SW registration helper
 ├── tests/
 │   └── run_verification.py
@@ -174,11 +174,11 @@ https://spectorlabs.io/app.html?test
 
 ## Contact & links
 
-- **GitHub:** https://github.com/Spector-Labs/SPECTOR (under org; public recommended)
+- **GitHub:** https://github.com/hydrogenbondss/SPECTOR (public)
 - **Live:** https://www.spectorlabs.io
 - **Competition:** Meta Ray-Ban teleprompter (in-app, paste + manual advance)  
 - **Note:** SPECTOR sells teleprompter software only — not smart glasses or Meta hardware
-- **Domain status:** spectorlabs.io purchased (Namecheap) and live at https://www.spectorlabs.io/. Repo transferred to org `Spector-Labs`. Ready to make public.
+- **Domain status:** spectorlabs.io purchased (Namecheap) and live at https://www.spectorlabs.io/. Repo public at `github.com/hydrogenbondss/SPECTOR`.
 
 ---
 

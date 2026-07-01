@@ -92,7 +92,7 @@ Acquiring the domain is a strong signal of commitment. Immediate next:
 **Next immediate steps:**
 1. Trigger a fresh deploy in Vercel for the spectorlabs.io custom domain to pick up the latest code.
 2. [x] Set up Formspree (endpoint mzdlddkp, see public/index.html) and notifications to hello@spectorlabs.io.
-3. Update your GitHub repo "Website" setting to https://www.spectorlabs.io (repo is now under github.com/Spector-Labs/SPECTOR after org transfer).
+3. Update your GitHub repo "Website" setting to https://www.spectorlabs.io (repo is at github.com/hydrogenbondss/SPECTOR).
 4. Start beta recruitment (post the live link + form, emphasize hardware testing).
 5. Capture real screenshots from the live site and update the demo section (remove the placeholder note).
 

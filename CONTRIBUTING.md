@@ -8,7 +8,7 @@ Be respectful, inclusive, and focused on building a great tool for people who re
 
 ## How to Contribute
 
-1. **Fork the repo** under the Spector-Labs organization (or your own fork if you don't have access).
+1. **Fork the repo** at [github.com/hydrogenbondss/SPECTOR](https://github.com/hydrogenbondss/SPECTOR) to your own account.
 2. **Create a branch** for your changes: `git checkout -b feature/your-feature-name`
 3. **Make your changes**:
    - Follow the existing code style (vanilla JS, minimal dependencies, clean HTML/CSS).
@@ -20,7 +20,7 @@ Be respectful, inclusive, and focused on building a great tool for people who re
    - Test the landing, player launch (click samples then Launch), Comfort mode (tilt device or use DevTools > Sensors > Orientation on desktop), button simulator ('b' key or on-screen button), PWA install, and offline mode.
    - Run `?test` in the player to verify core logic still passes.
 5. **Commit** with clear messages.
-6. **Open a Pull Request** against the main branch in the Spector-Labs org.
+6. **Open a Pull Request** against the `main` branch of `hydrogenbondss/SPECTOR`.
 
 ## Reporting Issues
 

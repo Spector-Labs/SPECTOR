@@ -19,8 +19,11 @@
     <title>Spector — Eyes Forward</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <link rel="preload" as="image" href="images/hero-glasses.webp" type="image/webp">
+    <!-- Load fonts without blocking first paint (Lighthouse: render-blocking resources) -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap"></noscript>
+    <link rel="preload" as="image" href="images/hero-glasses.webp" type="image/webp" fetchpriority="high">
     <link rel="stylesheet" href="style.css?v=2">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="favicon.ico" sizes="48x48">
@@ -49,23 +52,24 @@
         </button>
     </nav>
 
-    <div class="container">
+    <div class="container" role="main">
 
         <!-- HERO -->
         <section class="hero-section">
-            <div class="hero-badge">Teleprompter for smart glasses</div>
+            <div class="hero-badge">One prompter · any glasses</div>
             <h1 class="hero-headline">Eyes <span class="text-purple">Forward.</span></h1>
-            <p class="hero-subhead">Spector is the auto-paced teleprompter built for smart glasses. Rehearse on your phone, then deliver flawlessly on Ray-Ban Meta, XREAL, or Viture — eyes up, no glancing down, no script-face.</p>
+            <p class="hero-subhead">Spector is the teleprompter that works on <strong>any</strong> smart glasses — Ray-Ban Meta, XREAL, Viture — not just one brand's. Rehearse on your phone, then perform eyes-up on glasses. Free and open source, no account.</p>
             <div class="hero-cta-group">
                 <a href="#try" class="btn-primary">Try it free</a>
                 <a href="#beta" class="btn-secondary">Join the beta →</a>
+                <button id="install-btn" type="button" class="btn-secondary">Install app</button>
             </div>
             <p class="hero-note">No account required · Works today on phone · Built for the glasses HUD · Open source</p>
         </section>
 
         <!-- HERO VISUAL (demo video) -->
         <div class="hero-visual">
-            <video class="hero-media" autoplay muted loop playsinline poster="images/hero-glasses.webp" aria-label="Spector teleprompter running on smart glasses">
+            <video class="hero-media" autoplay muted loop playsinline preload="none" width="1600" height="900" poster="images/hero-glasses.webp" aria-label="Spector teleprompter running on smart glasses">
                 <source src="spector-demo.mp4" type="video/mp4">
                 <img src="images/hero-glasses.webp" alt="Spector teleprompter HUD running on Ray-Ban Meta smart glasses" width="1600" height="900">
             </video>
@@ -216,6 +220,21 @@
             </div>
         </section>
 
+        <!-- SEE IT IN ACTION -->
+        <section class="demo-section reveal" id="see-it">
+            <div class="section-header">
+                <p class="section-eyebrow">See it in action</p>
+                <h2>The real app, running.</h2>
+            </div>
+            <p class="problem-statement" style="margin-bottom:32px;">No mockups — this is Spector actually playing a script: adaptive pacing, cue emphasis, and the eyes-up HUD. <a href="#try">Try it yourself →</a></p>
+            <div class="demo-player">
+                <video class="demo-media" autoplay muted loop playsinline preload="none" width="606" height="920" poster="images/demo-poster.jpg" aria-label="Screen recording of the Spector teleprompter playing a script with adaptive pacing and cue emphasis">
+                    <source src="spector-real-demo.webm" type="video/webm">
+                    <img src="images/demo-poster.jpg" alt="Spector teleprompter playing a script, with a highlighted line" width="606" height="920">
+                </video>
+            </div>
+        </section>
+
         <!-- TRACTION -->
         <section class="traction-section reveal" id="traction">
             <div class="section-header">
@@ -275,25 +294,25 @@
         <section class="comparison-section reveal">
             <div class="section-header">
                 <p class="section-eyebrow">Why Spector</p>
-                <h2>Built different.</h2>
+                <h2>One prompter, any glasses.</h2>
             </div>
             <div class="comparison-grid">
                 <div class="comparison-card basic">
-                    <h4>Basic teleprompter</h4>
+                    <h4>Single-brand glasses prompters</h4>
                     <ul>
-                        <li><span class="x-mark">&#x2715;</span> Fixed scrolling speed</li>
-                        <li><span class="x-mark">&#x2715;</span> Easy to lose your place</li>
-                        <li><span class="x-mark">&#x2715;</span> Designed for phones only</li>
-                        <li><span class="x-mark">&#x2715;</span> No rehearsal analytics</li>
+                        <li><span class="x-mark">&#x2715;</span> Locked to one brand's glasses</li>
+                        <li><span class="x-mark">&#x2715;</span> $600–800+ just to start</li>
+                        <li><span class="x-mark">&#x2715;</span> Account required, closed source</li>
+                        <li><span class="x-mark">&#x2715;</span> Nothing to rehearse with on your phone</li>
                     </ul>
                 </div>
                 <div class="comparison-card spector">
                     <h4>Spector</h4>
                     <ul>
-                        <li><span class="check-mark">&#x2713;</span> Adaptive auto-pacing</li>
-                        <li><span class="check-mark">&#x2713;</span> Comfort mode + cue markers</li>
-                        <li><span class="check-mark">&#x2713;</span> Built for smart glasses HUD</li>
-                        <li><span class="check-mark">&#x2713;</span> Post-run pacing analytics</li>
+                        <li><span class="check-mark">&#x2713;</span> Works on any glasses — and your phone</li>
+                        <li><span class="check-mark">&#x2713;</span> Free &amp; open source</li>
+                        <li><span class="check-mark">&#x2713;</span> Rehearse on phone → perform on glasses</li>
+                        <li><span class="check-mark">&#x2713;</span> No account, no lock-in</li>
                     </ul>
                 </div>
             </div>
@@ -313,9 +332,9 @@
                     </div>
                 </details>
                 <details class="faq-item">
-                    <summary>Why won't Meta or Google just build this themselves?</summary>
+                    <summary>Hasn't Meta already built a teleprompter?</summary>
                     <div class="faq-answer">
-                        <p>Platform owners build for the average user; they don't go deep on a single workflow. Spector is <strong>cross-platform and neutral</strong> — one rehearsal experience across Ray-Ban Meta, XREAL, Viture, and Brilliant Labs, not locked to one maker's roadmap. Being <strong>open source</strong> lets us move faster than any platform team and build a community moat. We win the communication-layer wedge by caring about it more than a trillion-dollar company ever will.</p>
+                        <p>It has — Meta added a basic teleprompter to its <strong>$799 Ray-Ban Display</strong> glasses in 2026. But it's locked to Meta's hardware, US-only, account-required, and advanced by hand. That's exactly the point: platform owners build for their <em>own</em> device. Spector is <strong>cross-brand and neutral</strong> — one experience across Ray-Ban Meta, XREAL, Viture, and Brilliant Labs, plus phone rehearsal — and <strong>open source</strong>, so it moves faster and can't be locked down.</p>
                     </div>
                 </details>
                 <details class="faq-item">
@@ -380,7 +399,7 @@
                     <button type="button" class="sample-btn" data-sample="earnings">Earnings Call</button>
                 </div>
 
-                <div style="font-size:11px;color:#555;margin-bottom:12px;line-height:1.4;">
+                <div style="font-size:11px;color:#8a8a8a;margin-bottom:12px;line-height:1.4;">
                     Supports <code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;">**emphasis**</code> and <code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;">[pause]</code> / <code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;">[pause:3s]</code> markers.
                 </div>
 
@@ -410,7 +429,25 @@
         <section class="history-section" id="history-section" style="display:none;margin-top:8px;">
             <h3 style="font-size:14px;font-weight:600;color:#71717A;margin:0 0 8px;letter-spacing:0.04em;text-transform:uppercase;">Recent rehearsals</h3>
             <div id="history-list" style="font-size:12px;color:#888;"></div>
-            <div style="font-size:10px;color:#555;margin-top:4px;">Local only. Cloud sync planned.</div>
+            <div style="font-size:10px;color:#8a8a8a;margin-top:4px;">Local only. Cloud sync planned.</div>
+        </section>
+
+        <!-- SUPPORT / PRO -->
+        <section class="support-section" id="support">
+            <p class="section-eyebrow">Support the build</p>
+            <h2>Back Spector, get Pro for life.</h2>
+            <p>The core teleprompter is <strong>free forever</strong>. If Spector earns a place in how you prepare, become a founding supporter — a one-time unlock that funds development and gives you every Pro feature as it ships: cloud sync across devices, rehearsal history &amp; pacing trends, and script export.</p>
+            <div class="support-cta">
+                <a href="#" id="go-pro-btn" class="btn-primary">Become a founding supporter — $34</a>
+                <a href="#" id="sponsor-btn" class="btn-secondary">Sponsor instead</a>
+            </div>
+            <div class="license-box">
+                <span class="license-label">Already a supporter?</span>
+                <input type="text" id="license-key" placeholder="Paste your license key" autocomplete="off" spellcheck="false">
+                <button type="button" id="activate-pro" class="btn-secondary">Activate Pro</button>
+            </div>
+            <p id="pro-status" class="pro-status" role="status"></p>
+            <p class="support-note">One-time payment, no subscription. Founding beta hardware testers get Pro free — <a href="#beta">see the beta</a>.</p>
         </section>
 
         <!-- BETA -->
@@ -451,7 +488,9 @@
                 <a href="https://github.com/hydrogenbondss/SPECTOR" target="_blank">GitHub</a>
                 <a href="#try">Try it</a>
                 <a href="mailto:hello@spectorlabs.io">Contact</a>
-                <a href="https://spectorlabs.io">spectorlabs.io</a>
+                <a href="/teleprompter-for-xreal">XREAL</a>
+                <a href="/teleprompter-for-viture">Viture</a>
+                <a href="/ray-ban-meta-teleprompter">Ray-Ban Meta</a>
             </div>
         </footer>
 
@@ -459,6 +498,65 @@
 
     <script>
         const STORAGE_KEY = 'spector_scripts_v1';
+
+        // ── Monetization (no backend) ─────────────────────────────────────────
+        // Paste your provider URLs to switch the buttons on. Until then they show
+        // a friendly "coming soon" note instead of navigating to a dead link.
+        // CHECKOUT_URL: your Lemon Squeezy / Gumroad / Stripe buy link.
+        // SPONSOR_URL:  e.g. https://github.com/sponsors/<you> or https://ko-fi.com/<you>
+        const CHECKOUT_URL = '';
+        const SPONSOR_URL = '';
+
+        function isPro() {
+            try { return !!localStorage.getItem('spector_pro'); } catch { return false; }
+        }
+
+        function reflectProState() {
+            const status = document.getElementById('pro-status');
+            const goPro = document.getElementById('go-pro-btn');
+            if (isPro()) {
+                if (goPro) { goPro.textContent = 'Founding supporter ✓'; goPro.classList.add('owned'); }
+                if (status) { status.textContent = 'Pro is active on this device ✓'; status.classList.add('active'); }
+                document.body.classList.add('is-pro');
+            }
+        }
+
+        function initSupport() {
+            const goPro = document.getElementById('go-pro-btn');
+            const sponsor = document.getElementById('sponsor-btn');
+            const activate = document.getElementById('activate-pro');
+            const keyInput = document.getElementById('license-key');
+            const status = document.getElementById('pro-status');
+
+            if (goPro) goPro.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (isPro()) return;
+                if (CHECKOUT_URL) window.location.href = CHECKOUT_URL;
+                else if (status) status.textContent = 'Checkout opens shortly — sponsor or join the beta in the meantime.';
+            });
+
+            if (sponsor) sponsor.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (SPONSOR_URL) window.open(SPONSOR_URL, '_blank', 'noopener');
+                else if (status) status.textContent = 'Sponsorship opens shortly — thank you for the interest!';
+            });
+
+            if (activate && keyInput) activate.addEventListener('click', () => {
+                const key = keyInput.value.trim();
+                // NOTE: local activation only. For real enforcement, validate the key
+                // against the Lemon Squeezy License API first (see MONETIZATION.md).
+                if (key.length < 8) {
+                    if (status) status.textContent = 'That key doesn’t look right — check the email from your purchase.';
+                    return;
+                }
+                try { localStorage.setItem('spector_pro', key); } catch {}
+                keyInput.value = '';
+                reflectProState();
+                if (status) status.textContent = 'Pro activated — thank you for backing Spector ✓';
+            });
+
+            reflectProState();
+        }
 
         function getLibrary() {
             try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
@@ -910,6 +1008,7 @@
             initScrollReveal();
             initMobileNav();
             initTubelightNav();
+            initSupport();
 
             const textarea = document.getElementById('script-input');
             if (textarea) textarea.addEventListener('input', updateScriptMeta);

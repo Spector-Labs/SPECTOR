@@ -185,7 +185,26 @@
         const tail = text.slice(lastIndex).trim();
         if (tail) sentences.push(tail);
         if (!sentences.length && text.trim()) sentences.push(text.trim());
-        return sentences;
+        return mergeDanglingEmphasis(sentences);
+    }
+
+    // A sentence terminator inside a **bold** span (e.g. "**We can do better.**")
+    // gets split by the tokenizer, orphaning the closing ** in the next fragment.
+    // Re-attach it so the emphasis renders instead of showing literal asterisks.
+    function mergeDanglingEmphasis(parts) {
+        const out = [];
+        for (let i = 0; i < parts.length; i++) {
+            let cur = parts[i];
+            const unclosed = (cur.match(/\*\*/g) || []).length % 2 === 1;
+            if (unclosed && i + 1 < parts.length && /^\s*\*\*/.test(parts[i + 1])) {
+                cur += '**';
+                const rest = parts[i + 1].replace(/^\s*\*\*/, '');
+                if (rest.trim()) parts[i + 1] = rest;
+                else i++; // consumed a standalone "**"
+            }
+            out.push(cur);
+        }
+        return out;
     }
 
     const chunkStrategies = {
@@ -1214,6 +1233,11 @@
         assert('formatChunkHtml emphasis', cueHtml.includes('cue-emphasis') && cueHtml.includes('hello'));
         const cueChunks = SpectorCore.hybridChunkWithCues('Line one. [pause] Line two.');
         assert('hybridChunkWithCues inserts pause chunk', cueChunks.includes('[pause]'));
+        const emphChunks = SpectorCore.chunk('We can do better. **Nailed it.**', 'hybrid');
+        assert('emphasis closing ** survives sentence split',
+            emphChunks.some(c => /\*\*[^*]+\*\*/.test(c)));
+        assert('formatChunkHtml renders reattached emphasis',
+            emphChunks.some(c => SpectorCore.formatChunkHtml(c).includes('cue-emphasis')));
         const analytics = SpectorCore.buildRehearsalAnalytics([
             { index: 0, expectedMs: 2000, actualMs: 2100, hesitated: false, text: 'a' },
             { index: 1, expectedMs: 2000, actualMs: 2400, hesitated: true, text: 'b' },

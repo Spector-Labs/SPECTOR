@@ -4,7 +4,7 @@
 
 [![Live Demo](https://img.shields.io/badge/Live-spectorlabs.io-000?style=flat-square)](https://spectorlabs.io)
 [![PWA](https://img.shields.io/badge/PWA-Installable-000?style=flat-square)](https://spectorlabs.io)
-[![GitHub](https://img.shields.io/badge/GitHub-Spector-Labs/SPECTOR-000?style=flat-square)](https://github.com/Spector-Labs/SPECTOR)
+[![GitHub](https://img.shields.io/badge/GitHub-hydrogenbondss%2FSPECTOR-000?style=flat-square)](https://github.com/hydrogenbondss/SPECTOR)
 
 **Current live:** https://spectorlabs.io
 
@@ -62,7 +62,7 @@ Real screenshots, usage photos, and a screen-recorded demo will be added after b
 | **Mirror Mode**       | Horizontal flip for camera-facing / mirror setups |
 | **Customization**     | Live text size, leading, Compact HUD toggle |
 | **Analytics**         | End screen: chunks, time, avg WPM, pacing consistency %, hesitations, slowest moment |
-| **PWA + Offline**     | Full installable PWA, service worker v4 (network-first shells for updates), verified offline |
+| **PWA + Offline**     | Full installable PWA, service worker v6 (network-first shells for updates), verified offline |
 | **Haptics**           | Subtle vibration feedback on play, mode change, advance, etc. (where supported) |
 | **Portable Core**     | `window.SpectorCore` exposed — chunking, timing, motion factory, analytics — designed for future SDK port |
 
@@ -135,9 +135,9 @@ Sign up via the form on the landing (powered by Formspree, endpoint configured, 
 
 ## Source Code & Repository
 
-The source is available on GitHub under the Spector-Labs organization: https://github.com/Spector-Labs/SPECTOR
+The source is available on GitHub: https://github.com/hydrogenbondss/SPECTOR
 
-**Repo status:** Public under the Spector-Labs org (https://github.com/Spector-Labs/SPECTOR). 
+**Repo status:** Public at https://github.com/hydrogenbondss/SPECTOR. 
 
 This makes the work visible to creators, hardware devs, and potential partners while keeping your personal profile clean. The live site (spectorlabs.io) + beta process + real hardware validation are the defensible "product" layer on top of the open code.
 
@@ -178,7 +178,8 @@ Explicit non-goals for now: native mobile binaries, accounts/backend, proprietar
 
 ## Assets & Branding
 
-- Logo / wordmark: text "Spector™" (premium minimal).
+- **Brand guidelines:** [BRAND.md](BRAND.md) — colors, type, voice, and motion (kept in lock-step with the `:root` tokens in `public/style.css`).
+- Logo / wordmark: text "Spector™" (premium minimal); `SPECTOR` in the nav.
 - PWA icons: inline SVG "S" (192/512) in `manifest.json`.
 - Early concept renders live in `assets/`. Real device screenshots and usage photos will be added after beta feedback.
 
@@ -203,6 +204,6 @@ Spector sells **teleprompter software only**. Not smart glasses, not Meta hardwa
 Live: https://spectorlabs.io
 Status: [PROJECT.md](PROJECT.md)  
 Testing on glasses: [TESTING.md](TESTING.md)  
-Source: [github.com/Spector-Labs/SPECTOR](https://github.com/Spector-Labs/SPECTOR)
+Source: [github.com/hydrogenbondss/SPECTOR](https://github.com/hydrogenbondss/SPECTOR)
 
 *Last updated: June 2026 (README refresh for visibility + education).*
